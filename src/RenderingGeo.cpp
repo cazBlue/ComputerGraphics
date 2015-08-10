@@ -26,15 +26,13 @@ void RenderGeo::generateGrid(unsigned int rows, unsigned int cols) {
 				(float)c, 0, (float)r, 1);
 			// create some arbitrary colour based off something
 			// that might not be related to tiling a texture
-			vec3 colour = vec3(sinf((c / (float)(cols - 1)) *
-				(r / (float)(rows - 1))));
+			vec3 colour = vec3(sinf((c / (float)(cols - 1)) * (r / (float)(rows - 1))));
 			aoVertices[r * cols + c].colour = vec4(colour, 1);
 		}
 	}
 
 	// defining index count based off quad count (2 triangles per quad)
-	unsigned int* auiIndices = new unsigned int[(rows - 1) * (cols - 1) *
-		6];
+	unsigned int* auiIndices = new unsigned int[(rows - 1) * (cols - 1) *6];
 	unsigned int index = 0;
 	for (unsigned int r = 0; r < (rows - 1); ++r) {
 		for (unsigned int c = 0; c < (cols - 1); ++c) {
@@ -49,7 +47,7 @@ void RenderGeo::generateGrid(unsigned int rows, unsigned int cols) {
 		}
 	}
 
-
+	glUseProgram(m_programID);
 	// Generate our GL Buffers
 	// Lets move these so that they are all generated together
 	glGenBuffers(1, &m_VBO);
@@ -57,10 +55,12 @@ void RenderGeo::generateGrid(unsigned int rows, unsigned int cols) {
 	//Add the following line to generate a VertexArrayObject
 	glGenVertexArrays(1, &m_VAO);
 	glBindVertexArray(m_VAO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 
 	// create and bind buffers to a vertex array object
 	//glGenBuffers(1, &m_VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+	
 	glBufferData(GL_ARRAY_BUFFER, (rows * cols) * sizeof(Vertex), aoVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -69,13 +69,13 @@ void RenderGeo::generateGrid(unsigned int rows, unsigned int cols) {
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//glGenBuffers(1, &m_IBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
+	
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (rows - 1) * (cols - 1) * 6 * sizeof(unsigned int), auiIndices, GL_STREAM_DRAW);
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	// ....Code Segment here to bind and fill VBO + IBO
 
-	glUseProgram(m_programID);
+	
 	unsigned int projectionViewUniform = glGetUniformLocation(m_programID, "ProjectionView");
 	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(GameCam->GetProjectionView()));
 	glBindVertexArray(m_VAO);
