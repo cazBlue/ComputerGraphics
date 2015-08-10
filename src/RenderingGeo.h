@@ -23,7 +23,8 @@ public:
 	unsigned int m_IBO;
 
 	unsigned int m_programID;
-
+	
+	float m_time;
 };
 
 

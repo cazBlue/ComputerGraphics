@@ -17,15 +17,17 @@ RenderGeo::~RenderGeo()
 
 }
 
-// function to create a grid
-void RenderGeo::generateGrid(unsigned int rows, unsigned int cols) {
+// function to create a flat plane grid
+void RenderGeo::generateGrid(unsigned int rows, unsigned int cols) 
+{
+	//define vertex positions
 	Vertex* aoVertices = new Vertex[rows * cols];
-	for (unsigned int r = 0; r < rows; ++r) {
-		for (unsigned int c = 0; c < cols; ++c) {
-			aoVertices[r * cols + c].position = vec4(
-				(float)c, 0, (float)r, 1);
-			// create some arbitrary colour based off something
-			// that might not be related to tiling a texture
+	for (unsigned int r = 0; r < rows; ++r) 
+	{		
+		for (unsigned int c = 0; c < cols; ++c) 
+		{
+			aoVertices[r * cols + c].position = vec4( (float)c, 0, (float)r, 1); // assign vertex position	
+			//assign a grey to white colour based on sin
 			vec3 colour = vec3(sinf((c / (float)(cols - 1)) * (r / (float)(rows - 1))));
 			aoVertices[r * cols + c].colour = vec4(colour, 1);
 		}
@@ -34,8 +36,10 @@ void RenderGeo::generateGrid(unsigned int rows, unsigned int cols) {
 	// defining index count based off quad count (2 triangles per quad)
 	unsigned int* auiIndices = new unsigned int[(rows - 1) * (cols - 1) *6];
 	unsigned int index = 0;
-	for (unsigned int r = 0; r < (rows - 1); ++r) {
-		for (unsigned int c = 0; c < (cols - 1); ++c) {
+	for (unsigned int r = 0; r < (rows - 1); ++r) 
+	{
+		for (unsigned int c = 0; c < (cols - 1); ++c) 
+		{
 			// triangle 1
 			auiIndices[index++] = r * cols + c;
 			auiIndices[index++] = (r + 1) * cols + c;
@@ -47,46 +51,40 @@ void RenderGeo::generateGrid(unsigned int rows, unsigned int cols) {
 		}
 	}
 
-	glUseProgram(m_programID);
-	// Generate our GL Buffers
-	// Lets move these so that they are all generated together
-	glGenBuffers(1, &m_VBO);
-	glGenBuffers(1, &m_IBO);
-	//Add the following line to generate a VertexArrayObject
-	glGenVertexArrays(1, &m_VAO);
-	glBindVertexArray(m_VAO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+	glUseProgram(m_programID); //select the program to use
 
-	// create and bind buffers to a vertex array object
-	//glGenBuffers(1, &m_VBO);
-	
-	glBufferData(GL_ARRAY_BUFFER, (rows * cols) * sizeof(Vertex), aoVertices, GL_STATIC_DRAW);
+	glBindVertexArray(m_VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
+		
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(vec4)));
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	//glGenBuffers(1, &m_IBO);
 	
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (rows - 1) * (cols - 1) * 6 * sizeof(unsigned int), auiIndices, GL_STREAM_DRAW);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	// ....Code Segment here to bind and fill VBO + IBO
-
+	glBufferData(GL_ARRAY_BUFFER, (rows * cols) * sizeof(Vertex), aoVertices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (rows - 1) * (cols - 1) * 6 * sizeof(unsigned int), auiIndices, GL_STATIC_DRAW);
 	
 	unsigned int projectionViewUniform = glGetUniformLocation(m_programID, "ProjectionView");
 	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(GameCam->GetProjectionView()));
-	glBindVertexArray(m_VAO);
+
+	unsigned int timeUniform = glGetUniformLocation(m_programID, "Time");
+	//float time = 3.91f;
+	glUniform1f(timeUniform, m_time);
+
+	unsigned int heightUniform = glGetUniformLocation(m_programID, "HeightScale");
+	float height = 1.0f;
+	glUniform1f(heightUniform, height);
+	
 	unsigned int indexCount = (rows - 1) * (cols - 1) * 6;
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
 
+	//unbind and delte pointers
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
 	delete[] auiIndices;
 	delete[] aoVertices;
 }
@@ -95,7 +93,7 @@ void RenderGeo::Update(float a_dt)
 {
 	GameCam->Update(a_dt); //update camera
 
-
+	m_time += a_dt;
 }
 
 void RenderGeo::Draw()
@@ -151,6 +149,8 @@ std::string RenderGeo::LoadShader(const char *a_filePath)
 
 bool RenderGeo::Start()
 {
+	m_time = 0.0f;
+
 	Gizmos::create();
 
 	GameCam = new Camera();
@@ -191,6 +191,11 @@ bool RenderGeo::Start()
 	}
 	glDeleteShader(fragmentShader);
 	glDeleteShader(vertexShader);
+
+	// Generate our GL Buffers	
+	glGenBuffers(1, &m_VBO);
+	glGenBuffers(1, &m_IBO);
+	glGenVertexArrays(1, &m_VAO); //generate a VertexArrayObject
 
 	return true; //not being used in this lesson
 }
