@@ -20,6 +20,8 @@ RenderGeo::~RenderGeo()
 // function to create a flat plane grid
 void RenderGeo::generateGrid(unsigned int rows, unsigned int cols) 
 {
+	rows++; //add one to show correct rows/cols
+	cols++;	// ""
 	//define vertex positions
 	Vertex* aoVertices = new Vertex[rows * cols];
 	for (unsigned int r = 0; r < rows; ++r) 
@@ -27,14 +29,17 @@ void RenderGeo::generateGrid(unsigned int rows, unsigned int cols)
 		for (unsigned int c = 0; c < cols; ++c) 
 		{
 			aoVertices[r * cols + c].position = vec4( (float)c, 0, (float)r, 1); // assign vertex position	
-			//assign a grey to white colour based on sin
-			vec3 colour = vec3(sinf((c / (float)(cols - 1)) * (r / (float)(rows - 1))));
+			//assign a rgb colour based on sin and cos (90 deg offset)
+			float sinTime = sinf((m_time  * c / (float)(cols - 1)) * (r / (float)(rows - 1)));
+			float cosTime = cosf((m_time  * c / (float)(cols - 1)) * (r / (float)(rows - 1)));
+			vec3 colour = vec3(sinTime * -1, cosTime, sinTime);
 			aoVertices[r * cols + c].colour = vec4(colour, 1);
 		}
 	}
 
 	// defining index count based off quad count (2 triangles per quad)
-	unsigned int* auiIndices = new unsigned int[(rows - 1) * (cols - 1) *6];
+	unsigned int indexCount = (rows - 1) * (cols - 1) * 6; //index count is the number of vertices to make triangle NOT the vertices with positions
+	unsigned int* auiIndices = new unsigned int[indexCount];
 	unsigned int index = 0;
 	for (unsigned int r = 0; r < (rows - 1); ++r) 
 	{
@@ -51,35 +56,33 @@ void RenderGeo::generateGrid(unsigned int rows, unsigned int cols)
 		}
 	}
 
-	glUseProgram(m_programID); //select the program to use
+	glUseProgram(m_programID);						//select the program to use
+	//bind buffers
+	glBindVertexArray(m_VAO);						//bind vertex array object
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);			//vertex buffer objet
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);	//index buffer object
+	//enable arrays for incoming data
+	glEnableVertexAttribArray(0);					//enable vertex positions in the vertex shader
+	glEnableVertexAttribArray(1);					//enable colour in the vertex shader
+	
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);	//index of poisition within the vertex object
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(vec4))); //index position of the colour data - 1 vec 4 into the vertex block
+	
+	glBufferData(GL_ARRAY_BUFFER, (rows * cols) * sizeof(Vertex), aoVertices, GL_STATIC_DRAW); //push the vertices into vertex buffer object
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (rows - 1) * (cols - 1) * 6 * sizeof(unsigned int), auiIndices, GL_STATIC_DRAW); //push the vertice indexs into the index buffer object
+	
+	unsigned int projectionViewUniform = glGetUniformLocation(m_programID, "ProjectionView");			//get the index of the ProjectionView uniform variable from the vertex shader
+	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(GameCam->GetProjectionView()));	//set the Projection View uniform variabe in the vertex shader
 
-	glBindVertexArray(m_VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
-		
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(vec4)));
-	
-	glBufferData(GL_ARRAY_BUFFER, (rows * cols) * sizeof(Vertex), aoVertices, GL_STATIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (rows - 1) * (cols - 1) * 6 * sizeof(unsigned int), auiIndices, GL_STATIC_DRAW);
-	
-	unsigned int projectionViewUniform = glGetUniformLocation(m_programID, "ProjectionView");
-	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(GameCam->GetProjectionView()));
+	unsigned int timeUniform = glGetUniformLocation(m_programID, "Time");	//get the Time uniform index from the vertex shader
+	glUniform1f(timeUniform, m_time);	//set the Time uniform variabe in the vertex shader
 
-	unsigned int timeUniform = glGetUniformLocation(m_programID, "Time");
-	//float time = 3.91f;
-	glUniform1f(timeUniform, m_time);
-
-	unsigned int heightUniform = glGetUniformLocation(m_programID, "HeightScale");
-	float height = 1.0f;
-	glUniform1f(heightUniform, height);
+	unsigned int heightUniform = glGetUniformLocation(m_programID, "HeightScale"); //get the Time uniform index from the vertex shader
+	float height = 1.0f; //TODO - do something more fun with the hieght value
+	glUniform1f(heightUniform, height); //set the Time uniform variabe in the vertex shader
 	
-	unsigned int indexCount = (rows - 1) * (cols - 1) * 6;
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //enable wireframe render
+	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0); //draw all triangles to screen
 
 	//unbind and delte pointers
 	glBindVertexArray(0);
