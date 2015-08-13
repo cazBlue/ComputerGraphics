@@ -1,4 +1,4 @@
-#ifndef APPOBJLOADER
+#ifndef APPOBJLOADER_H
 #define APPOBJLOADER_H
 #include <Application.h>
 #include <tiny_obj_loader.h>

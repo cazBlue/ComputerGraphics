@@ -40,7 +40,8 @@ void APP_OBJLoader::createOpenGLBuffers(std::vector<tinyobj::shape_t>& shapes)
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}}
+	}
+}
 
 void APP_OBJLoader::Update(float a_dt)
 {

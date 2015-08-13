@@ -9,6 +9,7 @@
 #include <IntroToOpenGL.h>
 #include <RenderingGeo.h>
 #include <APP_ObjLoader.h>
+#include <App_LoadingTextures.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -36,9 +37,10 @@ int main()
 	auto minor = ogl_GetMinorVersion();
 	printf("GL: %i.%i\n", major, minor);	
 	
-	//App *appPtr = new IntroOpenGl(); //create into to opengl app
-	//App *appPtr = new RenderGeo(); //create into to opengl app
-	App *appPtr = new APP_OBJLoader(); //create into to opengl app
+	//App *appPtr = new IntroOpenGl();		//#1 & #2 create intro to opengl app
+	//App *appPtr = new RenderGeo();		//#2 P1 create planes!
+	//App *appPtr = new APP_OBJLoader();	//#2 P2 obj loader
+	App *appPtr = new APP_Texturing();		//#3 texturing!
 	
 	appPtr->Start();
 
