@@ -8,6 +8,8 @@
 #include <Application.h>
 #include <IntroToOpenGL.h>
 #include <RenderingGeo.h>
+#include <APP_ObjLoader.h>
+
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
@@ -35,8 +37,9 @@ int main()
 	printf("GL: %i.%i\n", major, minor);	
 	
 	//App *appPtr = new IntroOpenGl(); //create into to opengl app
-	App *appPtr = new RenderGeo(); //create into to opengl app
-
+	//App *appPtr = new RenderGeo(); //create into to opengl app
+	App *appPtr = new APP_OBJLoader(); //create into to opengl app
+	
 	appPtr->Start();
 
 	//enable unlimited scrolling - hides the cursor
