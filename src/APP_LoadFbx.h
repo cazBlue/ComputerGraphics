@@ -2,6 +2,8 @@
 #define APPLOADFBX_H
 #include <Application.h>
 
+#include <FBXFile.h>
+
 class APP_LoadFbx : public App
 {
 public:
@@ -20,11 +22,13 @@ public:
 
 	unsigned int m_programID;
 
-	unsigned int m_textureID1, m_textureID2;
+	unsigned int m_textureID1, m_textureID2, m_textureID3;
 
 	unsigned int m_vbo, m_vao, m_ibo;
 
 	void loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id);
+
+	FBXFile* fbxFile;
 };
 
 

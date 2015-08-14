@@ -1,15 +1,13 @@
 #pragma once
 
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/epsilon.hpp>
 #include <map>
 #include <vector>
 #include <string>
 #include <thread>
 #include <mutex>
-
-#define GLM_SWIZZLE	
-#include "glm/glm.hpp"
-#include "glm/gtc/quaternion.hpp"
-#include "glm/gtc/epsilon.hpp"
 
 struct ImportAssistor;
 
@@ -20,28 +18,28 @@ public:
 
 	enum VertexAttributeFlags
 	{
-		ePOSITION = (1 << 0),
-		eCOLOUR = (1 << 1),
-		eNORMAL = (1 << 2),
-		eTANGENT = (1 << 3),
-		eBINORMAL = (1 << 4),
-		eINDICES = (1 << 5),
-		eWEIGHTS = (1 << 6),
-		eTEXCOORD1 = (1 << 7),
-		eTEXCOORD2 = (1 << 8),
+		ePOSITION	=	(1<<0),
+		eCOLOUR		=	(1<<1),
+		eNORMAL		=	(1<<2),
+		eTANGENT	=	(1<<3),
+		eBINORMAL	=	(1<<4),
+		eINDICES	=	(1<<5),
+		eWEIGHTS	=	(1<<6),
+		eTEXCOORD1	=	(1<<7),
+		eTEXCOORD2	=	(1<<8),
 	};
 
 	enum Offsets
 	{
-		PositionOffset = 0,
-		ColourOffset = PositionOffset + sizeof(glm::vec4),
-		NormalOffset = ColourOffset + sizeof(glm::vec4),
-		TangentOffset = NormalOffset + sizeof(glm::vec4),
-		BiNormalOffset = TangentOffset + sizeof(glm::vec4),
-		IndicesOffset = BiNormalOffset + sizeof(glm::vec4),
-		WeightsOffset = IndicesOffset + sizeof(glm::vec4),
-		TexCoord1Offset = WeightsOffset + sizeof(glm::vec4),
-		TexCoord2Offset = TexCoord1Offset + sizeof(glm::vec2),
+		PositionOffset	= 0,
+		ColourOffset	= PositionOffset + sizeof(glm::vec4),
+		NormalOffset	= ColourOffset + sizeof(glm::vec4),
+		TangentOffset	= NormalOffset + sizeof(glm::vec4),
+		BiNormalOffset	= TangentOffset + sizeof(glm::vec4),
+		IndicesOffset	= BiNormalOffset + sizeof(glm::vec4),
+		WeightsOffset	= IndicesOffset + sizeof(glm::vec4),
+		TexCoord1Offset	= WeightsOffset + sizeof(glm::vec4),	
+		TexCoord2Offset	= TexCoord1Offset + sizeof(glm::vec2),			
 	};
 
 	FBXVertex();
@@ -83,7 +81,7 @@ struct FBXMaterial
 {
 	enum TextureTypes
 	{
-		DiffuseTexture = 0,
+		DiffuseTexture	= 0,
 		AmbientTexture,
 		GlowTexture,
 		SpecularTexture,
@@ -94,7 +92,7 @@ struct FBXMaterial
 
 		TextureTypes_Count
 	};
-
+	
 	FBXMaterial();
 	~FBXMaterial();
 
@@ -170,7 +168,7 @@ public:
 
 	enum LightType : unsigned int
 	{
-		Point = 0,
+		Point	=	0,
 		Directional,
 		Spot,
 	};
@@ -280,7 +278,7 @@ class FBXFile
 public:
 
 	FBXFile() : m_root(nullptr), m_importAssistor(nullptr) {}
-	~FBXFile()
+	~FBXFile() 
 	{
 		unload();
 	}
@@ -300,7 +298,7 @@ public:
 
 	// must unload a scene before loading a new one over top
 	bool			load(const char* a_filename, UNIT_SCALE a_scale = FBXFile::UNITS_METER, bool a_loadTextures = true, bool a_loadAnimations = true, bool a_flipTextureY = true);
-	bool			loadAnimationsOnly(const char* a_filename, UNIT_SCALE a_scale = FBXFile::UNITS_METER);
+	bool			loadAnimationsOnly(const char* a_filename, UNIT_SCALE a_scale = FBXFile::UNITS_METER );
 	void			unload();
 
 	// goes through all loaded textures and creates their GL versions
@@ -308,21 +306,21 @@ public:
 
 	// the folder path of the FBX file
 	// useful for accessing texture locations
-	const char*			getPath() const				{ return m_path.c_str(); }
+	const char*			getPath() const				{	return m_path.c_str();	}
 
 	// the scene arranged in a tree graph
-	FBXNode*			getRoot() const				{ return m_root; }
+	FBXNode*			getRoot() const				{	return m_root;			}
 
 	// the ambient light of the scene
-	const glm::vec4&	getAmbientLight() const		{ return m_ambientLight; }
+	const glm::vec4&	getAmbientLight() const		{	return m_ambientLight;	}
 
-	unsigned int	getMeshCount() const		{ return m_meshes.size(); }
-	unsigned int	getLightCount() const		{ return m_lights.size(); }
-	unsigned int	getCameraCount() const		{ return m_cameras.size(); }
-	unsigned int	getMaterialCount() const	{ return m_materials.size(); }
-	unsigned int	getSkeletonCount() const	{ return m_skeletons.size(); }
-	unsigned int	getAnimationCount() const	{ return m_animations.size(); }
-	unsigned int	getTextureCount() const		{ return m_textures.size(); }
+	unsigned int	getMeshCount() const		{	return m_meshes.size();		}
+	unsigned int	getLightCount() const		{	return m_lights.size();		}
+	unsigned int	getCameraCount() const		{	return m_cameras.size();	}
+	unsigned int	getMaterialCount() const	{	return m_materials.size();	}
+	unsigned int	getSkeletonCount() const	{	return m_skeletons.size();	}
+	unsigned int	getAnimationCount() const	{	return m_animations.size();	}
+	unsigned int	getTextureCount() const		{	return m_textures.size();	}
 
 	FBXMeshNode*	getMeshByName(const char* a_name);
 	FBXLightNode*	getLightByName(const char* a_name);
@@ -332,11 +330,11 @@ public:
 	FBXTexture*		getTextureByName(const char* a_name);
 
 	// these methods are slow as the items are stored in a map
-	FBXMeshNode*	getMeshByIndex(unsigned int a_index) const	{ return m_meshes[a_index]; }
+	FBXMeshNode*	getMeshByIndex(unsigned int a_index) const	{	return m_meshes[ a_index ];	}
 	FBXLightNode*	getLightByIndex(unsigned int a_index);
 	FBXCameraNode*	getCameraByIndex(unsigned int a_index);
 	FBXMaterial*	getMaterialByIndex(unsigned int a_index);
-	FBXSkeleton*	getSkeletonByIndex(unsigned int a_index)	{ return m_skeletons[a_index]; }
+	FBXSkeleton*	getSkeletonByIndex(unsigned int a_index)	{	return m_skeletons[a_index];	}
 	FBXAnimation*	getAnimationByIndex(unsigned int a_index);
 	FBXTexture*		getTextureByIndex(unsigned int a_index);
 
@@ -353,7 +351,7 @@ private:
 
 	void	extractAnimation(void* a_scene);
 	void	extractAnimationTrack(std::vector<int>& a_tracks, void* a_layer, void* a_node, std::vector<void*>& a_nodes, unsigned int& a_startFrame, unsigned int& a_endFrame);
-
+		
 	FBXMaterial*	extractMaterial(void* a_mesh, int a_materialIndex);
 
 	static void		optimiseMesh(FBXMeshNode* a_mesh);
@@ -369,13 +367,13 @@ private:
 
 	glm::vec4								m_ambientLight;
 	std::vector<FBXMeshNode*>				m_meshes;
-	std::map<std::string, FBXLightNode*>		m_lights;
-	std::map<std::string, FBXCameraNode*>	m_cameras;
-	std::map<std::string, FBXMaterial*>		m_materials;
-	std::map<std::string, FBXTexture*>		m_textures;
+	std::map<std::string,FBXLightNode*>		m_lights;
+	std::map<std::string,FBXCameraNode*>	m_cameras;
+	std::map<std::string,FBXMaterial*>		m_materials;
+	std::map<std::string,FBXTexture*>		m_textures;
 
 	std::vector<FBXSkeleton*>				m_skeletons;
-	std::map<std::string, FBXAnimation*>		m_animations;
+	std::map<std::string,FBXAnimation*>		m_animations;
 
 	ImportAssistor*							m_importAssistor;
 
@@ -389,16 +387,16 @@ private:
 };
 
 //////////////////////////////////////////////////////////////////////////
-inline FBXVertex::FBXVertex()
-	: position(0, 0, 0, 1),
-	colour(1, 1, 1, 1),
-	normal(0, 0, 0, 0),
-	tangent(0, 0, 0, 0),
-	binormal(0, 0, 0, 0),
-	indices(0, 0, 0, 0),
-	weights(0, 0, 0, 0),
-	texCoord1(0, 0),
-	texCoord2(0, 0)
+inline FBXVertex::FBXVertex() 
+	: position(0,0,0,1), 
+	colour(1,1,1,1), 
+	normal(0,0,0,0), 
+	tangent(0,0,0,0), 
+	binormal(0,0,0,0),
+	indices(0,0,0,0), 
+	weights(0,0,0,0),
+	texCoord1(0,0), 
+	texCoord2(0,0) 
 {
 
 }
@@ -410,12 +408,12 @@ inline FBXVertex::~FBXVertex()
 
 inline bool FBXVertex::operator == (const FBXVertex& a_rhs) const
 {
-	return memcmp(this, &a_rhs, sizeof(FBXVertex)) == 0;
+	return memcmp(this,&a_rhs,sizeof(FBXVertex)) == 0;
 }
 
 inline bool FBXVertex::operator < (const FBXVertex& a_rhs) const
 {
-	return memcmp(this, &a_rhs, sizeof(FBXVertex)) < 0;
+	return memcmp(this,&a_rhs,sizeof(FBXVertex)) < 0;
 }
 
 inline FBXTexture::FBXTexture()
@@ -428,40 +426,40 @@ inline FBXTexture::FBXTexture()
 
 }
 
-inline FBXMaterial::FBXMaterial()
-	: ambient(0, 0, 0, 0),
-	diffuse(1, 1, 1, 1),
-	specular(1, 1, 1, 1),
-	emissive(0, 0, 0, 0)
+inline FBXMaterial::FBXMaterial() 
+	: ambient(0,0,0,0),
+	diffuse(1,1,1,1), 
+	specular(1,1,1,1), 
+	emissive(0,0,0,0)
 {
-	memset(textures, 0, TextureTypes_Count * sizeof(FBXTexture*));
-	memset(textureOffsets, 0, TextureTypes_Count * sizeof(glm::vec2));
-	memset(textureTiling, 0, TextureTypes_Count * sizeof(glm::vec2));
-	memset(textureRotation, 0, TextureTypes_Count * sizeof(float));
+	memset(textures,0,TextureTypes_Count * sizeof(FBXTexture*));
+	memset(textureOffsets,0,TextureTypes_Count * sizeof(glm::vec2));
+	memset(textureTiling,0,TextureTypes_Count * sizeof(glm::vec2));
+	memset(textureRotation,0,TextureTypes_Count * sizeof(float));
 }
 
-inline FBXMaterial::~FBXMaterial()
+inline FBXMaterial::~FBXMaterial() 
 {
 
 }
 
-inline FBXNode::FBXNode()
+inline FBXNode::FBXNode() 
 	: m_nodeType(NODE),
-	m_localTransform(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1),
-	m_globalTransform(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1),
-	m_parent(nullptr),
+	m_localTransform(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1), 
+	m_globalTransform(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1),
+	m_parent(nullptr), 
 	m_userData(nullptr)
-{
+{ 
 
 }
 
 inline FBXNode::~FBXNode()
 {
-	for (auto n : m_children)
+	for (auto n : m_children) 
 		delete n;
 }
 
-inline FBXMeshNode::FBXMeshNode()
+inline FBXMeshNode::FBXMeshNode() 
 	: m_vertexAttributes(0),
 	m_material(nullptr)
 {
@@ -473,9 +471,9 @@ inline FBXMeshNode::~FBXMeshNode()
 
 }
 
-inline FBXLightNode::FBXLightNode()
-{
-	m_nodeType = LIGHT;
+inline FBXLightNode::FBXLightNode() 
+{ 
+	m_nodeType = LIGHT; 
 }
 
 inline FBXLightNode::~FBXLightNode()
@@ -484,7 +482,7 @@ inline FBXLightNode::~FBXLightNode()
 }
 
 inline FBXCameraNode::FBXCameraNode()
-{
+{ 
 	m_nodeType = CAMERA;
 }
 
@@ -495,9 +493,9 @@ inline FBXCameraNode::~FBXCameraNode()
 
 inline FBXKeyFrame::FBXKeyFrame()
 	: m_key(0),
-	m_rotation(0, 0, 0, 1),
-	m_translation(0, 0, 0),
-	m_scale(1, 1, 1)
+	m_rotation(0,0,0,1),
+	m_translation(0,0,0),
+	m_scale(1,1,1)
 {
 
 }
@@ -509,8 +507,8 @@ inline FBXKeyFrame::~FBXKeyFrame()
 
 inline FBXTrack::FBXTrack()
 	: m_boneIndex(0),
-	m_keyframeCount(0),
-	m_keyframes(nullptr)
+	m_keyframeCount(0), 
+	m_keyframes(nullptr) 
 {
 
 }
@@ -520,8 +518,8 @@ inline FBXTrack::~FBXTrack()
 	delete[] m_keyframes;
 }
 
-inline FBXAnimation::FBXAnimation()
-	: m_startFrame(0xffffffff),
+inline FBXAnimation::FBXAnimation() 
+	: m_startFrame(0xffffffff), 
 	m_endFrame(0),
 	m_trackCount(0),
 	m_tracks(nullptr)
@@ -529,14 +527,14 @@ inline FBXAnimation::FBXAnimation()
 
 }
 
-inline FBXAnimation::~FBXAnimation()
+inline FBXAnimation::~FBXAnimation() 
 {
 	delete[] m_tracks;
 }
 
 inline unsigned int FBXAnimation::totalFrames() const
-{
-	return m_endFrame - m_startFrame;
+{	
+	return m_endFrame - m_startFrame;	
 }
 
 inline float FBXAnimation::totalTime(float a_fps /* = 24.0f */) const
@@ -544,18 +542,18 @@ inline float FBXAnimation::totalTime(float a_fps /* = 24.0f */) const
 	return (m_endFrame - m_startFrame) / a_fps;
 }
 
-inline FBXSkeleton::FBXSkeleton()
-	: m_boneCount(0),
-	m_nodes(nullptr),
+inline FBXSkeleton::FBXSkeleton() 
+	: m_boneCount(0), 
+	m_nodes(nullptr), 
 	m_parentIndex(nullptr),
-	m_bones(nullptr),
-	m_bindPoses(nullptr),
+	m_bones(nullptr), 
+	m_bindPoses(nullptr), 
 	m_userData(nullptr)
 {
 
 }
 
-inline FBXSkeleton::~FBXSkeleton()
+inline FBXSkeleton::~FBXSkeleton() 
 {
 	delete[] m_parentIndex;
 	delete[] m_nodes;

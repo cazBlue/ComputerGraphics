@@ -1,9 +1,11 @@
 #include <APP_LoadFbx.h>
+#include <vector>
 
-#include <FBXFile.h>
 
 //#define STB_IMAGE_IMPLEMENTATION //declared in fbx loader
 #include <stb_image.h>
+
+using namespace std;
 
 APP_LoadFbx::APP_LoadFbx()
 {
@@ -80,43 +82,47 @@ bool APP_LoadFbx::Start()
 	Gizmos::create();
 	GameCam = new Camera();
 
-	FBXFile* fbxFile = new FBXFile();
+	//FBXFile* fbxFile = new FBXFile();
+
+	fbxFile = new FBXFile();
 
 
+	fbxFile->load("./assets/cube.fbx", fbxFile->UNITS_METER, true, true, true);
+	
+	FBXNode* root = fbxFile->getRoot();
 
+	//fbxFile.initialiseOpenGLTextures();
 
+	//fbxFile.getMeshByName()
 
+//	int imageWidth = 0, imageHeight = 0, imageFormat = 0;
+//	int imageWidth2 = 0, imageHeight2 = 0, imageFormat2 = 0;
+//	m_textureID1 = 0;
+//	m_textureID2 = 0;
+//	m_textureID3 = 0;
 
-
-
-
-
-	int imageWidth = 0, imageHeight = 0, imageFormat = 0;
-	int imageWidth2 = 0, imageHeight2 = 0, imageFormat2 = 0;
-	m_textureID1 = 0;
-	m_textureID2 = 0;
-
-	loadImg(&imageHeight, &imageWidth, &imageFormat, "./assets/textures/crate.png", &m_textureID1);
-	loadImg(&imageHeight2, &imageWidth2, &imageFormat2, "./assets/textures/redarrow.png", &m_textureID2);
+//	loadImg(&imageHeight, &imageWidth, &imageFormat, "./assets/textures/crate.png", &m_textureID1);
+//	loadImg(&imageHeight2, &imageWidth2, &imageFormat2, "./assets/textures/redarrow.png", &m_textureID2);	
 
 	//////////////create shaders and program
 	const char* vsSource = "#version 410\n \
-						   						   layout(location=0) in vec4 Position; \
-												   						   layout(location=1) in vec2 TexCoord; \
-																		   						   out vec2 vTexCoord; \
-																								   						   uniform mat4 ProjectionView; \
-																														   						   void main() { \
-																																				   						   vTexCoord = TexCoord; \
-																																										   						   gl_Position= ProjectionView * Position;\
-																																																   						   }";
+		layout(location=0) in vec4 Position; \
+		layout(location=1) in vec2 TexCoord; \
+		out vec2 vTexCoord; \
+		uniform mat4 ProjectionView; \
+		void main() { \
+		vTexCoord = TexCoord; \
+		gl_Position= ProjectionView * Position;\
+	}";
 	const char* fsSource = "#version 410\n \
-						   						   in vec2 vTexCoord; \
-												   						   out vec4 FragColor; \
-																		   						   uniform sampler2D diffuse; \
-																								   						   uniform sampler2D blend; \
-																														   						   void main() { \
-																																				   						   FragColor = texture(diffuse,vTexCoord) * texture(blend,vTexCoord);\
-																																										   						   }";
+		in vec2 vTexCoord; \
+		out vec4 FragColor; \
+		uniform sampler2D diffuse; \
+		uniform sampler2D blend; \
+		void main() { \
+		FragColor = texture(diffuse,vTexCoord) * texture(blend,vTexCoord);\
+	}";
+
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, (const char**)&vsSource, 0);
 	glCompileShader(vertexShader);
@@ -141,6 +147,18 @@ bool APP_LoadFbx::Start()
 		0, 1, 2,
 		0, 2, 3,
 	};
+
+//	FBXMeshNode* mesh = fbxFile.getMeshByIndex(0);
+
+//	std::vector<FBXVertex> verts = mesh->m_vertices;
+//	
+//	for (auto it = verts.begin(); it != verts.end(); ++it)
+//	{
+//		it->position;
+//		int temp = 0;
+//	}
+//
+	//FBXVertex* vertex = mesh->get;
 
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);

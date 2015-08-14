@@ -10,6 +10,7 @@
 #include <RenderingGeo.h>
 #include <APP_ObjLoader.h>
 #include <App_LoadingTextures.h>
+#include <APP_LoadFbx.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -40,7 +41,8 @@ int main()
 	//App *appPtr = new IntroOpenGl();		//#1 & #2 create intro to opengl app
 	//App *appPtr = new RenderGeo();		//#2 P1 create planes!
 	//App *appPtr = new APP_OBJLoader();	//#2 P2 obj loader
-	App *appPtr = new APP_Texturing();		//#3 texturing!
+	//App *appPtr = new APP_Texturing();	//#3 texturing!
+	App *appPtr = new APP_LoadFbx();		//#4 FBX loader!
 	
 	appPtr->Start();
 
