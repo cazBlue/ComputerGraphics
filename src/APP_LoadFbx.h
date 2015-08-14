@@ -2,7 +2,7 @@
 #define APPLOADFBX_H
 #include <Application.h>
 
-#include <FBXFile.h>
+class FBXFile;
 
 class APP_LoadFbx : public App
 {
@@ -28,7 +28,7 @@ public:
 
 	void loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id);
 
-	FBXFile* fbxFile;
+	//FBXFile* fbxFile;
 };
 
 

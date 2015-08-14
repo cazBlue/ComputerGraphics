@@ -4,6 +4,10 @@
 
 //#define STB_IMAGE_IMPLEMENTATION //declared in fbx loader
 #include <stb_image.h>
+#include <FBXFile.h>
+
+#include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -82,14 +86,44 @@ bool APP_LoadFbx::Start()
 	Gizmos::create();
 	GameCam = new Camera();
 
-	//FBXFile* fbxFile = new FBXFile();
+	FBXFile* fbxFile = new FBXFile();
 
-	fbxFile = new FBXFile();
+	//fbxFile = new FBXFile();
+
+	fbxFile->unload();
 
 
-	fbxFile->load("./assets/cube.fbx", fbxFile->UNITS_METER, true, true, true);
-	
+	std::string strShaderCode; //file info holder --TODO create array of file names
+	//open shader file
+	std::ifstream shaderStream("./assets/fbxToLoad.txt");
+	//if that worked ok, load file line by line
+
+	if (shaderStream.is_open())
+	{
+		std::string Line = "";
+		while (std::getline(shaderStream, Line))
+		{
+			//strShaderCode += "\n" + Line;
+			strShaderCode += Line;
+		}
+		shaderStream.close();
+	}
+
+	const char* path = strShaderCode.c_str();
+	//fsSource = fsResult.c_str();
+
+
+	bool didLoad = fbxFile->load(path, fbxFile->UNITS_METER, true, true, true);
+	if (didLoad)
+		printf("loaded");
+	else
+		printf("no load");
+
 	FBXNode* root = fbxFile->getRoot();
+
+	//fbxFile->unload(); //called in deconstructor
+
+//	delete fbxFile;
 
 	//fbxFile.initialiseOpenGLTextures();
 
