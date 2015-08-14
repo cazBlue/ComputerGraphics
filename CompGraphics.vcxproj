@@ -41,6 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -52,13 +53,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;GLM_SWIZZLE;GLM_FORCE_PURE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\aieutilities-master;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\include;$(SolutionDir)src;$(SolutionDir)dep\glm;$(SolutionDir)dep\tinyOBJ;$(SolutionDir)dep\stb-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\aieutilities-master;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\include;$(SolutionDir)src;$(SolutionDir)dep\glm;$(SolutionDir)dep\tinyOBJ;$(SolutionDir)dep\stb-master;$(SolutionDir)dep\FBXLoader_2013;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;FBXLoader_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\FBXLoader_2013</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -84,6 +85,7 @@
   <ItemGroup>
     <ClCompile Include="dep\aieutilities-master\aie\Gizmos.cpp" />
     <ClCompile Include="dep\tinyOBJ\tiny_obj_loader.cc" />
+    <ClCompile Include="src\APP_LoadFbx.cpp" />
     <ClCompile Include="src\App_LoadingTextures.cpp" />
     <ClCompile Include="src\APP_ObjLoader.cpp" />
     <ClCompile Include="src\Camera.cpp" />
@@ -96,6 +98,7 @@
     <ClInclude Include="dep\aieutilities-master\aie\Gizmos.h" />
     <ClInclude Include="dep\tinyOBJ\tiny_obj_loader.h" />
     <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\APP_LoadFbx.h" />
     <ClInclude Include="src\App_LoadingTextures.h" />
     <ClInclude Include="src\APP_ObjLoader.h" />
     <ClInclude Include="src\Camera.h" />

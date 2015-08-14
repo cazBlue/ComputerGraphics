@@ -1,6 +1,6 @@
 #include <App_LoadingTextures.h>
 
-#define STB_IMAGE_IMPLEMENTATION
+//#define STB_IMAGE_IMPLEMENTATION //declared in fbx loader
 #include <stb_image.h>
 
 APP_Texturing::APP_Texturing()
@@ -62,12 +62,14 @@ void APP_Texturing::Draw()
 
 void APP_Texturing::loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id)
 {	
-	unsigned char* data = stbi_load(a_path, a_width, a_height, a_format, STBI_rgb); //request no alpha
+	unsigned char* data = stbi_load(a_path, a_width, a_height, a_format, STBI_rgb); //request no alpha
+
 	glGenTextures(1, a_id);
 	glBindTexture(GL_TEXTURE_2D, (*a_id));
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (*a_width), (*a_height), 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
 	stbi_image_free(data); //unload the image data
 }
 

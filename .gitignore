@@ -4,6 +4,9 @@
 
 assets/largeAssets/
 Debug/
+FBXLoader_d.lib
+dep/FBXLoader_d.lib
+
 
 # Compiled Object files
 *.slo

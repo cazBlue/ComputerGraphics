@@ -42,6 +42,9 @@
     <ClCompile Include="src\App_LoadingTextures.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\APP_LoadFbx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\gl_core_4_4.h">
@@ -69,6 +72,9 @@
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="src\App_LoadingTextures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\APP_LoadFbx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

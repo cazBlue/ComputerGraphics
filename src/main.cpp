@@ -61,6 +61,8 @@ int main()
 		glEnable(GL_DEPTH_TEST); // enables the depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		
+
 		float currentTime = (float)glfwGetTime();
 		float deltaTime = currentTime - previousTime; // prev of last frame
 		previousTime = currentTime;
