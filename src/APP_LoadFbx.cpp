@@ -86,7 +86,7 @@ bool APP_LoadFbx::Start()
 	Gizmos::create();
 	GameCam = new Camera();
 
-	FBXFile* fbxFile = new FBXFile();
+	//FBXFile* fbxFile = new FBXFile();
 
 	//fbxFile = new FBXFile();
 
@@ -218,6 +218,8 @@ bool APP_LoadFbx::Shutdown()
 {
 	delete GameCam;
 	Gizmos::destroy();
+
+	delete fbxFile;
 
 	return true; //not being used in this lesson
 }
