@@ -1,1 +1,1 @@
-./assets/sphere.fbx
+./assets/soulspear/soulspear.fbx

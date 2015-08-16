@@ -9,6 +9,7 @@
 #include <thread>
 #include <mutex>
 
+//defines from GLEW to ensure things keep running
 #define GL_LUMINANCE 0x1909
 #define GL_LUMINANCE_ALPHA 0x190A
 #define GL_BITMAP 0x1A00

@@ -125,7 +125,7 @@ bool APP_LoadFbx::Start()
 
 //	delete fbxFile;
 
-	//fbxFile.initialiseOpenGLTextures();
+	fbxFile->initialiseOpenGLTextures();
 
 	//fbxFile.getMeshByName()
 
