@@ -28,6 +28,8 @@ public:
 
 	void loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id);
 
+	void createOpenGLBuffers();
+
 	FBXFile* fbxFile;
 };
 

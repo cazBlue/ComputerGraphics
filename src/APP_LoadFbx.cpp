@@ -88,9 +88,9 @@ bool APP_LoadFbx::Start()
 
 	//FBXFile* fbxFile = new FBXFile();
 
-	//fbxFile = new FBXFile();
+	fbxFile = new FBXFile();
 
-	fbxFile->unload();
+	//fbxFile->unload();
 
 
 	std::string strShaderCode; //file info holder --TODO create array of file names
@@ -121,6 +121,7 @@ bool APP_LoadFbx::Start()
 
 	FBXNode* root = fbxFile->getRoot();
 
+	
 	//fbxFile->unload(); //called in deconstructor
 
 //	delete fbxFile;
@@ -212,6 +213,12 @@ bool APP_LoadFbx::Start()
 
 
 	return true; //not being used in this lesson
+}
+
+
+void APP_LoadFbx::createOpenGLBuffers()
+{
+	//loop through all meshes in fbx 
 }
 
 bool APP_LoadFbx::Shutdown()
