@@ -283,11 +283,8 @@ class FBXFile
 {
 public:
 
-	FBXFile() : m_root(nullptr), m_importAssistor(nullptr) {}
-	~FBXFile() 
-	{
-		unload();
-	}
+	FBXFile();
+	~FBXFile();
 
 	enum UNIT_SCALE
 	{
@@ -449,15 +446,17 @@ inline FBXMaterial::~FBXMaterial()
 
 }
 
+/*
 inline FBXNode::FBXNode() 
 	: m_nodeType(NODE),
 	m_localTransform(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1), 
 	m_globalTransform(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1),
 	m_parent(nullptr), 
-	m_userData(nullptr)
-{ 
-
+	m_userData(nullptr)	
+{ 	
+	m_name = "";
 }
+*/
 
 inline FBXNode::~FBXNode()
 {
@@ -465,12 +464,7 @@ inline FBXNode::~FBXNode()
 		delete n;
 }
 
-inline FBXMeshNode::FBXMeshNode() 
-	: m_vertexAttributes(0),
-	m_material(nullptr)
-{
-	m_nodeType = MESH;
-}
+
 
 inline FBXMeshNode::~FBXMeshNode()
 {

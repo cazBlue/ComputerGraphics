@@ -112,7 +112,7 @@ bool APP_LoadFbx::Start()
 	const char* path = strShaderCode.c_str();
 	//fsSource = fsResult.c_str();
 
-
+	//issue tracked to line 184 in FBXFile.cpp
 	bool didLoad = fbxFile->load(path, fbxFile->UNITS_METER, true, true, true);
 	if (didLoad)
 		printf("loaded");
@@ -195,22 +195,53 @@ bool APP_LoadFbx::Start()
 //
 	//FBXVertex* vertex = mesh->get;
 
-	glGenVertexArrays(1, &m_vao);
-	glBindVertexArray(m_vao);
-	glGenBuffers(1, &m_vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)* 6 * 4, vertexData, GL_STATIC_DRAW);
-	glGenBuffers(1, &m_ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)* 6, indexData, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float)* 6, 0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float)* 6, ((char*)0) + 16);
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	m_gl_info.resize(fbxFile->getMeshCount()); //set gl object array size
 
+	//loop through all meshes loaded
+	for (unsigned int meshIndex = 0; meshIndex < fbxFile->getMeshCount(); ++meshIndex)
+	{
+		printf("looping through: %d ", meshIndex);
+
+		FBXMeshNode* meshNode = fbxFile->getMeshByIndex(0);
+		//std::vector<FBXVertex> vertices = meshNode->m_vertices;
+
+		unsigned int size = (*meshNode).m_vertices.size();
+
+		for (unsigned int vertIndex = 0; vertIndex < size; ++vertIndex)
+		{
+			printf("added vert: %d", vertIndex);
+		}
+
+		std::vector<float> vertex_data;
+		//unsigned int size = meshNode->m_vertices;
+		
+
+		glGenVertexArrays(1, &m_gl_info[meshIndex].m_VAO);
+		glGenBuffers(1, &m_gl_info[meshIndex].m_IBO);
+		glGenBuffers(1, &m_gl_info[meshIndex].m_VBO);
+
+		glBindVertexArray(m_gl_info[meshIndex].m_VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_gl_info[meshIndex].m_VBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_info[meshIndex].m_IBO);
+
+
+
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float)* 6 * 4, vertexData , GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)* 6, indexData, GL_STATIC_DRAW);
+		
+		//set position
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float)* 6, 0);
+		
+		//set colour - TODO check if colour or tex verts
+		glEnableVertexAttribArray(1);		
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float)* 6, ((char*)0) + 16);
+		
+		//clear buffers
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
 
 	return true; //not being used in this lesson
 }

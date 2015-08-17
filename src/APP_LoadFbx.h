@@ -1,6 +1,7 @@
 #ifndef APPLOADFBX_H
 #define APPLOADFBX_H
 #include <Application.h>
+#include <vector>
 
 class FBXFile;
 
@@ -29,6 +30,16 @@ public:
 	void loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id);
 
 	void createOpenGLBuffers();
+
+	struct OpenGLInfo
+	{
+		unsigned int m_VAO;
+		unsigned int m_VBO;
+		unsigned int m_IBO;
+		unsigned int m_index_count;
+	};
+
+	std::vector<OpenGLInfo> m_gl_info;
 
 	FBXFile* fbxFile;
 };

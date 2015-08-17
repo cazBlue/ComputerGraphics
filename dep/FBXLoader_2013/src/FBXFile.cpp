@@ -35,6 +35,36 @@ struct ImportAssistor
 	std::map<std::string,int> boneIndexList;
 };
 
+FBXFile::FBXFile()
+{
+	m_root = nullptr;
+	m_importAssistor = nullptr;
+}
+
+FBXFile::~FBXFile()
+{
+	unload();
+}
+
+FBXMeshNode::FBXMeshNode()
+{
+	//FBXNode::FBXNode(a_name);
+	m_nodeType = MESH;
+	m_vertexAttributes = 0;
+	m_material = nullptr;
+}
+
+FBXNode::FBXNode()
+{
+	m_name = "";
+	m_nodeType = NODE;
+	m_localTransform = glm::mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+	m_globalTransform = glm::mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+	m_parent = nullptr;
+	m_userData = nullptr;	
+}
+
+
 void FBXFile::unload()
 {
 	delete m_root;

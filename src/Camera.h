@@ -6,7 +6,7 @@
 #include <glm/ext.hpp>
 #include <GLFW\glfw3.h>
 
-class GLFWwindow;
+struct GLFWwindow;
 
 class Camera
 {

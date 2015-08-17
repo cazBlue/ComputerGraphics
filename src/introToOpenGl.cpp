@@ -13,7 +13,7 @@ void IntroOpenGl::Update(float a_dt)
 {
 	GameCam->Update(a_dt); //update camera
 
-	rot += .0001;
+	rot += .0001f;
 
 	parentTrans = glm::rotate(rot, vec3(0, 1, 0));
 

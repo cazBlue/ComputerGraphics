@@ -69,7 +69,7 @@ void Camera::cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
 		else
 			camera->m_rotateRight = true;
 
-		camera->m_lastMousePosX = xpos; //set to last position
+		camera->m_lastMousePosX = (float)xpos; //set to last position
 	}
 
 	if (camera->m_lastMousePosY != ypos)
@@ -79,7 +79,7 @@ void Camera::cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
 		else
 			camera->m_rotateDown = true;
 
-		camera->m_lastMousePosY = ypos; //set to last position
+		camera->m_lastMousePosY = (float)ypos; //set to last position
 	}
 }
 
