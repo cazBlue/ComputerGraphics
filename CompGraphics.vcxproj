@@ -49,14 +49,15 @@
       </PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;GLM_SWIZZLE;GLM_FORCE_PURE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\aieutilities-master;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\include;$(SolutionDir)src;$(SolutionDir)dep\glm;$(SolutionDir)dep\tinyOBJ;$(SolutionDir)dep\stb-master;$(SolutionDir)dep\FBXLoader_2013;$(SolutionDir)dep\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\aieutilities-master;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\include;$(SolutionDir)src;$(SolutionDir)dep\glm;$(SolutionDir)dep\tinyOBJ;$(SolutionDir)dep\stb-master;$(SolutionDir)dep\FBXLoader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;FBXLoader_d.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\FBXLoader_2013;$(SolutionDir)dep\glew\lib\Release\Win32\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;FBXLoader_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\FBXLoader</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -86,7 +87,6 @@
     <ClCompile Include="src\App_LoadingTextures.cpp" />
     <ClCompile Include="src\APP_ObjLoader.cpp" />
     <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\gl_core_4_4.c" />
     <ClCompile Include="src\introToOpenGl.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\RenderingGeo.cpp" />
@@ -99,7 +99,6 @@
     <ClInclude Include="src\App_LoadingTextures.h" />
     <ClInclude Include="src\APP_ObjLoader.h" />
     <ClInclude Include="src\Camera.h" />
-    <ClInclude Include="src\gl_core_4_4.h" />
     <ClInclude Include="src\IntroToOpenGL.h" />
     <ClInclude Include="src\RenderingGeo.h" />
   </ItemGroup>

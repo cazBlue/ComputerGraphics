@@ -119,6 +119,9 @@ bool APP_LoadFbx::Start()
 	else
 		printf("no load");
 
+
+
+	//hell year
 	FBXNode* root = fbxFile->getRoot();
 
 	

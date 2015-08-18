@@ -7,6 +7,8 @@ Debug/
 FBXLoader_d.lib
 dep/FBXLoader_2013/FBXLoader_d.lib
 dep/FBXLoader_2013/FBXLoader.lib
+dep/FBXLoader/FBXLoader_d.lib
+dep/FBXLoader/FBXLoader.lib
 
 
 # Compiled Object files
