@@ -9,12 +9,6 @@
 #include <thread>
 #include <mutex>
 
-//defines from GLEW to ensure things keep running
-#define GL_LUMINANCE 0x1909
-#define GL_LUMINANCE_ALPHA 0x190A
-#define GL_BITMAP 0x1A00
-#define GL_POINT 0x1B00
-
 struct ImportAssistor;
 
 // A complete vertex structure with all the data needed from the FBX file
@@ -283,8 +277,11 @@ class FBXFile
 {
 public:
 
-	FBXFile();
-	~FBXFile();
+	FBXFile() : m_root(nullptr), m_importAssistor(nullptr) {}
+	~FBXFile() 
+	{
+		unload();
+	}
 
 	enum UNIT_SCALE
 	{
@@ -446,17 +443,15 @@ inline FBXMaterial::~FBXMaterial()
 
 }
 
-/*
 inline FBXNode::FBXNode() 
 	: m_nodeType(NODE),
 	m_localTransform(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1), 
 	m_globalTransform(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1),
 	m_parent(nullptr), 
-	m_userData(nullptr)	
-{ 	
-	m_name = "";
+	m_userData(nullptr)
+{ 
+
 }
-*/
 
 inline FBXNode::~FBXNode()
 {
@@ -464,7 +459,12 @@ inline FBXNode::~FBXNode()
 		delete n;
 }
 
-
+inline FBXMeshNode::FBXMeshNode() 
+	: m_vertexAttributes(0),
+	m_material(nullptr)
+{
+	m_nodeType = MESH;
+}
 
 inline FBXMeshNode::~FBXMeshNode()
 {

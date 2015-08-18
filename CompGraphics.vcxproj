@@ -49,14 +49,14 @@
       </PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;GLM_SWIZZLE;GLM_FORCE_PURE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\aieutilities-master;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\include;$(SolutionDir)src;$(SolutionDir)dep\glm;$(SolutionDir)dep\tinyOBJ;$(SolutionDir)dep\stb-master;$(SolutionDir)dep\FBXLoader_2013;$(SolutionDir)dep\FBXLoader_2013\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\aieutilities-master;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\include;$(SolutionDir)src;$(SolutionDir)dep\glm;$(SolutionDir)dep\tinyOBJ;$(SolutionDir)dep\stb-master;$(SolutionDir)dep\FBXLoader_2013;$(SolutionDir)dep\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;FBXLoader_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\FBXLoader_2013\lib\vs2013</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;FBXLoader_d.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\FBXLoader_2013;$(SolutionDir)dep\glew\lib\Release\Win32\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
