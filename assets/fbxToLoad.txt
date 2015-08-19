@@ -1,1 +1,1 @@
-./assets/cube.fbx
+./assets/stanford/Bunny.fbx

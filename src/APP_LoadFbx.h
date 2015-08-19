@@ -21,27 +21,34 @@ public:
 
 	std::string LoadShader(const char *a_filePath);
 
-	unsigned int m_programID;
+//	std::string LoadShader(const char *a_filePath);
 
-	unsigned int m_textureID1, m_textureID2, m_textureID3;
+//	unsigned int m_programID;
 
-	unsigned int m_vbo, m_vao, m_ibo;
+//	unsigned int m_textureID1, m_textureID2, m_textureID3;
 
-	void loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id);
+//	unsigned int m_vbo, m_vao, m_ibo;
 
-	void createOpenGLBuffers();
+//	void loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id);
 
-	struct OpenGLInfo
-	{
-		unsigned int m_VAO;
-		unsigned int m_VBO;
-		unsigned int m_IBO;
-		unsigned int m_index_count;
-	};
+//	void createOpenGLBuffers();
 
-	std::vector<OpenGLInfo> m_gl_info;
+//	struct OpenGLInfo
+//	{
+//		unsigned int m_VAO;
+//		unsigned int m_VBO;
+//		unsigned int m_IBO;
+//		unsigned int m_index_count;
+//	};
+//
+//	std::vector<OpenGLInfo> m_gl_info;
 
-	FBXFile* fbxFile;
+//	FBXFile* fbxFile;
+
+	void createOpenGLBuffers(FBXFile* fbx);
+	void cleanupOpenGLBuffers(FBXFile* fbx);
+	FBXFile* m_fbx;
+	unsigned int m_program;
 };
 
 
