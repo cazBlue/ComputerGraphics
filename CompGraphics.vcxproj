@@ -102,6 +102,12 @@
     <ClInclude Include="src\IntroToOpenGL.h" />
     <ClInclude Include="src\RenderingGeo.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\FBXFragShader.glsl" />
+    <None Include="assets\shaders\FBXVertexShader.glsl" />
+    <None Include="assets\shaders\FragShader.glsl" />
+    <None Include="assets\shaders\VertexShader.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

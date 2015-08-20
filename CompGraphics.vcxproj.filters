@@ -72,4 +72,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\FBXFragShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\FBXVertexShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\FragShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\VertexShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

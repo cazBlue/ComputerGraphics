@@ -1,1 +1,1 @@
-./assets/stanford/Bunny.fbx
+./assets/soulspear/soulspear.fbx
