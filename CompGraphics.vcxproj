@@ -105,6 +105,8 @@
     <ClInclude Include="src\RenderingGeo.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\AdvTexFragShader.glsl" />
+    <None Include="assets\shaders\AdvTexVertexShader.glsl" />
     <None Include="assets\shaders\FBXFragShader.glsl" />
     <None Include="assets\shaders\FBXVertexShader.glsl" />
     <None Include="assets\shaders\FragShader.glsl" />

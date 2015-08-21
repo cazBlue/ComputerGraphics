@@ -50,10 +50,11 @@ void APP_AdvTex::Draw()
 	int loc = glGetUniformLocation(m_program, "ProjectionView");
 	glUniformMatrix4fv(loc, 1, GL_FALSE, &(GameCam->GetProjectionView()[0][0]));
 
+	
 	int lightDirUniform = -1;
 	// bind the directional light position for a directional light
 	lightDirUniform = glGetUniformLocation(m_program, "directionalLight");	//get the directional light uniform index from the vertex shader
-	glm::vec3 dirLight = glm::vec3(0, 1, -10); //controls the lights position in the world	
+	glm::vec3 dirLight = glm::vec3(sin(glfwGetTime()), 1, cos(glfwGetTime())); //controls the lights position in the world	
 	glUniform3fv(lightDirUniform, 1, glm::value_ptr(dirLight));	//set the lightDir uniform variabe in the vertex shader
 
 	// bind the point light position for a directional light
@@ -73,13 +74,24 @@ void APP_AdvTex::Draw()
 
 	// bind change the spec power
 	int specPosUniform = glGetUniformLocation(m_program, "SpecPow");	//get the Time uniform index from the vertex shader
-	GLfloat specPow = 512; //controls the lights position in the world		
+	GLfloat specPow = 1024; //controls the lights position in the world		
 	glUniform1f(specPosUniform, specPow);	//set the lightDir uniform variabe in the vertex shader
 
 	// bind our vertex array object and draw the mesh
 	for (unsigned int i = 0; i < m_fbx->getMeshCount(); ++i) {
 		FBXMeshNode* mesh = m_fbx->getMeshByIndex(i);
 		unsigned int* glData = (unsigned int*)mesh->m_userData;
+
+		//set diffuse texture	
+		glActiveTexture(GL_TEXTURE0); //set for initial active texture		
+		int difLoc = glGetUniformLocation(m_program, "Diffuse"); //get diffuse location
+		glUniform1i(difLoc, 0); //set to the diffuse to the texture index	
+
+		//set normal texture	
+		glActiveTexture(GL_TEXTURE0 + 1); //set for initial active texture		
+		int normalLoc = glGetUniformLocation(m_program, "NormalTex"); //get diffuse location
+		glUniform1i(normalLoc, 1); //set to the diffuse to the texture index	
+
 		glBindVertexArray(glData[0]);
 		glDrawElements(GL_TRIANGLES,
 			(unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
@@ -138,7 +150,7 @@ bool APP_AdvTex::Start()
 
 	std::string strShaderCode; //file info holder --TODO create array of file names
 	//open shader file
-	std::ifstream shaderStream("./assets/fbxToLoad.txt");
+	std::ifstream shaderStream("./assets/fbxToLoadAdvTex.txt");
 	//if that worked ok, load file line by line
 
 	if (shaderStream.is_open())
@@ -162,15 +174,13 @@ bool APP_AdvTex::Start()
 	else
 		printf("no load");
 
-	createOpenGLBuffers(m_fbx);
-
 	//////////////create shaders and program	
 	const char* vsSource = nullptr;
-	std::string vsResult = LoadShader("./assets/shaders/FBXVertexShader.glsl");
+	std::string vsResult = LoadShader("./assets/shaders/AdvTexVertexShader.glsl");
 	vsSource = vsResult.c_str();
 
 	const char* fsSource = nullptr;
-	std::string fsResult = LoadShader("./assets/shaders/FBXFragShader.glsl");
+	std::string fsResult = LoadShader("./assets/shaders/AdvTexFragShader.glsl");
 	fsSource = fsResult.c_str();
 
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -186,6 +196,7 @@ bool APP_AdvTex::Start()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
+	createOpenGLBuffers(m_fbx);
 
 	return true; //not being used in this lesson
 }
@@ -203,9 +214,10 @@ void APP_AdvTex::createOpenGLBuffers(FBXFile* fbx)
 		FBXMaterial* mat = mesh->m_material;
 
 		FBXTexture* diffuesTex = mat->textures[FBXMaterial::TextureTypes::DiffuseTexture];
+		FBXTexture* normalTex = mat->textures[FBXMaterial::TextureTypes::NormalTexture];
 
-		// storage for the opengl data in 4 unsigned int (includes diffuse texID)
-		unsigned int* glData = new unsigned int[4];
+		// storage for the opengl data in 4 unsigned int (includes diffuse texID (3) and normal texID (4))
+		unsigned int* glData = new unsigned int[5];
 
 		glGenVertexArrays(1, &glData[0]);
 		glBindVertexArray(glData[0]);
@@ -221,16 +233,35 @@ void APP_AdvTex::createOpenGLBuffers(FBXFile* fbx)
 		glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE, sizeof(FBXVertex), ((char*)0) + FBXVertex::NormalOffset);
 		glEnableVertexAttribArray(2); // colour / tex cords
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_TRUE, sizeof(FBXVertex), ((char*)0) + FBXVertex::TexCoord1Offset);
+		glEnableVertexAttribArray(3); // tangent coords / tex cords
+		glVertexAttribPointer(3, 4, GL_FLOAT, GL_TRUE, sizeof(FBXVertex), ((char*)0) + FBXVertex::TangentOffset);
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		//gen texture id and bind texture to buffer 
+		//gen diffuse texture id and bind texture to buffer 
+		glActiveTexture(GL_TEXTURE0); //texture are we binding to
 		glGenTextures(1, &glData[3]);
 		glBindTexture(GL_TEXTURE_2D, glData[3]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, diffuesTex->width, diffuesTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, diffuesTex->data);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+//		int difLoc = glGetUniformLocation(m_program, "Diffuse"); //get diffuse location
+//		glUniform1i(difLoc, 0); //set to the diffuse to the texture index	
+
+		//gen normal texture id and bind texture to buffer 
+//		glActiveTexture(GL_TEXTURE0 + 1);
+		glActiveTexture(GL_TEXTURE0 + 1); //texture are we binding to
+		glGenTextures(1, &glData[4]);
+		glBindTexture(GL_TEXTURE_2D, glData[4]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, normalTex->width, normalTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, normalTex->data);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	
+
+//		glActiveTexture(GL_TEXTURE0 + 1);
+//		int normalLoc = glGetUniformLocation(m_program, "Normal"); //get normal location
+//		glUniform1i(normalLoc, 1); //set to the diffuse to the texture index			
 
 		mesh->m_userData = glData;
 	}

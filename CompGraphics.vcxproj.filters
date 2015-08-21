@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\shaders">
+      <UniqueIdentifier>{535d2ac0-c196-485d-9514-6c80412d91c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -79,17 +82,23 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\AdvTexFragShader.glsl">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="assets\shaders\AdvTexVertexShader.glsl">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
     <None Include="assets\shaders\FBXFragShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="assets\shaders\FBXVertexShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="assets\shaders\FragShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="assets\shaders\VertexShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>
 </Project>
