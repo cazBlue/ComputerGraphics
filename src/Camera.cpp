@@ -24,6 +24,24 @@ Camera::Camera()
 	m_lastMousePosY = 0;
 }
 
+void Camera::SetPosition(glm::vec3 a_position)
+{
+	//set the camera position
+	m_worldTransform *= glm::translate(a_position);
+
+	UpdateProjectionViewTransform(); //make sure things stay alinged
+}
+
+void Camera::SetPerspective(float a_FOV, float a_aspectRatio,
+	float a_near, float a_far)
+{
+	//m_viewTransform = glm::lookAt(a_lookAt, a_centre, a_up);
+	m_projectionTransform = glm::perspective(a_FOV,
+		a_aspectRatio, a_near, a_far);
+
+	m_worldTransform = glm::inverse(m_viewTransform);
+}
+
 Camera::Camera(glm::vec3 a_lookAt, glm::vec3 a_centre, glm::vec3 a_up, 
 	float a_nearClip, float a_farClip, float a_FOV, float a_aspectRatio, float a_moveSpeed)
 {

@@ -84,6 +84,7 @@
     <ClCompile Include="dep\aieutilities-master\aie\Gizmos.cpp" />
     <ClCompile Include="dep\tinyOBJ\tiny_obj_loader.cc" />
     <ClCompile Include="src\APP_AdvTexturing.cpp" />
+    <ClCompile Include="src\APP_Animation.cpp" />
     <ClCompile Include="src\APP_LoadFbx.cpp" />
     <ClCompile Include="src\App_LoadingTextures.cpp" />
     <ClCompile Include="src\APP_ObjLoader.cpp" />
@@ -97,6 +98,7 @@
     <ClInclude Include="dep\tinyOBJ\tiny_obj_loader.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\APP_AdvTexturing.h" />
+    <ClInclude Include="src\APP_Animation.h" />
     <ClInclude Include="src\APP_LoadFbx.h" />
     <ClInclude Include="src\App_LoadingTextures.h" />
     <ClInclude Include="src\APP_ObjLoader.h" />
@@ -107,6 +109,8 @@
   <ItemGroup>
     <None Include="assets\shaders\AdvTexFragShader.glsl" />
     <None Include="assets\shaders\AdvTexVertexShader.glsl" />
+    <None Include="assets\shaders\AnimFragShader.glsl" />
+    <None Include="assets\shaders\AnimVertexShader.glsl" />
     <None Include="assets\shaders\FBXFragShader.glsl" />
     <None Include="assets\shaders\FBXVertexShader.glsl" />
     <None Include="assets\shaders\FragShader.glsl" />

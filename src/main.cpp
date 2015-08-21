@@ -12,6 +12,7 @@
 #include <App_LoadingTextures.h>
 #include <APP_LoadFbx.h>
 #include <APP_AdvTexturing.h>
+#include <APP_Animation.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -44,8 +45,9 @@ int main()
 	//App *appPtr = new APP_OBJLoader();	//#2 P2 obj loader
 	//App *appPtr = new APP_Texturing();	//#3 texturing!
 	//App *appPtr = new APP_LoadFbx();		//#4 FBX loader and lighting!
-	App *appPtr = new APP_AdvTex();		//#4 advanced texturing (normal maps)!
-	
+	//App *appPtr = new APP_AdvTex();		//#4 advanced texturing (normal maps)!
+	App *appPtr = new APP_Animation();		//#4 advanced texturing (normal maps)!
+
 	appPtr->Start();
 
 	//enable unlimited scrolling - hides the cursor

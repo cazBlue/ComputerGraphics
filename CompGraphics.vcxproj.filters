@@ -15,6 +15,7 @@
     </Filter>
     <Filter Include="Resource Files\shaders">
       <UniqueIdentifier>{535d2ac0-c196-485d-9514-6c80412d91c4}</UniqueIdentifier>
+      <ParseFiles>true</ParseFiles>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +47,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\APP_AdvTexturing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\APP_Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,11 +84,11 @@
     <ClInclude Include="src\APP_AdvTexturing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\APP_Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\AdvTexFragShader.glsl">
-      <Filter>Resource Files\shaders</Filter>
-    </None>
     <None Include="assets\shaders\AdvTexVertexShader.glsl">
       <Filter>Resource Files\shaders</Filter>
     </None>
@@ -98,6 +102,15 @@
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="assets\shaders\VertexShader.glsl">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="assets\shaders\AnimFragShader.glsl">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="assets\shaders\AnimVertexShader.glsl">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="assets\shaders\AdvTexFragShader.glsl">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>
