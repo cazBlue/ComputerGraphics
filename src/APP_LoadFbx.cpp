@@ -50,10 +50,16 @@ void APP_LoadFbx::Draw()
 	int loc = glGetUniformLocation(m_program, "ProjectionView");
 	glUniformMatrix4fv(loc, 1, GL_FALSE, &(GameCam->GetProjectionView()[0][0]));
 	
-	// bind the light position
-	int lightDirUniform = glGetUniformLocation(m_program, "lightDir");	//get the Time uniform index from the vertex shader
-	glm::vec3 light = glm::vec3(-10, 1, -10); //controls the lights position in the world	
-	glUniform3fv(lightDirUniform, 1, glm::value_ptr(light));	//set the lightDir uniform variabe in the vertex shader
+	int lightDirUniform = -1;
+	// bind the directional light position for a directional light
+	lightDirUniform  = glGetUniformLocation(m_program, "directionalLight");	//get the directional light uniform index from the vertex shader
+	glm::vec3 dirLight = glm::vec3(0, 1, -10); //controls the lights position in the world	
+	glUniform3fv(lightDirUniform, 1, glm::value_ptr(dirLight));	//set the lightDir uniform variabe in the vertex shader
+
+	// bind the point light position for a directional light
+	lightDirUniform = glGetUniformLocation(m_program, "pointLight");	//get the point light uniform index from the vertex shader
+	glm::vec3 pointLight = glm::vec3(0, -1, -1); //controls the lights position in the world	
+	glUniform3fv(lightDirUniform, 1, glm::value_ptr(pointLight));	//set the lightDir uniform variabe in the vertex shader
 
 	// bind change the light colour
 	int lightColUniform = glGetUniformLocation(m_program, "lightColour");	//get the Time uniform index from the vertex shader
@@ -67,7 +73,7 @@ void APP_LoadFbx::Draw()
 
 	// bind change the spec power
 	int specPosUniform = glGetUniformLocation(m_program, "SpecPow");	//get the Time uniform index from the vertex shader
-	GLfloat specPow = 128; //controls the lights position in the world		
+	GLfloat specPow = 512; //controls the lights position in the world		
 	glUniform1f(specPosUniform, specPow);	//set the lightDir uniform variabe in the vertex shader
 
 	// bind our vertex array object and draw the mesh

@@ -83,6 +83,7 @@
   <ItemGroup>
     <ClCompile Include="dep\aieutilities-master\aie\Gizmos.cpp" />
     <ClCompile Include="dep\tinyOBJ\tiny_obj_loader.cc" />
+    <ClCompile Include="src\APP_AdvTexturing.cpp" />
     <ClCompile Include="src\APP_LoadFbx.cpp" />
     <ClCompile Include="src\App_LoadingTextures.cpp" />
     <ClCompile Include="src\APP_ObjLoader.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="dep\aieutilities-master\aie\Gizmos.h" />
     <ClInclude Include="dep\tinyOBJ\tiny_obj_loader.h" />
     <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\APP_AdvTexturing.h" />
     <ClInclude Include="src\APP_LoadFbx.h" />
     <ClInclude Include="src\App_LoadingTextures.h" />
     <ClInclude Include="src\APP_ObjLoader.h" />

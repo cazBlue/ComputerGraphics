@@ -11,6 +11,7 @@
 #include <APP_ObjLoader.h>
 #include <App_LoadingTextures.h>
 #include <APP_LoadFbx.h>
+#include <APP_AdvTexturing.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -42,7 +43,8 @@ int main()
 	//App *appPtr = new RenderGeo();		//#2 P1 create planes!
 	//App *appPtr = new APP_OBJLoader();	//#2 P2 obj loader
 	//App *appPtr = new APP_Texturing();	//#3 texturing!
-	App *appPtr = new APP_LoadFbx();		//#4 FBX loader!
+	//App *appPtr = new APP_LoadFbx();		//#4 FBX loader and lighting!
+	App *appPtr = new APP_AdvTex();		//#4 advanced texturing (normal maps)!
 	
 	appPtr->Start();
 
