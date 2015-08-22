@@ -1,1 +1,1 @@
-./assets/characters/Enemyelite/EnemyElite.fbx
+./assets/characters/Pyro/pyro.fbx

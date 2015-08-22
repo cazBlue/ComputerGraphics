@@ -90,8 +90,18 @@ void APP_Animation::Draw()
 	GLfloat specPow = 512; //controls the lights position in the world		
 	glUniform1f(specPosUniform, specPow);	//set the lightDir uniform variabe in the vertex shader
 
+	// grab the skeleton and animation we want to use
+	FBXSkeleton* skeleton = m_fbx->getSkeletonByIndex(0);
+	skeleton->updateBones();
+	int bones_location = glGetUniformLocation(m_program, "bones");
+	glUniformMatrix4fv(bones_location, skeleton->m_boneCount, GL_FALSE, (float*)skeleton->m_bones);
+
+	int global_location = glGetUniformLocation(m_program, "Global"); //apply a global scale
+	glUniformMatrix4fv(global_location, 1, GL_FALSE, glm::value_ptr(glm::scale(glm::vec3(.005, .005, .005))));
+
 	// bind our vertex array object and draw the mesh
-	for (unsigned int i = 0; i < m_fbx->getMeshCount(); ++i) {
+	unsigned int meshCount = m_fbx->getMeshCount();
+	for (unsigned int i = 0; i < meshCount; ++i) {
 		FBXMeshNode* mesh = m_fbx->getMeshByIndex(i);
 		unsigned int* glData = (unsigned int*)mesh->m_userData;
 		glBindVertexArray(glData[0]);
@@ -100,17 +110,12 @@ void APP_Animation::Draw()
 	}
 }
 
-void APP_Animation::loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id)
+void APP_Animation::loadImg(FBXTexture* a_tex)
 {
-	unsigned char* data = stbi_load(a_path, a_width, a_height, a_format, STBI_rgb); //request no alpha
+	a_tex->data = stbi_load(a_tex->path.c_str(), &a_tex->width, 
+		&a_tex->height, &a_tex->format, STBI_rgb); //request no alpha - works with PNG's
 
-	glGenTextures(1, a_id);
-	glBindTexture(GL_TEXTURE_2D, (*a_id));
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (*a_width), (*a_height), 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	stbi_image_free(data); //unload the image data
+	//stbi_image_free(a_tex->data); //unload the image data
 }
 
 std::string APP_Animation::LoadShader(const char *a_filePath)
@@ -140,7 +145,7 @@ std::string APP_Animation::LoadShader(const char *a_filePath)
 
 bool APP_Animation::Start()
 {
-	Gizmos::create();
+		Gizmos::create();
 	GameCam = new Camera();
 
 	m_timer = 0;
@@ -214,7 +219,7 @@ bool APP_Animation::Start()
 void APP_Animation::createOpenGLBuffers(FBXFile* fbx)
 {
 	unsigned int meshCount = fbx->getMeshCount();
-	unsigned int materialCount = fbx->getMaterialCount();
+	
 	// create the GL VAO/VBO/IBO data for each mesh	
 	for (unsigned int i = 0; i < meshCount; ++i)
 	{
@@ -227,6 +232,7 @@ void APP_Animation::createOpenGLBuffers(FBXFile* fbx)
 		// storage for the opengl data in 4 unsigned int (includes diffuse texID)
 		unsigned int* glData = new unsigned int[4];
 
+
 		glGenVertexArrays(1, &glData[0]);
 		glBindVertexArray(glData[0]);
 		glGenBuffers(1, &glData[1]);
@@ -235,15 +241,40 @@ void APP_Animation::createOpenGLBuffers(FBXFile* fbx)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glData[2]);
 		glBufferData(GL_ARRAY_BUFFER, mesh->m_vertices.size() * sizeof(FBXVertex), mesh->m_vertices.data(), GL_STATIC_DRAW);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->m_indices.size() * sizeof(unsigned int), mesh->m_indices.data(), GL_STATIC_DRAW);
-		glEnableVertexAttribArray(0); // position
-		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(FBXVertex), 0);
-		glEnableVertexAttribArray(1); // normal
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE, sizeof(FBXVertex), ((char*)0) + FBXVertex::NormalOffset);
-		glEnableVertexAttribArray(2); // colour / tex cords
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_TRUE, sizeof(FBXVertex), ((char*)0) + FBXVertex::TexCoord1Offset);
+//		glEnableVertexAttribArray(0); // position
+//		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(FBXVertex), 0);
+//		glEnableVertexAttribArray(1); // normal
+//		glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE, sizeof(FBXVertex), ((char*)0) + FBXVertex::NormalOffset);
+//		glEnableVertexAttribArray(2); // colour / tex cords
+//		glVertexAttribPointer(2, 2, GL_FLOAT, GL_TRUE, sizeof(FBXVertex), ((char*)0) + FBXVertex::TexCoord1Offset);
+		//enable attrib pointers
+		glEnableVertexAttribArray(0); //position
+		glEnableVertexAttribArray(1); //normals
+		glEnableVertexAttribArray(2); //texcoords
+		glEnableVertexAttribArray(3); //tangents
+		glEnableVertexAttribArray(4); //weights
+		glEnableVertexAttribArray(5); //indices
+
+		//assign info positions
+		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(FBXVertex),
+			(void*)FBXVertex::PositionOffset);
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE, sizeof(FBXVertex),
+			(void*)FBXVertex::NormalOffset);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_TRUE, sizeof(FBXVertex),
+			(void*)FBXVertex::TexCoord1Offset);
+		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(FBXVertex),
+			(void*)FBXVertex::TangentOffset);
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(FBXVertex),
+			(void*)FBXVertex::WeightsOffset);
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(FBXVertex),
+			(void*)FBXVertex::IndicesOffset);
+		
+		//we are done, unbind
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		loadImg(diffuesTex); //issues found with png, removing alpha manually as temp work around
 
 		//gen texture id and bind texture to buffer 
 		glGenTextures(1, &glData[3]);
@@ -253,27 +284,6 @@ void APP_Animation::createOpenGLBuffers(FBXFile* fbx)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 		mesh->m_userData = glData;
-	}
-
-	//create GL id for textures and load then to buffer
-	for (unsigned int i = 0; i < materialCount; ++i)
-	{
-		FBXMaterial* mat = fbx->getMaterialByIndex(i);
-
-		FBXTexture* tex = mat->textures[FBXMaterial::TextureTypes::DiffuseTexture];
-
-		int temp = 0;
-		//		std::string path = mat->textures
-
-		//		unsigned char* data = stbi_load(a_path, a_width, a_height, a_format, STBI_rgb); //request no alpha
-		//
-		//		glGenTextures(1, a_id);
-		//		glBindTexture(GL_TEXTURE_2D, (*a_id));
-		//		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (*a_width), (*a_height), 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		//
-		//		stbi_image_free(data); //unload the image data
 	}
 }
 

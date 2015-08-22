@@ -4,6 +4,7 @@
 #include <vector>
 
 class FBXFile;
+class FBXTexture;
 
 class APP_Animation : public App
 {
@@ -29,7 +30,7 @@ public:
 
 	//	unsigned int m_vbo, m_vao, m_ibo;
 
-	void loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id);
+	void loadImg(FBXTexture* a_tex);
 
 	//	void createOpenGLBuffers();
 

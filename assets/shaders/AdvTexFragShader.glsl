@@ -20,10 +20,6 @@ uniform sampler2D NormalTex;
 void main() 
 {
 	//calculate normals	
-//	mat3 TBN = mat3( normalize( vTangent ), normalize( vBiTangent ), normalize( vNormal )); 
-//	vec3 N = texture(Normal, vTexCoord).xyz * 2 - 1;
-//	float d = max( 0, dot( normalize( TBN * N ), normalize( directionalLight ))); 
-
 	vec3 Normal = normalize(vNormal);
     vec3 Tangent = normalize(vTangent);
     Tangent = normalize(Tangent - dot(Tangent, Normal) * Normal);
@@ -46,9 +42,6 @@ void main()
 	vec4 ambient = texture(Diffuse,vTexCoord) * vec4(enviro, 1) * vec4(ambientColor, 1);
 
 	//diffuse
-//	float NdL = max( 0.0f, dot( normalize(vNormal), -normalize(directionalLight.xyz) ) ); // Lambert term
-//	vec4 diffuse = texture(Diffuse,vTexCoord) * vec4(1,1,1,1) * NdL;
-
 	vec4 diffuse = texture(Diffuse, vTexCoord) * vec4(d,d,d,1);	//light info comes from normals now
 
 	//specular found issues with tut, ran with reference from below
@@ -81,25 +74,9 @@ void main()
 
 	vec4 pointLight = Color / Attenuation;
 
-//	FragColor = pointLight;
-
-//	FragColor = diffuse + ambient + SpecularColor + pointLight; //final combined output
-
-//	FragColor = diffuse + ambient; //final combined output
-
-//	FragColor = texture(Normal, vTexCoord) * texture(Diffuse, vTexCoord);
-
-//	FragColor = texture(Normal, vTexCoord);
-
+//	FragColor = pointLight; //point light only
 //	FragColor = SpecularColor; //spec only
+//	FragColor = ambient; //ambient onlt
 
-
-//	//calculate normals
-//	mat3 TBN = mat3( normalize( vTangent ), normalize( vBiTangent ), normalize( vNormal )); 
-//	vec3 N = texture(Normal, vTexCoord).xyz * 2 - 1;
-//	float d = max( 0, dot( normalize( TBN * N ), normalize( directionalLight ))); 
-//	FragColor = texture(Diffuse, vTexCoord); 
-//	FragColor.rgb = FragColor.rgb * d;
-
-	FragColor = diffuse + ambient + SpecularColor;
+	FragColor = diffuse + ambient + SpecularColor; //final result
 }
