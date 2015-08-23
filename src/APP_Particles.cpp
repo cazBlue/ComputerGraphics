@@ -41,10 +41,9 @@ void APP_Particles::Draw()
 			i == 10 ? white : black);
 	}
 
+	Gizmos::draw(GameCam->GetProjectionView());	
 
 	particleDraw();
-
-	Gizmos::draw(GameCam->GetProjectionView());	
 }
 
 bool APP_Particles::Start()
@@ -66,8 +65,9 @@ bool APP_Particles::Start()
 
 	const char* fsSource = "#version 410\n \
 						   in vec4 colour; \
+						   out vec4 FragColor; \
 						   void main() { \
-						   gl_FragColor = colour;}";
+						   FragColor = colour;}";
 	unsigned int vs = glCreateShader(GL_VERTEX_SHADER);
 	unsigned int fs = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(vs, 1, &vsSource, nullptr);
@@ -81,8 +81,8 @@ bool APP_Particles::Start()
 	glDeleteShader(fs);
 	glDeleteShader(vs);
 
-	glm::vec4 scolour = glm::vec4(.3, 0, .3, 1);
-	glm::vec4 ecolour = glm::vec4(.8, .2, .6, 1);
+	glm::vec4 scolour = glm::vec4(1, 0, 0, 1);
+	glm::vec4 ecolour = glm::vec4(1, 1, 0, 1);
 	
 	initalise(1000, 100, .01f, 1, .01f, 1.0f, 1.0f, .1f, scolour, ecolour);
 
@@ -278,7 +278,13 @@ void APP_Particles::particleDraw()
 	// based on how many alive particles there are
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, m_firstDead * 4 * sizeof(ParticleVertex), m_vertexData);
+//	glBufferData(GL_ARRAY_BUFFER, m_firstDead * 4 *
+//		sizeof(ParticleVertex), m_vertexData,
+//		GL_STATIC_DRAW);
 	// draw particles
 	glBindVertexArray(m_vao);
-	glDrawElements(GL_TRIANGLES, m_firstDead * 6, GL_UNSIGNED_INT, 0);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //enable wireframe render
+	glDrawElements(GL_TRIANGLES, m_firstDead * 6, GL_UNSIGNED_INT, nullptr);
+
+	glUseProgram(0);
 }
