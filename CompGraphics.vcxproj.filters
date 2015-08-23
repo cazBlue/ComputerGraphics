@@ -52,6 +52,12 @@
     <ClCompile Include="src\APP_Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\APP_Particles_emitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\APP_Particles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\aieutilities-master\aie\Gizmos.h">
@@ -87,6 +93,12 @@
     <ClInclude Include="src\APP_Animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\APP_Particles_emitter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\APP_Particles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\AdvTexVertexShader.glsl">
@@ -111,6 +123,12 @@
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="assets\shaders\AdvTexFragShader.glsl">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="assets\shaders\particleFragShader.glsl">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="assets\shaders\particleVertexShader.glsl">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>

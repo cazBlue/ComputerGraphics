@@ -13,6 +13,7 @@
 #include <APP_LoadFbx.h>
 #include <APP_AdvTexturing.h>
 #include <APP_Animation.h>
+#include <APP_Particles.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -45,8 +46,9 @@ int main()
 	//App *appPtr = new APP_OBJLoader();	//#2 P2 obj loader
 	//App *appPtr = new APP_Texturing();	//#3 texturing!
 	//App *appPtr = new APP_LoadFbx();		//#4 FBX loader and lighting!
-	//App *appPtr = new APP_AdvTex();		//#4 advanced texturing (normal maps)!
-	App *appPtr = new APP_Animation();		//#4 animation (no lighting)
+	//App *appPtr = new APP_AdvTex();		//#5 advanced texturing (normal maps)!
+	//App *appPtr = new APP_Animation();	//#6 animation (no lighting)
+	App *appPtr = new APP_Particles();      //#7 CPU billboard particles
 
 	appPtr->Start();
 
@@ -66,8 +68,6 @@ int main()
 		glClearColor(0.25f, 0.25f, 0.25f, 1);
 		glEnable(GL_DEPTH_TEST); // enables the depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		
 
 		float currentTime = (float)glfwGetTime();
 		float deltaTime = currentTime - previousTime; // prev of last frame
