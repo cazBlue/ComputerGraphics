@@ -54,8 +54,8 @@ bool APP_Particles::Start()
 //	m_emitter = new APP_particleEmitter();
 
 	const char* vsSource = "#version 410\n \
-						   in vec4 Position; \
-						   in vec4 Colour; \
+						   layout(location=0) in vec4 Position; \
+						   layout(location=1) in vec4 Colour; \
 						   out vec4 colour; \
 						   uniform mat4 projectionView; \
 						   void main() { \
@@ -283,7 +283,7 @@ void APP_Particles::particleDraw()
 //		GL_STATIC_DRAW);
 	// draw particles
 	glBindVertexArray(m_vao);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //enable wireframe render
+//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //enable wireframe render
 	glDrawElements(GL_TRIANGLES, m_firstDead * 6, GL_UNSIGNED_INT, nullptr);
 
 	glUseProgram(0);
