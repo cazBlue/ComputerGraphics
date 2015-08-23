@@ -198,3 +198,10 @@ void Camera::Update(float a_dt)
 	//re-align the camera
 	UpdateProjectionViewTransform();
 }
+
+
+glm::mat4 Camera::GetWorldTransform()
+{
+//	glm::vec4 pos =  m_worldTransform[3];
+	return m_worldTransform;
+}

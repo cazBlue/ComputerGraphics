@@ -51,7 +51,8 @@ protected:
 	unsigned int m_maxParticles;	
 	unsigned int m_vao, m_vbo, m_ibo;
 	ParticleVertex* m_vertexData;
-		//member variabes	
+	
+	//member variabes	
 	float m_emitTimer;
 	float m_emitRate;
 	float m_lifespanMin;
@@ -61,7 +62,9 @@ protected:
 	float m_startSize;
 	float m_endSize;
 	glm::vec4 m_startColour;
-	glm::vec4 m_endColour;	glm::vec3 m_position;
+	glm::vec4 m_endColour;
+	glm::vec3 m_position;
+
 };
 
 
