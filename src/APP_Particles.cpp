@@ -84,7 +84,7 @@ bool APP_Particles::Start()
 	glm::vec4 scolour = glm::vec4(1, 0, 0, 1);
 	glm::vec4 ecolour = glm::vec4(1, 1, 0, 1);
 	
-	initalise(1000, 100, .01f, 1, .01f, 1.0f, 1.0f, .1f, scolour, ecolour);
+	initalise(1000, 100, .01f, 5, .01f, 10.0f, .1f, 1.0f, scolour, ecolour);
 
 	return true; //not being used in this lesson
 }
@@ -183,8 +183,7 @@ void APP_Particles::emit() {
 	particle.colour = m_startColour;
 	particle.size = m_startSize;
 	// randomise velocity direction and strength
-	float velocity = (rand() / (float)RAND_MAX) *
-		(m_velocityMax - m_velocityMin) + m_velocityMin;
+	float velocity = (rand() / (float)RAND_MAX) * (m_velocityMax - m_velocityMin) + m_velocityMin;
 	particle.velocity.x = (rand() / (float)RAND_MAX) * 2 - 1;
 	particle.velocity.y = (rand() / (float)RAND_MAX) * 2 - 1;
 	particle.velocity.z = (rand() / (float)RAND_MAX) * 2 - 1;
@@ -215,6 +214,11 @@ void APP_Particles::particleUpdate(float a_deltaTime) {
 		else {
 			// move particle
 			particle->position += particle->velocity * a_deltaTime;
+			//apply gravity: http://gamedev.stackexchange.com/questions/32631/easy-way-to-do-gravity-in-a-simple-game
+			particle->velocity += glm::vec3(0, -.01, 0);
+			//check that we haven't gone below 0
+//			if (particle->position.y < 0)
+//				particle->position.y = 0;
 			// size particle
 			particle->size = glm::mix(m_startSize, m_endSize,
 				particle->lifetime / particle->lifespan);
