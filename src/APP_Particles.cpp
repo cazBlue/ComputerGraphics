@@ -1,6 +1,5 @@
 #include <APP_Particles.h>
 
-
 APP_Particles::APP_Particles()
 : m_particles(nullptr),
 m_firstDead(0),
@@ -84,7 +83,7 @@ bool APP_Particles::Start()
 	glm::vec4 scolour = glm::vec4(1, 0, 0, 1);
 	glm::vec4 ecolour = glm::vec4(1, 1, 0, 1);
 	
-	initalise(1000, 100, .01f, 5, .01f, 10.0f, .1f, 1.0f, scolour, ecolour);
+	initalise(1000, 100, .01f, 3, .01f, 10.0f, .1f, 1.0f, scolour, ecolour);
 
 	return true; //not being used in this lesson
 }
@@ -188,6 +187,23 @@ void APP_Particles::emit() {
 	particle.velocity.y = (rand() / (float)RAND_MAX) * 2 - 1;
 	particle.velocity.z = (rand() / (float)RAND_MAX) * 2 - 1;
 	particle.velocity = glm::normalize(particle.velocity) * velocity;
+
+	//random spawn within a sphere : http://stackoverflow.com/questions/5531827/random-point-on-a-given-sphere
+	//refernce also: http://mathworld.wolfram.com/SpherePointPicking.html
+
+	float radius = 2.0f; //sphere radius
+	glm::vec3 pos = glm::vec3(0,2,0); //sphere position effectively moves the emitter
+	
+	//http://stackoverflow.com/questions/686353/c-random-float-number-generation
+	float u = static_cast <float> (rand()) / static_cast <float> (RAND_MAX); 	
+	float v = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	float theta = 2 * glm::pi<float>() * u;
+	float phi = glm::acos(2 * v - 1);
+	float x = pos.x + (radius * glm::sin(phi) * glm::cos(theta));
+	float y = pos.y + (radius * glm::sin(phi) * glm::sin(theta));
+	float z = pos.z + (radius * glm::cos(phi));
+	
+	particle.position = vec3(x,y,z);
 }
 
 
