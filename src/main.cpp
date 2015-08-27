@@ -14,6 +14,7 @@
 #include <APP_AdvTexturing.h>
 #include <APP_Animation.h>
 #include <APP_Particles.h>
+#include <APP_GpuParticles.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -48,7 +49,8 @@ int main()
 	//App *appPtr = new APP_LoadFbx();		//#4 FBX loader and lighting!
 	//App *appPtr = new APP_AdvTex();		//#5 advanced texturing (normal maps)!
 	//App *appPtr = new APP_Animation();	//#6 animation (no lighting)
-	App *appPtr = new APP_Particles();      //#7 CPU billboard particles
+	//App *appPtr = new APP_Particles();    //#7 CPU billboard particles
+	App *appPtr = new APP_GPUParticles();      //#8 GPU billboard particles
 
 	appPtr->Start();
 

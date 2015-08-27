@@ -85,6 +85,7 @@
     <ClCompile Include="dep\tinyOBJ\tiny_obj_loader.cc" />
     <ClCompile Include="src\APP_AdvTexturing.cpp" />
     <ClCompile Include="src\APP_Animation.cpp" />
+    <ClCompile Include="src\APP_GpuParticles.cpp" />
     <ClCompile Include="src\APP_LoadFbx.cpp" />
     <ClCompile Include="src\App_LoadingTextures.cpp" />
     <ClCompile Include="src\APP_ObjLoader.cpp" />
@@ -101,6 +102,7 @@
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\APP_AdvTexturing.h" />
     <ClInclude Include="src\APP_Animation.h" />
+    <ClInclude Include="src\APP_GpuParticles.h" />
     <ClInclude Include="src\APP_LoadFbx.h" />
     <ClInclude Include="src\App_LoadingTextures.h" />
     <ClInclude Include="src\APP_ObjLoader.h" />
