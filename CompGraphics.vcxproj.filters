@@ -137,5 +137,17 @@
     <None Include="assets\shaders\particleVertexShader.glsl">
       <Filter>Resource Files\shaders</Filter>
     </None>
+    <None Include="assets\shaders\GPUParticleVertexUpdateShader.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="assets\shaders\GPUParticleFragShader.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="assets\shaders\GPUParticleVertexShader.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="assets\shaders\GPUParticleGeoShader.geom">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

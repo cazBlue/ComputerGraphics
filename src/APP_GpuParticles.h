@@ -16,14 +16,25 @@ public:
 
 	unsigned int loadShader(unsigned int type, const char* path);
 
+//	struct posCoord{
+//		glm::vec3 position;
+//		glm::vec3 texCoord;
+//	};
+
 	struct GPUParticle {
 		GPUParticle() : lifetime(1), lifespan(0) {}
 		glm::vec3 position;
+//		glm::vec3 texCord;
+		//posCoord posCord;
 		glm::vec3 velocity;
 		float lifetime;
 		float lifespan;
+
+		//unsigned int indexData[6];
+
 	};
 
+	unsigned int m_textureID1;
 
 	void initalise(unsigned int a_maxParticles,
 		float a_lifespanMin, float a_lifespanMax,
@@ -33,7 +44,8 @@ public:
 		const glm::vec4& a_endColour);
 
 	void draw(float time, const glm::mat4& a_cameraTransform,
-		const glm::mat4& a_projectionView);
+		const glm::mat4& a_projectionView);
+
 
 protected:
 	void createBuffers();
@@ -57,6 +69,8 @@ protected:
 	unsigned int m_drawShader;
 	unsigned int m_updateShader;
 	float m_lastDrawTime;
+
+	void loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id);
 };
 
 

@@ -1,4 +1,5 @@
 #include <APP_GpuParticles.h>
+#include <stb_image.h>
 
 APP_GPUParticles::APP_GPUParticles()
 : m_particles(nullptr), m_maxParticles(0),
@@ -79,7 +80,9 @@ bool APP_GPUParticles::Shutdown()
 void APP_GPUParticles::initalise(unsigned int a_maxParticles,
 	float a_lifetimeMin, float a_lifetimeMax, float a_velocityMin,
 	float a_velocityMax, float a_startSize, float a_endSize,
-	const glm::vec4& a_startColour, const glm::vec4& a_endColour) {	// store all variables passed in
+	const glm::vec4& a_startColour, const glm::vec4& a_endColour) {
+
+	// store all variables passed in
 	m_startColour = a_startColour;
 	m_endColour = a_endColour;
 	m_startSize = a_startSize;
@@ -88,13 +91,20 @@ void APP_GPUParticles::initalise(unsigned int a_maxParticles,
 	m_velocityMax = a_velocityMax;
 	m_lifespanMin = a_lifetimeMin;
 	m_lifespanMax = a_lifetimeMax;
-	m_maxParticles = a_maxParticles;	// create particle array
+	m_maxParticles = a_maxParticles;
+
+	// create particle array
 	m_particles = new GPUParticle[a_maxParticles];
 	// set our starting ping-pong buffer
 	m_activeBuffer = 0;
 	createBuffers();
 	createUpdateShader();
-	createDrawShader();}void APP_GPUParticles::createBuffers() {
+	createDrawShader();
+}
+
+
+
+void APP_GPUParticles::createBuffers() {
 	// create opengl buffers
 	glGenVertexArrays(2, m_vao);
 	glGenBuffers(2, m_vbo);
@@ -114,7 +124,9 @@ void APP_GPUParticles::initalise(unsigned int a_maxParticles,
 	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE,
 		sizeof(GPUParticle), ((char*)0) + 24);
 	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE,
-		sizeof(GPUParticle), ((char*)0) + 28);	// setup the second buffer
+		sizeof(GPUParticle), ((char*)0) + 28);
+
+	// setup the second buffer
 	glBindVertexArray(m_vao[1]);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, m_maxParticles *
@@ -131,8 +143,37 @@ void APP_GPUParticles::initalise(unsigned int a_maxParticles,
 		sizeof(GPUParticle), ((char*)0) + 24);
 	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE,
 		sizeof(GPUParticle), ((char*)0) + 28);
+
+
+
+//	int imageWidth = 0, imageHeight = 0, imageFormat = 0; //not using...
+//	m_textureID1 = 0;
+//
+//	loadImg(&imageHeight, &imageWidth, &imageFormat, "./assets/textures/crate.png", &m_textureID1);
+//
+//
+//	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE,
+//		sizeof(GPUParticle), ((char*)0) + 28);
+
 	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);}void APP_GPUParticles::createDrawShader() {
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void APP_GPUParticles::loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id)
+{
+	unsigned char* data = stbi_load(a_path, a_width, a_height, a_format, STBI_rgb); //request no alpha
+
+	glGenTextures(1, a_id);
+	glBindTexture(GL_TEXTURE_2D, (*a_id));
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (*a_width), (*a_height), 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	stbi_image_free(data); //unload the image data
+}
+
+
+void APP_GPUParticles::createDrawShader() {
 	unsigned int vs = loadShader(GL_VERTEX_SHADER,
 		"./assets/shaders/GPUParticleVertexShader.vert");
 	unsigned int gs = loadShader(GL_GEOMETRY_SHADER,
@@ -161,7 +202,10 @@ void APP_GPUParticles::initalise(unsigned int a_maxParticles,
 	glUniform4fv(location, 1, &m_startColour[0]);
 	location = glGetUniformLocation(m_drawShader, "colourEnd");
 	glUniform4fv(location, 1, &m_endColour[0]);
-}void APP_GPUParticles::createUpdateShader() {
+}
+
+
+void APP_GPUParticles::createUpdateShader() {
 	// create a shader
 	unsigned int vs = loadShader(GL_VERTEX_SHADER,
 		"./assets/shaders/GPUParticleVertexUpdateShader.vert");
@@ -171,7 +215,9 @@ void APP_GPUParticles::initalise(unsigned int a_maxParticles,
 	const char* varyings[] = { "position", "velocity",
 		"lifetime", "lifespan" };
 	glTransformFeedbackVaryings(m_updateShader, 4, varyings,
-		GL_INTERLEAVED_ATTRIBS);	glLinkProgram(m_updateShader);
+		GL_INTERLEAVED_ATTRIBS);
+
+	glLinkProgram(m_updateShader);
 	// remove unneeded handles
 	glDeleteShader(vs);
 	// bind the shader so that we can set some
@@ -182,7 +228,10 @@ void APP_GPUParticles::initalise(unsigned int a_maxParticles,
 	glUniform1f(location, m_lifespanMin);
 	location = glGetUniformLocation(m_updateShader, "lifeMax");
 	glUniform1f(location, m_lifespanMax);
-}void APP_GPUParticles::draw(float time,
+}
+
+
+void APP_GPUParticles::draw(float time,
 	const glm::mat4& a_cameraTransform,
 	const glm::mat4& a_projectionView) {
 	// update the particles using transform feedback
@@ -192,11 +241,17 @@ void APP_GPUParticles::initalise(unsigned int a_maxParticles,
 	glUniform1f(location, time);
 	float deltaTime = time - m_lastDrawTime; m_lastDrawTime = time;
 	location = glGetUniformLocation(m_updateShader, "deltaTime");
-	glUniform1f(location, deltaTime);	// bind emitter's position
+	glUniform1f(location, deltaTime);
+
+	// bind emitter's position
 	location = glGetUniformLocation(m_updateShader,
 		"emitterPosition");
-	glUniform3fv(location, 1, &m_position[0]);	// disable rasterisation
-	glEnable(GL_RASTERIZER_DISCARD);	// bind the buffer we will update
+	glUniform3fv(location, 1, &m_position[0]);
+
+	// disable rasterisation
+	glEnable(GL_RASTERIZER_DISCARD);
+
+	// bind the buffer we will update
 	glBindVertexArray(m_vao[m_activeBuffer]);
 	// work out the "other" buffer
 	unsigned int otherBuffer = (m_activeBuffer + 1) % 2;
@@ -205,10 +260,14 @@ void APP_GPUParticles::initalise(unsigned int a_maxParticles,
 	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
 		m_vbo[otherBuffer]);
 	glBeginTransformFeedback(GL_POINTS);
-	glDrawArrays(GL_POINTS, 0, m_maxParticles);	// disable transform feedback and enable rasterization again
+	glDrawArrays(GL_POINTS, 0, m_maxParticles);
+
+	// disable transform feedback and enable rasterization again
 	glEndTransformFeedback();
 	glDisable(GL_RASTERIZER_DISCARD);
-	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);	// draw the particles using the Geometry SHader to billboard them
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);
+
+	// draw the particles using the Geometry SHader to billboard them
 	glUseProgram(m_drawShader);
 	location = glGetUniformLocation(m_drawShader, "projectionView");
 	glUniformMatrix4fv(location, 1, false, &a_projectionView[0][0]);
@@ -220,7 +279,12 @@ void APP_GPUParticles::initalise(unsigned int a_maxParticles,
 	glDrawArrays(GL_POINTS, 0, m_maxParticles);
 	
 	// swap for next frame
-	m_activeBuffer = otherBuffer;}unsigned int APP_GPUParticles::loadShader(unsigned int type, const char* path) {
+	m_activeBuffer = otherBuffer;
+
+}
+
+
+unsigned int APP_GPUParticles::loadShader(unsigned int type, const char* path) {
 	FILE* file = fopen(path, "rb");
 	if (file == nullptr)
 		return 0;

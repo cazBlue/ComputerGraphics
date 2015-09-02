@@ -120,6 +120,10 @@
     <None Include="assets\shaders\FBXFragShader.glsl" />
     <None Include="assets\shaders\FBXVertexShader.glsl" />
     <None Include="assets\shaders\FragShader.glsl" />
+    <None Include="assets\shaders\GPUParticleFragShader.frag" />
+    <None Include="assets\shaders\GPUParticleGeoShader.geom" />
+    <None Include="assets\shaders\GPUParticleVertexShader.vert" />
+    <None Include="assets\shaders\GPUParticleVertexUpdateShader.vert" />
     <None Include="assets\shaders\particleFragShader.glsl" />
     <None Include="assets\shaders\particleVertexShader.glsl" />
     <None Include="assets\shaders\VertexShader.glsl" />
