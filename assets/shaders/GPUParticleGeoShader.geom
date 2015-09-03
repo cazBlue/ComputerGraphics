@@ -11,6 +11,7 @@ in float lifespan[];
 
 // output to fragment shader
 out vec4 Colour;
+out vec2 TexCoord;
 
 uniform mat4 projectionView;
 uniform mat4 cameraTransform;
@@ -23,17 +24,19 @@ uniform vec4 colourEnd;
 void main() {
 	
 	// interpolate colour
-	Colour = mix(colourStart, colourEnd, lifetime[0] / lifespan[0] );
-	
+	Colour = mix(colourStart, colourEnd, lifetime[0] / lifespan[0] );		
+
 	// calculate the size and create the corners of a quad
 	float halfSize = mix(sizeStart,sizeEnd,lifetime[0]/lifespan[0]) * 0.5f;
 	
 	vec3 corners[4];
-	corners[0] = vec3( halfSize, -halfSize, 0 );
-	corners[1] = vec3( halfSize, halfSize, 0 );
-	corners[2] = vec3( -halfSize, -halfSize, 0 );
-	corners[3] = vec3( -halfSize, halfSize, 0 );
+	corners[0] = vec3( halfSize, -halfSize, 0 ); //bottom right
+	corners[1] = vec3( halfSize, halfSize, 0 ); //top right
+	corners[2] = vec3( -halfSize, -halfSize, 0 ); //bottom left
+	corners[3] = vec3( -halfSize, halfSize, 0 ); //top left
 	
+	mat4 verts[4];	
+
 	// billboard
 	vec3 zAxis = normalize( cameraTransform[3].xyz - position[0] );
 	vec3 xAxis = cross( cameraTransform[1].xyz, zAxis );
@@ -42,14 +45,18 @@ void main() {
 	
 	// emit he 4 vertices for the quad
 	gl_Position = projectionView*vec4(billboard*corners[0]+position[0], 1);
+	TexCoord = vec2( 1, 1); //tr
 	EmitVertex();
 	
 	gl_Position = projectionView*vec4(billboard*corners[1]+position[0], 1);
+	TexCoord = vec2( 1, 0); //br
 	EmitVertex();
 	
 	gl_Position = projectionView*vec4(billboard*corners[2]+position[0], 1);
+	TexCoord = vec2( 0, 1); //tl
 	EmitVertex();
 	
 	gl_Position = projectionView*vec4(billboard*corners[3]+position[0], 1);
+	TexCoord = vec2( 0, 0); //bl
 	EmitVertex();
 }

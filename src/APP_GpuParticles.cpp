@@ -59,7 +59,7 @@ bool APP_GPUParticles::Start()
 
 	GameCam = new Camera();
 
-	initalise(10000,
+	initalise(10,
 		0.1f, 5.0f,
 		5, 20,
 		1, 0.1f,
@@ -174,6 +174,11 @@ void APP_GPUParticles::loadImg(int* a_height, int* a_width, int* a_format, const
 
 
 void APP_GPUParticles::createDrawShader() {
+	//load particle image
+	int imageWidth = 0, imageHeight = 0, imageFormat = 0;
+	m_textureID1 = 0;
+	loadImg(&imageHeight, &imageWidth, &imageFormat, "./assets/textures/crate.png", &m_textureID1); //load a tester image
+
 	unsigned int vs = loadShader(GL_VERTEX_SHADER,
 		"./assets/shaders/GPUParticleVertexShader.vert");
 	unsigned int gs = loadShader(GL_GEOMETRY_SHADER,
@@ -202,6 +207,7 @@ void APP_GPUParticles::createDrawShader() {
 	glUniform4fv(location, 1, &m_startColour[0]);
 	location = glGetUniformLocation(m_drawShader, "colourEnd");
 	glUniform4fv(location, 1, &m_endColour[0]);
+
 }
 
 
@@ -244,9 +250,15 @@ void APP_GPUParticles::draw(float time,
 	glUniform1f(location, deltaTime);
 
 	// bind emitter's position
-	location = glGetUniformLocation(m_updateShader,
-		"emitterPosition");
+	location = glGetUniformLocation(m_updateShader, "emitterPosition");
 	glUniform3fv(location, 1, &m_position[0]);
+
+	//set the particle texture
+	glActiveTexture(GL_TEXTURE0); //set for initial active texture
+	glBindTexture(GL_TEXTURE_2D, m_textureID1);	//bind the crate texture
+	// tell the shader where it is
+	int difLoc = glGetUniformLocation(m_drawShader, "diffuse"); //get diffuse location
+	glUniform1i(difLoc, 0); //set to the diffuse to the texture index		
 
 	// disable rasterisation
 	glEnable(GL_RASTERIZER_DISCARD);
