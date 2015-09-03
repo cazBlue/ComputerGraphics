@@ -28,7 +28,8 @@ float rand(uint seed, float range) {
 
 void main() {
 	position = Position + Velocity * deltaTime;
-	velocity = Velocity + vec3(0,-.01,0); //add gravity (hardcoded!)
+	velocity = Velocity + vec3(0,-1.10 * deltaTime,0); //add gravity (hardcoded!)
+//	velocity = Velocity;
 	lifetime = Lifetime + deltaTime;
 	lifespan = Lifespan;
 	
