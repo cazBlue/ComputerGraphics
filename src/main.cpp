@@ -16,6 +16,7 @@
 #include <APP_Particles.h>
 #include <APP_GpuParticles.h>
 #include <APP_SpotRotate.h>
+#include <APP_SceneManagment.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -52,7 +53,8 @@ int main()
 	//App *appPtr = new APP_Animation();	//#6 animation (no lighting)
 	//App *appPtr = new APP_Particles();    //#7 CPU billboard particles
 	//App *appPtr = new APP_GPUParticles(); //#8 GPU billboard particles
-	App *appPtr = new APP_SpotRotate();     //#9 side step to work out rotation for particles (proof of concept)
+	//App *appPtr = new APP_SpotRotate();     //#9 side step to work out rotation for particles (proof of concept)
+	App *appPtr = new APP_SCENEMANAGE();     //#9 side step to work out rotation for particles (proof of concept)
 
 	appPtr->Start();
 
