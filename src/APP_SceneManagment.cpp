@@ -156,9 +156,12 @@ void APP_SCENEMANAGE::Draw()
 	float d = glm::dot(vec3(plane), sphere.centre) + plane.w;
 	
 	Gizmos::addAABB(movingPoint, vec3(0.5f, 0.5f, 0.5f), vec4(0, 0, 1, 1), nullptr);
+	
+	//comparing a square AABB shape of center 0 to .5 giving total size of 1 square
+	//against a plane
 
 	//AABB/plane collision
-	vec4 planeColour(1, 1, 0, 1); //set the plane to yellow
+//	vec4 planeColour(1, 1, 0, 1); //set the plane to yellow
 //	if (fb_xmin > ob_xmax || fb_xmax < ob_xmin ||
 //		fb_ymin > ob_ymax || fb_ymax < ob_ymin ||
 //		fb_zmin > ob_zmax || fb_zmax < ob_zmin)
@@ -175,11 +178,11 @@ void APP_SCENEMANAGE::Draw()
 
 
 	//sphere/plane collision
-//	vec4 planeColour(1, 1, 0, 1); //set the plane to yellow
-//	if (d > sphere.radius) 
-//		planeColour = vec4(0, 1, 0, 1); //set the plane to green
-//	else if (d < -sphere.radius) 
-//		planeColour = vec4(1, 0, 0, 1); // set the plane to red
+	vec4 planeColour(1, 1, 0, 1); //set the plane to yellow
+	if (d > sphere.radius) 
+		planeColour = vec4(0, 1, 0, 1); //set the plane to green
+	else if (d < -sphere.radius) 
+		planeColour = vec4(1, 0, 0, 1); // set the plane to red
 	Gizmos::addTri(vec3(4, 1, 4), vec3(-4, 1, -4), vec3(-4, 1, 4), planeColour); Gizmos::addTri(vec3(4, 1, 4), vec3(4, 1, -4), vec3(-4, 1, -4), planeColour);
 
 	vec4 planes[6]; 
