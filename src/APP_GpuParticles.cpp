@@ -59,7 +59,7 @@ bool APP_GPUParticles::Start()
 
 	GameCam = new Camera();
 
-	initalise(10,
+	initalise(10000,
 		0.1f, 5.0f,
 		5, 20,
 		1, 0.1f,
