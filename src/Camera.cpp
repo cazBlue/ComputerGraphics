@@ -54,6 +54,12 @@ Camera::Camera(glm::vec3 a_lookAt, glm::vec3 a_centre, glm::vec3 a_up,
 	m_moveSpeed = a_moveSpeed;
 }
 
+void Camera::SetLookAt(glm::vec3 a_from, glm::vec3 a_to, glm::vec3 a_up)
+{
+	m_viewTransform = glm::lookAt(a_from, a_to, a_up);
+	m_worldTransform = glm::inverse(m_viewTransform);
+}
+
 //call after updating the world transform to align the view transform
 void Camera::UpdateProjectionViewTransform()
 {

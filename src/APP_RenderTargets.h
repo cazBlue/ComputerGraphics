@@ -28,6 +28,12 @@ public:
 	void createFBOBuffers(unsigned int bufNum);
 	void createGLplane(unsigned int bufNum);
 	void createGLShaderProgram();
+
+	float m_time;
+
+	mat4 getSphereMat(int x, int y, int z);
+
+	mat4 m_rotateMat;
 };
 
 

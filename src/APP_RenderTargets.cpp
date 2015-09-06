@@ -13,6 +13,18 @@ void APP_RenderTargets::Update(float a_dt)
 {
 	GameCam->Update(a_dt); //update camera
 
+	m_time += a_dt;
+
+	m_rotateMat = glm::rotate(m_time, vec3(0, 1, 0));
+}
+
+mat4 APP_RenderTargets::getSphereMat(int x, int y, int z)
+{
+	return mat4(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		x, y, z, 1);
 }
 
 void APP_RenderTargets::Draw()
@@ -33,6 +45,21 @@ void APP_RenderTargets::Draw()
 			i == 10 ? white : black);
 	}
 
+	//create new camera
+	Camera* securityCam;
+
+	mat4 sph1Wolrd = glm::inverse(m_rotateMat) * getSphereMat(-5, 0, 5);
+	vec3 sph1Vec3 = vec3(sph1Wolrd[3].x, cos(m_time) - 1, sph1Wolrd[3].z);
+
+	mat4 sph2Wolrd = m_rotateMat * getSphereMat(5, 0, -5);
+	vec3 sph2Vec3 = vec3(sph2Wolrd[3].x, cos(m_time), sph2Wolrd[3].z);
+
+	// draw our meshes, or gizmos, to the render target 
+	Gizmos::addSphere(vec3(5, sin(m_time), 5), 0.5f, 8, 8, vec4(1, 1, 0, 1));
+	Gizmos::addSphere(vec3(-5, cos(m_time), -5), 0.5f, 8, 8, vec4(1, 0, 0, 1));
+	Gizmos::addSphere(sph2Vec3, 0.5f, 8, 8, vec4(0, 1, 0, 1));
+	Gizmos::addSphere(sph1Vec3, 0.5f, 8, 8, vec4(0, 0, 1, 1));
+
 	for (unsigned int i = 0; i < 4; ++i)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_fbo[i]);
@@ -42,13 +69,30 @@ void APP_RenderTargets::Draw()
 		glClearColor(0.75f, 0.75f, 0.75f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// draw our meshes, or gizmos, to the render target Gizmos::draw(m_camera->getProjectionView());
-		Gizmos::addSphere(vec3(5, 0, 5), 0.5f, 8, 8, vec4(1, 1, 0, 1));
-		Gizmos::addSphere(vec3(-5, 0, -5), 0.5f, 8, 8, vec4(1, 0, 0, 1));
-		Gizmos::addSphere(vec3(5, 0, -5), 0.5f, 8, 8, vec4(0, 1, 0, 1));
-		Gizmos::addSphere(vec3(-5, 0, 5), 0.5f, 8, 8, vec4(0, 0, 1, 1));
-		Gizmos::draw(GameCam->GetProjectionView());
+		securityCam = new Camera();
+		switch (i)
+		{
+		case 0: 
+			securityCam->SetLookAt(vec3(-10, 10, 10), vec3(0), vec3(0, 1, 0));
+			break;
+		case 1:
+			securityCam->SetLookAt(vec3(10, 10, -10), vec3(0), vec3(0, 1, 0));
+			break;
+		case 2:
+			securityCam->SetLookAt(vec3(10, 10, 10), vec3(0), vec3(0, 1, 0));
+			break;
+		case 3:
+			securityCam->SetLookAt(vec3(-10, 10, -10), vec3(0), vec3(0, 1, 0));
+			break;
+		default:
+			securityCam->SetLookAt(vec3(10, 10, 10), vec3(0), vec3(0, 1, 0));
+			break;
+		}
+		
+		Gizmos::draw(securityCam->GetProjectionView());		
 	}
+	delete securityCam;
+
 	//revert to the back buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0); 
 	glViewport(0, 0, 1280, 720);
@@ -56,24 +100,28 @@ void APP_RenderTargets::Draw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(m_program);
 	int loc = glGetUniformLocation(m_program, "ProjectionView"); 
-	glUniformMatrix4fv(loc, 1, GL_FALSE, &(GameCam->GetProjectionView()[0][0]));
-	glActiveTexture(GL_TEXTURE0); 
-	glBindTexture(GL_TEXTURE_2D, m_fboTexture[0]);
-	unsigned int difLoc = glGetUniformLocation(m_program, "diffuse");
-	glUniform1i(difLoc, 0);
+	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(GameCam->GetProjectionView()));
+
 	for (unsigned int i = 0; i < 4; ++i)
 	{
+		glActiveTexture(GL_TEXTURE0); 
+		glBindTexture(GL_TEXTURE_2D, m_fboTexture[i]);
+		unsigned int difLoc = glGetUniformLocation(m_program, "diffuse");
+		glUniform1i(difLoc, 0);
+
 		glBindVertexArray(m_planes[i].m_vao);
 		glBindBuffer(GL_ARRAY_BUFFER, m_planes[i].m_vbo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_planes[i].m_ibo);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 	}
 
-	glDrawElements(GL_TRIANGLES, 6 * 4, GL_UNSIGNED_INT, 0);
+	
 
-	Gizmos::addSphere(vec3(5, 0, 5), 0.5f, 8, 8, vec4(1, 1, 0, 1));
-	Gizmos::addSphere(vec3(-5, 0, -5), 0.5f, 8, 8, vec4(1, 0, 0, 1));
-	Gizmos::addSphere(vec3(5, 0, -5), 0.5f, 8, 8, vec4(0, 1, 0, 1));
-	Gizmos::addSphere(vec3(-5, 0, 5), 0.5f, 8, 8, vec4(0, 0, 1, 1));
+//	Gizmos::addSphere(vec3(5, 0, 5), 0.5f, 8, 8, vec4(1, 1, 0, 1));
+//	Gizmos::addSphere(vec3(-5, 0, -5), 0.5f, 8, 8, vec4(1, 0, 0, 1));
+//	Gizmos::addSphere(vec3(5, 0, -5), 0.5f, 8, 8, vec4(0, 1, 0, 1));
+//	Gizmos::addSphere(vec3(-5, 0, 5), 0.5f, 8, 8, vec4(0, 0, 1, 1));
 
 
 	Gizmos::draw(GameCam->GetProjectionView());
@@ -83,6 +131,7 @@ bool APP_RenderTargets::Start()
 {
 	Gizmos::create();
 
+	m_time = 0;
 	GameCam = new Camera();
 
 	createFBO();
@@ -90,6 +139,11 @@ bool APP_RenderTargets::Start()
 		createGLplane(i);
 	createGLShaderProgram();
 
+	m_rotateMat = mat4(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1);
 
 	return true; //not being used in this lesson
 }
@@ -181,45 +235,45 @@ void APP_RenderTargets::createGLShaderProgram()
 
 void APP_RenderTargets::createGLplane(unsigned int bufNum)
 {
-	vec3 tl;
-	vec3 tr;
-	vec3 bl;
-	vec3 br;	
+	glm::vec2 tl;
+	glm::vec2 tr;
+	glm::vec2 bl;
+	glm::vec2 br;	
 	
 	switch (bufNum)
 	{
 	case 0:
-		bl = vec3(-6,6,-5);
-		br = vec3(0,6,-5);
-		tr = vec3(-6,3,-5);
-		tl = vec3(0,3,-5);
+		bl = glm::vec2(-6,6);
+		br = glm::vec2(0,6);
+		tr = glm::vec2(-6,3);
+		tl = glm::vec2(0,3);
 		break;
 	case 1:
-		bl = vec3(0, 6, -5);
-		br = vec3(6, 6, -5);
-		tr = vec3(0, 3, -5);
-		tl = vec3(6, 3, -5);
+		bl = glm::vec2(0, 6);
+		br = glm::vec2(6, 6);
+		tr = glm::vec2(0, 3);
+		tl = glm::vec2(6, 3);
 		break;
 	case 2:
-		bl = vec3(-6, 3, -5);
-		br = vec3(0, 0, -5);
-		tr = vec3(-6, 3, -5);
-		tl = vec3(0, 0, -5);
+		bl = glm::vec2(-6, 3);
+		br = glm::vec2(0, 3);
+		tr = glm::vec2(-6, 0);
+		tl = glm::vec2(0, 0);
 		break;
 	case 3:
-		bl = vec3(0, 3, -5);
-		br = vec3(6, 3, -5);
-		tr = vec3(0, 0, -5);
-		tl = vec3(6, 0, -5);
+		bl = glm::vec2(0, 3);
+		br = glm::vec2(6, 3);
+		tr = glm::vec2(0, 0);
+		tl = glm::vec2(6, 0);
 		break;
 	}
 
 	float vertexData[] = 
 	{ 
-		tl.x, tl.y, -5, 1,			0, 0,
-		tr.x, tr.y, -5, 1,			1, 0,
-		bl.x, bl.y, -5, 1,			1, 1,
-		br.x, br.y, -5, 1,			0, 1,
+		tl.x, tl.y, -10, 1,			0, 0,
+		tr.x, tr.y, -10, 1,			1, 0,
+		bl.x, bl.y, -10, 1,			1, 1,
+		br.x, br.y, -10, 1,			0, 1,
 	};
 
 	unsigned int indexData[] = 
@@ -229,7 +283,7 @@ void APP_RenderTargets::createGLplane(unsigned int bufNum)
 	};
 
 	glGenVertexArrays(1, &m_planes[bufNum].m_vao); 
-	glBindVertexArray(m_planes->m_vao);
+	glBindVertexArray(m_planes[bufNum].m_vao);
 	glGenBuffers(1, &m_planes[bufNum].m_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, m_planes[bufNum].m_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)* 6 * 4, vertexData, GL_STATIC_DRAW); 
