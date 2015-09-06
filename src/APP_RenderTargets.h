@@ -13,10 +13,20 @@ public:
 	bool Shutdown();
 
 public:
-	unsigned int m_fbo, m_fboTexture, m_fboDepth, 
-		m_vao, m_vbo, m_ibo, m_program;
+	unsigned int m_fboDepth, m_program;
 	
-	void createGLplane();
+	struct plane
+	{
+		unsigned int m_vao, m_vbo, m_ibo;
+	};
+
+	plane m_planes[4];
+	unsigned int m_fboTexture[4];
+	unsigned int m_fbo[4];
+
+	void createFBO();
+	void createFBOBuffers(unsigned int bufNum);
+	void createGLplane(unsigned int bufNum);
 	void createGLShaderProgram();
 };
 

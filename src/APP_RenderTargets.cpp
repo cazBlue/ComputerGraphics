@@ -33,15 +33,22 @@ void APP_RenderTargets::Draw()
 			i == 10 ? white : black);
 	}
 
+	for (unsigned int i = 0; i < 4; ++i)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, m_fbo[i]);
+		//render full res viewport (matches screen res)
+		//this will be paired down
+		glViewport(0, 0, 512, 512); 
+		glClearColor(0.75f, 0.75f, 0.75f, 1);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo); 
-	glViewport(0, 0, 512, 512);
-	glClearColor(0.75f, 0.75f, 0.75f, 1); 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	// draw our meshes, or gizmos, to the render target Gizmos::draw(m_camera->getProjectionView());
-	Gizmos::addSphere(vec3(0, 5, 0), 0.5f, 8, 8, vec4(1, 1, 0, 1));
-	Gizmos::draw(GameCam->GetProjectionView());
-
+		// draw our meshes, or gizmos, to the render target Gizmos::draw(m_camera->getProjectionView());
+		Gizmos::addSphere(vec3(5, 0, 5), 0.5f, 8, 8, vec4(1, 1, 0, 1));
+		Gizmos::addSphere(vec3(-5, 0, -5), 0.5f, 8, 8, vec4(1, 0, 0, 1));
+		Gizmos::addSphere(vec3(5, 0, -5), 0.5f, 8, 8, vec4(0, 1, 0, 1));
+		Gizmos::addSphere(vec3(-5, 0, 5), 0.5f, 8, 8, vec4(0, 0, 1, 1));
+		Gizmos::draw(GameCam->GetProjectionView());
+	}
 	//revert to the back buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0); 
 	glViewport(0, 0, 1280, 720);
@@ -50,12 +57,25 @@ void APP_RenderTargets::Draw()
 	glUseProgram(m_program);
 	int loc = glGetUniformLocation(m_program, "ProjectionView"); 
 	glUniformMatrix4fv(loc, 1, GL_FALSE, &(GameCam->GetProjectionView()[0][0]));
-	glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, m_fboTexture); 
-	glUniform1i(glGetUniformLocation(m_program, "diffuse"), 0);
-	glBindVertexArray(m_vao); 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+	glActiveTexture(GL_TEXTURE0); 
+	glBindTexture(GL_TEXTURE_2D, m_fboTexture[0]);
+	unsigned int difLoc = glGetUniformLocation(m_program, "diffuse");
+	glUniform1i(difLoc, 0);
+	for (unsigned int i = 0; i < 4; ++i)
+	{
+		glBindVertexArray(m_planes[i].m_vao);
+		glBindBuffer(GL_ARRAY_BUFFER, m_planes[i].m_vbo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_planes[i].m_ibo);
+	}
 
-	Gizmos::addSphere(vec3(0, 5, 0), 0.5f, 8, 8, vec4(1, 1, 0, 1));
+	glDrawElements(GL_TRIANGLES, 6 * 4, GL_UNSIGNED_INT, 0);
+
+	Gizmos::addSphere(vec3(5, 0, 5), 0.5f, 8, 8, vec4(1, 1, 0, 1));
+	Gizmos::addSphere(vec3(-5, 0, -5), 0.5f, 8, 8, vec4(1, 0, 0, 1));
+	Gizmos::addSphere(vec3(5, 0, -5), 0.5f, 8, 8, vec4(0, 1, 0, 1));
+	Gizmos::addSphere(vec3(-5, 0, 5), 0.5f, 8, 8, vec4(0, 0, 1, 1));
+
+
 	Gizmos::draw(GameCam->GetProjectionView());
 }
 
@@ -64,50 +84,62 @@ bool APP_RenderTargets::Start()
 	Gizmos::create();
 
 	GameCam = new Camera();
-	
-	// setup and bind a framebuffer 
-	glGenFramebuffers(1, &m_fbo); 
-	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+
+	createFBO();
+	for (unsigned int i = 0; i < 4; ++i)
+		createGLplane(i);
+	createGLShaderProgram();
+
+
+	return true; //not being used in this lesson
+}
+
+void APP_RenderTargets::createFBOBuffers(unsigned int bufNum)
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo[bufNum]);
 	// TODO: we would attach render targets here!
 
-	// create a texture and bind it 
-	glGenTextures(1, &m_fboTexture); 
-	glBindTexture(GL_TEXTURE_2D, m_fboTexture);
+	glBindTexture(GL_TEXTURE_2D, m_fboTexture[bufNum]);
 	// specify texture format for storage 
-	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 512, 512); 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
+	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 512, 512); //matches screen res
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// attach it to the framebuffer as the first colour attachment 
 	// the FBO MUST still be bound 
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_fboTexture, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_fboTexture[bufNum], 0);
 
 	// while the FBO is still bound 
-	GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 }; 
+	GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, drawBuffers);
+}
 
-	// setup and bind a 24bit depth buffer as a render buffer 
-	glGenRenderbuffers(1, &m_fboDepth); 
-	glBindRenderbuffer(GL_RENDERBUFFER, m_fboDepth); 
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
-	// while the FBO is still bound 
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, 
-							  GL_RENDERBUFFER, m_fboDepth);
+void APP_RenderTargets::createFBO()
+{
+	// setup and bind a framebuffer 
+	glGenFramebuffers(4, m_fbo);
+	// create a texture and bind it 
+	glGenTextures(4, m_fboTexture);
 
-	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); 
-	if (status != GL_FRAMEBUFFER_COMPLETE) 
+	for (unsigned int i = 0; i < 4; ++i)
+	{
+		createFBOBuffers(i);
+	}
+
+	//FBO depth buffer, not being used
+//	// setup and bind a 24bit depth buffer as a render buffer 
+//	glGenRenderbuffers(1, &m_fboDepth);
+//	glBindRenderbuffer(GL_RENDERBUFFER, m_fboDepth);
+//	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+//	// while the FBO is still bound 
+//	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+//		GL_RENDERBUFFER, m_fboDepth);
+
+	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status != GL_FRAMEBUFFER_COMPLETE)
 		printf("Framebuffer Error!\n");
 
 	// unbind the FBO so that we can render to the back buffer 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	createGLplane();
-	createGLShaderProgram();
-
-
-
-
-
-	return true; //not being used in this lesson
 }
 
 void APP_RenderTargets::createGLShaderProgram()
@@ -147,14 +179,47 @@ void APP_RenderTargets::createGLShaderProgram()
 	glDeleteShader(fragmentShader);
 }
 
-void APP_RenderTargets::createGLplane()
+void APP_RenderTargets::createGLplane(unsigned int bufNum)
 {
+	vec3 tl;
+	vec3 tr;
+	vec3 bl;
+	vec3 br;	
+	
+	switch (bufNum)
+	{
+	case 0:
+		bl = vec3(-6,6,-5);
+		br = vec3(0,6,-5);
+		tr = vec3(-6,3,-5);
+		tl = vec3(0,3,-5);
+		break;
+	case 1:
+		bl = vec3(0, 6, -5);
+		br = vec3(6, 6, -5);
+		tr = vec3(0, 3, -5);
+		tl = vec3(6, 3, -5);
+		break;
+	case 2:
+		bl = vec3(-6, 3, -5);
+		br = vec3(0, 0, -5);
+		tr = vec3(-6, 3, -5);
+		tl = vec3(0, 0, -5);
+		break;
+	case 3:
+		bl = vec3(0, 3, -5);
+		br = vec3(6, 3, -5);
+		tr = vec3(0, 0, -5);
+		tl = vec3(6, 0, -5);
+		break;
+	}
+
 	float vertexData[] = 
 	{ 
-		-5, 0,  -5, 1,		0, 0, 
-		 5, 0,  -5, 1,		1, 0, 
-		 5, 10, -5, 1,		1, 1, 
-		-5, 10, -5, 1,		0, 1, 
+		tl.x, tl.y, -5, 1,			0, 0,
+		tr.x, tr.y, -5, 1,			1, 0,
+		bl.x, bl.y, -5, 1,			1, 1,
+		br.x, br.y, -5, 1,			0, 1,
 	};
 
 	unsigned int indexData[] = 
@@ -163,13 +228,13 @@ void APP_RenderTargets::createGLplane()
 		0, 2, 3, 
 	};
 
-	glGenVertexArrays(1, &m_vao); 
-	glBindVertexArray(m_vao); 
-	glGenBuffers(1, &m_vbo); 
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo); 
+	glGenVertexArrays(1, &m_planes[bufNum].m_vao); 
+	glBindVertexArray(m_planes->m_vao);
+	glGenBuffers(1, &m_planes[bufNum].m_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, m_planes[bufNum].m_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)* 6 * 4, vertexData, GL_STATIC_DRAW); 
-	glGenBuffers(1, &m_ibo); 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo); 
+	glGenBuffers(1, &m_planes[bufNum].m_ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_planes[bufNum].m_ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)* 6, indexData, GL_STATIC_DRAW); 
 	glEnableVertexAttribArray(0); 
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float)* 6, 0); 
