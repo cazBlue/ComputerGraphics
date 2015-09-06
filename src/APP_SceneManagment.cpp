@@ -175,8 +175,6 @@ void APP_SCENEMANAGE::Draw()
 //	else
 //		return(INTERSECT);
 
-
-
 	//sphere/plane collision
 	vec4 planeColour(1, 1, 0, 1); //set the plane to yellow
 	if (d > sphere.radius) 

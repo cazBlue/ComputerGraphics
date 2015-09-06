@@ -67,6 +67,9 @@
     <ClCompile Include="src\APP_SceneManagment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\APP_RenderTargets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\aieutilities-master\aie\Gizmos.h">
@@ -115,6 +118,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\APP_SceneManagment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\APP_RenderTargets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
