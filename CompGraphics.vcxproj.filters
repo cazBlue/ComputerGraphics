@@ -70,6 +70,9 @@
     <ClCompile Include="src\APP_RenderTargets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\APP_PostProcessing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\aieutilities-master\aie\Gizmos.h">
@@ -123,6 +126,9 @@
     <ClInclude Include="src\APP_RenderTargets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\APP_PostProcessing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\AdvTexVertexShader.glsl">
@@ -171,6 +177,12 @@
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="assets\shaders\RotateVertShader.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="assets\shaders\PostProcessFragShader.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="assets\shaders\PostProcessVertShader.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>

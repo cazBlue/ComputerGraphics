@@ -91,6 +91,7 @@
     <ClCompile Include="src\APP_ObjLoader.cpp" />
     <ClCompile Include="src\APP_Particles.cpp" />
     <ClCompile Include="src\APP_Particles_emitter.cpp" />
+    <ClCompile Include="src\APP_PostProcessing.cpp" />
     <ClCompile Include="src\APP_RenderTargets.cpp" />
     <ClCompile Include="src\APP_SceneManagment.cpp" />
     <ClCompile Include="src\APP_SpotRotate.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="src\APP_ObjLoader.h" />
     <ClInclude Include="src\APP_Particles.h" />
     <ClInclude Include="src\APP_Particles_emitter.h" />
+    <ClInclude Include="src\APP_PostProcessing.h" />
     <ClInclude Include="src\APP_RenderTargets.h" />
     <ClInclude Include="src\APP_SceneManagment.h" />
     <ClInclude Include="src\APP_SpotRotate.h" />
@@ -132,6 +134,8 @@
     <None Include="assets\shaders\GPUParticleVertexUpdateShader.vert" />
     <None Include="assets\shaders\particleFragShader.glsl" />
     <None Include="assets\shaders\particleVertexShader.glsl" />
+    <None Include="assets\shaders\PostProcessFragShader.frag" />
+    <None Include="assets\shaders\PostProcessVertShader.vert" />
     <None Include="assets\shaders\RotateFragShader.frag" />
     <None Include="assets\shaders\RotateVertShader.vert" />
     <None Include="assets\shaders\VertexShader.glsl" />
