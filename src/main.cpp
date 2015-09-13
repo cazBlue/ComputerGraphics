@@ -19,6 +19,7 @@
 #include <APP_SceneManagment.h>
 #include <APP_RenderTargets.h>
 #include <APP_PostProcessing.h>
+#include <APP_Shadows.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -58,7 +59,8 @@ int main()
 	//App *appPtr = new APP_SpotRotate();     //#-- side step to work out rotation for particles (proof of concept)
 	//App *appPtr = new APP_SCENEMANAGE();   //#9 scene management, could do with more work on the quad tree
 	//App *appPtr = new APP_RenderTargets();  //#10 render targets
-	App *appPtr = new APP_postProcess();	//#11 post processing
+	//App *appPtr = new APP_postProcess();	//#11 post processing
+	App *appPtr = new APP_Shadows();		//#12 shadows
 
 	appPtr->Start();
 
