@@ -23,7 +23,7 @@ void APP_postProcess::Update(float a_dt)
 void APP_postProcess::Draw()
 {
 	Gizmos::clear();
-	Gizmos::addTransform(glm::mat4(1));
+//	Gizmos::addTransform(glm::mat4(1));
 
 	vec4 white(1);
 	vec4 black(0, 0, 0, 1);
@@ -40,10 +40,6 @@ void APP_postProcess::Draw()
 	Gizmos::draw(GameCam->GetProjectionView());
 
 
-
-
-
-
 	// bind our target
 	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 	glViewport(0, 0, 1280, 720);
@@ -52,14 +48,14 @@ void APP_postProcess::Draw()
 	// draw our 3D scene
 	// gizmos for now
 
-	Gizmos::addSphere(vec3(0,0,0), 1.0f, 8, 8, vec4(1,0,0,1));
-	Gizmos::addSphere(vec3(0, 2, 0), 0.5f, 8, 8, vec4(1, 1, 0, 1));
-	Gizmos::addSphere(vec3(0, 6, 0), 1.5f, 8, 8, vec4(0, 0, 1, 1));
+//	Gizmos::addSphere(vec3(0,0,0), 1.0f, 8, 8, vec4(1,0,0,1));
+//	Gizmos::addSphere(vec3(0, 2, 0), 0.5f, 8, 8, vec4(1, 1, 0, 1));
+//	Gizmos::addSphere(vec3(0, 6, 0), 1.5f, 8, 8, vec4(0, 0, 1, 1));
+//
+//	Gizmos::draw(GameCam->GetProjectionView());
 
-	Gizmos::draw(GameCam->GetProjectionView());
-
-	glUseProgram(m_program);
-	int view_proj_uniform = glGetUniformLocation(m_program, "ProjectionView");
+	glUseProgram(m_programTarget);
+	int view_proj_uniform = glGetUniformLocation(m_programTarget, "ProjectionView");
 	glUniformMatrix4fv(view_proj_uniform, 1, GL_FALSE, glm::value_ptr(GameCam->GetProjectionView()));
 	for (unsigned int i = 0; i < m_gl_info.size(); ++i)
 	{
@@ -75,10 +71,10 @@ void APP_postProcess::Draw()
 	// each pixel will be filled
 	glClear(GL_DEPTH_BUFFER_BIT);
 	// draw out full-screen quad
-	glUseProgram(m_program);
+	glUseProgram(m_programBackBuffer);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_fboTexture);
-	int loc = glGetUniformLocation(m_program, "target");
+	int loc = glGetUniformLocation(m_programBackBuffer, "target");
 	glUniform1i(loc, 0);
 
 //	int view_proj_uniform = glGetUniformLocation(m_program, "ProjectionView");
@@ -102,10 +98,20 @@ bool APP_postProcess::Start()
 	CreateFrameBuffer();
 	CreateTriangles();
 
+
+
+	createTargetBuffers();
+	createBackBufferBuffers();
+
+	return true; //not being used in this lesson
+}
+
+void APP_postProcess::createBackBufferBuffers()
+{
 	//load shaders
 	// create shaders
 	const char* vsSource = nullptr;
-	std::string vsResult = LoadShader("./assets/shaders/PostProcessVertShader.vert");
+	std::string vsResult = LoadShader("./assets/shaders/PostProcessWorldVertShader.vert");
 	vsSource = vsResult.c_str();
 
 	const char* fsSource = nullptr;
@@ -120,20 +126,44 @@ bool APP_postProcess::Start()
 	glShaderSource(fragmentShader, 1, (const char**)&fsSource, 0);
 	glCompileShader(fragmentShader);
 
-	m_program = glCreateProgram();
-	glAttachShader(m_program, vertexShader);
-	glAttachShader(m_program, fragmentShader);
-	glLinkProgram(m_program);
+	m_programBackBuffer = glCreateProgram();
+	glAttachShader(m_programBackBuffer, vertexShader);
+	glAttachShader(m_programBackBuffer, fragmentShader);
+	glLinkProgram(m_programBackBuffer);
+}
+
+void APP_postProcess::createTargetBuffers()
+{
+
+	//load shaders
+	// create shaders
+	const char* vsSource = nullptr;
+	std::string vsResult = LoadShader("./assets/shaders/PostProcessObjVertShader.vert");
+	vsSource = vsResult.c_str();
+
+	const char* fsSource = nullptr;
+	std::string fsResult = LoadShader("./assets/shaders/PostProcessFragShader.frag");
+	fsSource = fsResult.c_str();
+
+	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	glShaderSource(vertexShader, 1, (const char**)&vsSource, 0);
+	glCompileShader(vertexShader);
+	glShaderSource(fragmentShader, 1, (const char**)&fsSource, 0);
+	glCompileShader(fragmentShader);
+
+	m_programTarget = glCreateProgram();
+	glAttachShader(m_programTarget, vertexShader);
+	glAttachShader(m_programTarget, fragmentShader);
+	glLinkProgram(m_programTarget);
 
 
 	printf("loading object, this can take a while!");
 	std::string err = tinyobj::LoadObj(shapes, materials, "./assets/stanford_objs/bunny.obj");
 	printf("loading objects done");
 
-
 	createOpenGLBuffers(shapes);
-
-	return true; //not being used in this lesson
 }
 
 bool APP_postProcess::Shutdown()
@@ -146,6 +176,7 @@ bool APP_postProcess::Shutdown()
 
 void APP_postProcess::CreateFrameBuffer()
 {
+	glUseProgram(m_programTarget);
 	// setup framebuffer
 	glGenFramebuffers(1, &m_fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
@@ -162,6 +193,8 @@ void APP_postProcess::CreateFrameBuffer()
 	GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, drawBuffers);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glUseProgram(0);
 }
 
 void APP_postProcess::CreateTriangles()

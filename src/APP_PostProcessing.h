@@ -23,7 +23,7 @@ public:
 
 	unsigned int m_fbo, m_fboDepth, m_fboTexture;
 
-	unsigned int m_vao, m_vbo, m_program;
+	unsigned int m_vao, m_vbo, m_programTarget, m_programBackBuffer;
 
 	void createOpenGLBuffers(std::vector<tinyobj::shape_t>& shapes);
 
@@ -34,6 +34,9 @@ public:
 		unsigned int m_IBO;
 		unsigned int m_index_count;
 	};
+
+	void createTargetBuffers(); //also loads obj
+	void createBackBufferBuffers();
 
 	std::vector<OpenGLInfo> m_gl_info;
 };

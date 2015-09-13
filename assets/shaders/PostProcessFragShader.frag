@@ -39,42 +39,30 @@ vec4 Sobel()
 
 	vec4 colourx;
 	vec4 coloury;
-//	vec4 finalColour = texture( target, fTexCoord );
-	vec4 finalColour;
-	vec4 source;
+	vec4 finalColour;	
 
-//	colourx = texture( target, fTexCoord );
-//	coloury = texture( target, fTexCoord );
-	source = texture( target, fTexCoord );;
 	
 
 	// calculate x kernal
 	colourx += texture( target, fTexCoord - vec2( texelSize.x, 0 ) + vec2(0, texelSize.y) )  * -1; //top left
 	colourx += texture( target, fTexCoord - vec2( texelSize.x, 0 ) )  * -2; //middle left
 	colourx += texture( target, fTexCoord - vec2( texelSize.x, texelSize.y )) * -1; //bottom left
-//
+
 	colourx += texture( target, fTexCoord + vec2( texelSize.x, texelSize.y ) )  * 1; //top right
 	colourx += texture( target, fTexCoord + vec2( texelSize.x, 0 ) ) * 2; //middle right
 	colourx += texture( target, fTexCoord + vec2( texelSize.x, 0 ) - vec2(0,texelSize.y ) ) * 1; //bottom right
-//
-//	colourx *= source;
 
 	//calculate y kernal
 	coloury += texture( target, fTexCoord - vec2( texelSize.x, 0 ) + vec2( 0, texelSize.y) ) * 1; //top left
 	coloury += texture( target, fTexCoord + vec2( 0, texelSize.y) )  * 2; //middle top
 	coloury += texture( target, fTexCoord + vec2( texelSize.x, texelSize.y ) ) * 1; //top right
-//
+
 	coloury += texture( target, fTexCoord - vec2( texelSize.x, texelSize.y) ) * -1; //bottom left
 	coloury += texture( target, fTexCoord - vec2( 0, texelSize.y ) ) * -2; //middle bottom
 	coloury += texture( target, fTexCoord + vec2( texelSize.x, 0 ) - vec2(0,texelSize.y) ) * -1; //bottom right
 
-//	coloury *= source;
-
 	finalColour = sqrt((colourx * colourx) + (coloury  * coloury));
 
-//	finalColour
-
-//	coloury.w = 1;
 
 	return finalColour;
 }
@@ -106,9 +94,9 @@ vec4 Distort() {
 
 void main() {
 //	FragColour = vec4(1,0,0,1);
-	FragColour = Simple();
+//	FragColour = Simple();
 //	FragColour = BoxBlur();
 //	FragColour = Distort();
 //	FragColour = Sharpen();
-//	FragColour = Sobel();
+	FragColour = Sobel();
 }

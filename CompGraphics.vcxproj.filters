@@ -179,10 +179,13 @@
     <None Include="assets\shaders\RotateVertShader.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="assets\shaders\PostProcessFragShader.frag">
+    <None Include="assets\shaders\PostProcessObjVertShader.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="assets\shaders\PostProcessVertShader.vert">
+    <None Include="assets\shaders\PostProcessWorldVertShader.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="assets\shaders\PostProcessFragShader.frag">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>
