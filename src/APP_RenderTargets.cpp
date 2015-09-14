@@ -294,7 +294,8 @@ void APP_RenderTargets::createGLplane(unsigned int bufNum)
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float)* 6, 0); 
 	glEnableVertexAttribArray(1); 
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float)* 6, ((char*)0) + 16); 
-	glBindVertexArray(0); glBindBuffer(GL_ARRAY_BUFFER, 0); 
+	glBindVertexArray(0); 
+	glBindBuffer(GL_ARRAY_BUFFER, 0); 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 

@@ -56,15 +56,19 @@ void APP_Shadows::Draw()
 //	glm::vec3 dirLight = glm::vec3(0, 1, 10); //controls the lights position in the world	
 	glUniform3fv(lightDirUniform, 1, glm::value_ptr(m_lightDirection));	//set the lightDir uniform variabe in the vertex shader
 
-	generatePlane(); //draw the plane
+//	generatePlane(); //draw the plane
+	glBindVertexArray(m_plane_vao);	
+	glBindBuffer(GL_ARRAY_BUFFER, m_plane_vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_plane_ibo);
+	
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 	// bind our vertex array object and draw the fbx mesh
 	for (unsigned int i = 0; i < m_fbx->getMeshCount(); ++i) {
 		FBXMeshNode* mesh = m_fbx->getMeshByIndex(i);
 		unsigned int* glData = (unsigned int*)mesh->m_userData;
 		glBindVertexArray(glData[0]);
-		glDrawElements(GL_TRIANGLES,
-			(unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, (unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
 	}
 
 	glUseProgram(0);
@@ -168,6 +172,8 @@ bool APP_Shadows::Start()
 	m_lightMatrix = lightProjection * lightView;
 
 	createShadowProgram(); //requires lights to be bound first
+
+	generatePlane();
 
 	return true; //not being used in this lesson
 }
@@ -300,7 +306,7 @@ void APP_Shadows::generatePlane()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)* 6, indexData, GL_STATIC_DRAW);
 
 	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //enable wireframe render
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+//	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 	//unbind and delte pointers
 	glBindVertexArray(0);
