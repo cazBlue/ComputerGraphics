@@ -50,14 +50,15 @@ void APP_Shadows::Draw()
 	int loc = glGetUniformLocation(m_useShadowProgram, "ProjectionView");
 	glUniformMatrix4fv(loc, 1, GL_FALSE, &(GameCam->GetProjectionView()[0][0]));
 
-
 	int lightDirUniform = -1;
 	// bind the directional light position for a directional light
 	lightDirUniform = glGetUniformLocation(m_useShadowProgram, "directionalLight");	//get the directional light uniform index from the vertex shader
 //	glm::vec3 dirLight = glm::vec3(0, 1, 10); //controls the lights position in the world	
 	glUniform3fv(lightDirUniform, 1, glm::value_ptr(m_lightDirection));	//set the lightDir uniform variabe in the vertex shader
 
-	// bind our vertex array object and draw the mesh
+	generatePlane(); //draw the plane
+
+	// bind our vertex array object and draw the fbx mesh
 	for (unsigned int i = 0; i < m_fbx->getMeshCount(); ++i) {
 		FBXMeshNode* mesh = m_fbx->getMeshByIndex(i);
 		unsigned int* glData = (unsigned int*)mesh->m_userData;
@@ -66,23 +67,25 @@ void APP_Shadows::Draw()
 			(unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
 	}
 
-	// shadow pass: bind our shadow map target and clear the depth
-	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-	glViewport(0, 0, 1024, 1024);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	glUseProgram(m_shadowGenProgram);
-	// bind the light matrix
-	loc = glGetUniformLocation(m_shadowGenProgram, "LightMatrix");
-	glUniformMatrix4fv(loc, 1, GL_FALSE, &(m_lightMatrix[0][0]));
-	// draw all shadow-casting geometry
-	for (unsigned int i = 0; i < m_fbx->getMeshCount(); ++i) {
-		FBXMeshNode* mesh = m_fbx->getMeshByIndex(i);
-		unsigned int* glData = (unsigned int*)mesh->m_userData;
-		glBindVertexArray(glData[0]);
-		glDrawElements(GL_TRIANGLES,
-			(unsigned int)mesh->m_indices.size(),
-			GL_UNSIGNED_INT, 0);
-	}
+	glUseProgram(0);
+
+//	// shadow pass: bind our shadow map target and clear the depth
+//	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+//	glViewport(0, 0, 1024, 1024);
+//	glClear(GL_DEPTH_BUFFER_BIT);
+//	glUseProgram(m_shadowGenProgram);
+//	// bind the light matrix
+//	loc = glGetUniformLocation(m_shadowGenProgram, "LightMatrix");
+//	glUniformMatrix4fv(loc, 1, GL_FALSE, &(m_lightMatrix[0][0]));
+//	// draw all shadow-casting geometry
+//	for (unsigned int i = 0; i < m_fbx->getMeshCount(); ++i) {
+//		FBXMeshNode* mesh = m_fbx->getMeshByIndex(i);
+//		unsigned int* glData = (unsigned int*)mesh->m_userData;
+//		glBindVertexArray(glData[0]);
+//		glDrawElements(GL_TRIANGLES,
+//			(unsigned int)mesh->m_indices.size(),
+//			GL_UNSIGNED_INT, 0);
+//	}
 }
 
 void APP_Shadows::loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id)
@@ -157,12 +160,13 @@ bool APP_Shadows::Start()
 
 	createShadowMapBuffers();
 
-
 	m_lightDirection = glm::normalize(glm::vec3(1, 2.5f, 1));
 	
 	glm::mat4 lightProjection = glm::ortho<float>(-10, 10, -10, 10, -10, 10);
 	glm::mat4 lightView = glm::lookAt(m_lightDirection, glm::vec3(0), glm::vec3(0, 1, 0));
-		m_lightMatrix = lightProjection * lightView;
+	
+	m_lightMatrix = lightProjection * lightView;
+
 	createShadowProgram(); //requires lights to be bound first
 
 	return true; //not being used in this lesson
@@ -216,6 +220,7 @@ void APP_Shadows::createShadowMapBuffers()
 	
 	// no colour targets are used
 	glDrawBuffer(GL_NONE);
+
 	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (status != GL_FRAMEBUFFER_COMPLETE)
 		printf("Framebuffer Error!\n");
@@ -247,6 +252,62 @@ void APP_Shadows::createLightProgram()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
+	// Generate our GL Buffers	for the plane
+	glGenBuffers(1, &m_plane_vbo);
+	glGenBuffers(1, &m_plane_ibo);
+	glGenVertexArrays(1, &m_plane_vao); //generate a VertexArrayObject
+
+}
+
+struct Vertex {
+	vec4 position;
+	vec4 colour;
+};
+
+void APP_Shadows::generatePlane()
+{
+	Vertex* aoVertices = new Vertex[4];
+
+	//generate mesh information
+	aoVertices[0].position = glm::vec4(-15, 0, 15, 1);
+	aoVertices[1].position = glm::vec4(15, 0, 15, 1);
+	aoVertices[2].position = glm::vec4(15, 0, -15, 1);
+	aoVertices[3].position = glm::vec4(-15, 0, -15, 1);
+
+	aoVertices[0].colour = glm::vec4(1.0f, 1.0f, 1.0f, 1);
+	aoVertices[1].colour = glm::vec4(1.0f, 1.0f, 1.0f, 1);
+	aoVertices[2].colour = glm::vec4(1.0f, 1.0f, 1.0f, 1);
+	aoVertices[3].colour = glm::vec4(1.0f, 1.0f, 1.0f, 1);
+
+	unsigned int indexData[] = {
+		0, 1, 2,
+		0, 2, 3,
+	};
+
+	//bind buffers
+	glBindVertexArray(m_plane_vao);						//bind vertex array object
+	glBindBuffer(GL_ARRAY_BUFFER, m_plane_vbo);			//vertex buffer objet
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_plane_ibo);	//index buffer object
+	//enable arrays for incoming data
+	glEnableVertexAttribArray(0);					//enable vertex positions in the vertex shader
+	glEnableVertexAttribArray(1);					//enable colour in the vertex shader
+
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+//	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float)* 6, ((char*)0) + 16);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(vec4))); //colour of plane
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, aoVertices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)* 6, indexData, GL_STATIC_DRAW);
+
+	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //enable wireframe render
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+	//unbind and delte pointers
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	delete[] aoVertices;
 }
 
 void APP_Shadows::createOpenGLBuffers(FBXFile* fbx)

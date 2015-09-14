@@ -11,4 +11,4 @@ uniform mat4 ProjectionView;
 void main() {
 	vNormal = Normal;
 	gl_Position = ProjectionView * Position;
-}
+}

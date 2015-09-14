@@ -94,7 +94,7 @@ void APP_SpotRotate::generateGrid(unsigned int rows, unsigned int cols)
 
 void APP_SpotRotate::generatePlane()
 {
-	Vertex* aoVertices = new Vertex();
+	//Vertex* aoVertices = new Vertex();
 	
 	glm::vec4 tl = glm::vec4(-5, 5, 0, 1);
 	glm::vec4 tr = glm::vec4(5, 5, 0, 1);
@@ -161,7 +161,7 @@ void APP_SpotRotate::generatePlane()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);	//index buffer object
 	//enable arrays for incoming data
 	glEnableVertexAttribArray(0);					//enable vertex positions in the vertex shader
-	glEnableVertexAttribArray(1);					//enable colour in the vertex shader
+	glEnableVertexAttribArray(1);					//enable texture coord in the vertex shader
 	
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float)* 6, 0);	
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float)* 6, ((char*)0) + 16);

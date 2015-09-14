@@ -27,7 +27,7 @@ public:
 	void cleanupOpenGLBuffers(FBXFile* fbx);
 	FBXFile* m_fbx;
 
-	unsigned int m_program, m_shadowGenProgram, m_useShadowProgram;
+	unsigned int m_shadowGenProgram, m_useShadowProgram;
 
 	unsigned int m_fbo, m_fboDepth;
 
@@ -39,6 +39,9 @@ public:
 	glm::vec3 m_lightDirection;
 
 	void createShadowProgram();
+	void generatePlane();
+
+	unsigned int m_plane_vbo, m_plane_ibo, m_plane_vao;
 };
 
 
