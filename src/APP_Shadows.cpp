@@ -23,6 +23,14 @@ APP_Shadows::~APP_Shadows()
 void APP_Shadows::Update(float a_dt)
 {
 	GameCam->Update(a_dt); //update camera
+
+	//animate the light
+	m_time += a_dt;
+	m_lightDirection = glm::normalize(glm::vec3(glm::sin(m_time) * 1, 2.5f, glm::cos(m_time) * 1));
+	glm::mat4 lightProjection = glm::ortho<float>(-10, 10, -10, 10, -10, 10);
+	glm::mat4 lightView = glm::lookAt(m_lightDirection, glm::vec3(0), glm::vec3(0, 1, 0));
+
+	m_lightMatrix = lightProjection * lightView;
 }
 
 void APP_Shadows::Draw()
@@ -45,9 +53,27 @@ void APP_Shadows::Draw()
 
 	Gizmos::draw(GameCam->GetProjectionView());
 
+
+	// shadow pass: bind our shadow map target and clear the depth
+	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+	glViewport(0, 0, 1024, 1024);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glUseProgram(m_shadowGenProgram);
+	// bind the light matrix
+	int loc = glGetUniformLocation(m_shadowGenProgram, "LightMatrix");
+	glUniformMatrix4fv(loc, 1, GL_FALSE, &(m_lightMatrix[0][0]));
+	// draw all shadow-casting geometry
+	for (unsigned int i = 0; i < m_fbx->getMeshCount(); ++i) {
+		FBXMeshNode* mesh = m_fbx->getMeshByIndex(i);
+		unsigned int* glData = (unsigned int*)mesh->m_userData;
+		glBindVertexArray(glData[0]);
+		glDrawElements(GL_TRIANGLES, (unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
+	}
+
+
 	glUseProgram(m_useShadowProgram);
 	// bind the camera
-	int loc = glGetUniformLocation(m_useShadowProgram, "ProjectionView");
+	loc = glGetUniformLocation(m_useShadowProgram, "ProjectionView");
 	glUniformMatrix4fv(loc, 1, GL_FALSE, &(GameCam->GetProjectionView()[0][0]));
 
 	int lightDirUniform = -1;
@@ -57,39 +83,74 @@ void APP_Shadows::Draw()
 	glUniform3fv(lightDirUniform, 1, glm::value_ptr(m_lightDirection));	//set the lightDir uniform variabe in the vertex shader
 
 //	generatePlane(); //draw the plane
-	glBindVertexArray(m_plane_vao);	
-	glBindBuffer(GL_ARRAY_BUFFER, m_plane_vbo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_plane_ibo);
-	
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-	// bind our vertex array object and draw the fbx mesh
-	for (unsigned int i = 0; i < m_fbx->getMeshCount(); ++i) {
-		FBXMeshNode* mesh = m_fbx->getMeshByIndex(i);
-		unsigned int* glData = (unsigned int*)mesh->m_userData;
-		glBindVertexArray(glData[0]);
-		glDrawElements(GL_TRIANGLES, (unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
-	}
-
-	glUseProgram(0);
-
-//	// shadow pass: bind our shadow map target and clear the depth
-//	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
-//	glViewport(0, 0, 1024, 1024);
-//	glClear(GL_DEPTH_BUFFER_BIT);
-//	glUseProgram(m_shadowGenProgram);
-//	// bind the light matrix
-//	loc = glGetUniformLocation(m_shadowGenProgram, "LightMatrix");
-//	glUniformMatrix4fv(loc, 1, GL_FALSE, &(m_lightMatrix[0][0]));
-//	// draw all shadow-casting geometry
+//	glBindVertexArray(m_plane_vao);	
+//	glBindBuffer(GL_ARRAY_BUFFER, m_plane_vbo);
+//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_plane_ibo);
+//	
+//	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+//
+//	// bind our vertex array object and draw the fbx mesh
 //	for (unsigned int i = 0; i < m_fbx->getMeshCount(); ++i) {
 //		FBXMeshNode* mesh = m_fbx->getMeshByIndex(i);
 //		unsigned int* glData = (unsigned int*)mesh->m_userData;
 //		glBindVertexArray(glData[0]);
-//		glDrawElements(GL_TRIANGLES,
-//			(unsigned int)mesh->m_indices.size(),
-//			GL_UNSIGNED_INT, 0);
+//		glDrawElements(GL_TRIANGLES, (unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
 //	}
+
+	// final pass: bind back-buffer and clear colour and depth
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, 1280, 720);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(m_useShadowProgram);
+	// bind the camera
+	loc = glGetUniformLocation(m_useShadowProgram, "ProjectionView");
+	glUniformMatrix4fv(loc, 1, GL_FALSE, &(GameCam->GetProjectionView()[0][0]));
+	// bind the light matrix
+	glm::mat4 textureSpaceOffset(
+		0.5f, 0.0f, 0.0f, 0.0f,
+		0.0f, 0.5f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.5f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f
+		);
+
+	glm::mat4 lightMatrix = textureSpaceOffset * m_lightMatrix;
+	loc = glGetUniformLocation(m_useShadowProgram, "LightMatrix");
+	glUniformMatrix4fv(loc, 1, GL_FALSE, &lightMatrix[0][0]);
+	
+	loc = glGetUniformLocation(m_useShadowProgram, "lightDir");
+	glUniform3fv(loc, 1, &m_lightDirection[0]);
+	
+	loc = glGetUniformLocation(m_useShadowProgram, "shadowMap");
+	glUniform1i(loc, 0);
+	glActiveTexture(GL_TEXTURE0);
+	
+//	glTexParameteri(GL_TEXTURE_2D, GL_COMPARE_REF_TO_TEXTURE, GL_NONE);
+//	glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
+	
+
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_READ_COLOR);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_READ_COLOR);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+//	glTexParameteri(GL_TEXTURE_2D, GL_MAX_DEPTH_TEXTURE_SAMPLES, BACKGROUND_INTENSITY);
+
+
+	glBindTexture(GL_TEXTURE_2D, m_fboDepth);
+	// bind our vertex array object and draw the mesh
+	for (unsigned int i = 0; i < m_fbx->getMeshCount(); ++i) {
+		FBXMeshNode* mesh = m_fbx->getMeshByIndex(i);
+		unsigned int* glData = (unsigned int*)mesh->m_userData;
+		glBindVertexArray(glData[0]);
+		glDrawElements(GL_TRIANGLES,
+			(unsigned int)mesh->m_indices.size(),
+			GL_UNSIGNED_INT, 0);
+	}
+	// draw a plane under the bunny
+	glBindVertexArray(m_plane_vao);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
 }
 
 void APP_Shadows::loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id)
@@ -129,6 +190,8 @@ bool APP_Shadows::Start()
 {
 	Gizmos::create();
 	GameCam = new Camera();	
+
+	m_time = 0;
 
 	m_fbx = new FBXFile();	
 
@@ -171,14 +234,14 @@ bool APP_Shadows::Start()
 	
 	m_lightMatrix = lightProjection * lightView;
 
-	createShadowProgram(); //requires lights to be bound first
+	createShadowGenProgram(); //requires lights to be bound first
 
 	generatePlane();
 
 	return true; //not being used in this lesson
 }
 
-void APP_Shadows::createShadowProgram()
+void APP_Shadows::createShadowGenProgram()
 {
 
 	//////////////create shaders and program	

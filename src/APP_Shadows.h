@@ -38,10 +38,12 @@ public:
 	glm::mat4 m_lightMatrix;
 	glm::vec3 m_lightDirection;
 
-	void createShadowProgram();
+	void createShadowGenProgram();
 	void generatePlane();
 
 	unsigned int m_plane_vbo, m_plane_ibo, m_plane_vao;
+
+	float m_time;
 };
 
 
