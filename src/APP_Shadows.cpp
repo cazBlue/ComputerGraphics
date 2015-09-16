@@ -11,6 +11,8 @@
 
 using namespace std;
 
+//http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/#Basic_shadowmap
+
 APP_Shadows::APP_Shadows()
 {
 
@@ -26,7 +28,7 @@ void APP_Shadows::Update(float a_dt)
 
 	//animate the light
 	m_time += a_dt;
-	m_lightDirection = glm::normalize(glm::vec3(glm::sin(m_time) * 1, 2.5f, glm::cos(m_time) * 1));
+	m_lightDirection = glm::normalize(glm::vec3(glm::sin(m_time) * 6, 10.5f, glm::cos(m_time) * 6));
 	glm::mat4 lightProjection = glm::ortho<float>(-10, 10, -10, 10, -10, 10);
 	glm::mat4 lightView = glm::lookAt(m_lightDirection, glm::vec3(0), glm::vec3(0, 1, 0));
 
@@ -53,7 +55,6 @@ void APP_Shadows::Draw()
 
 	Gizmos::draw(GameCam->GetProjectionView());
 
-
 	// shadow pass: bind our shadow map target and clear the depth
 	glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 	glViewport(0, 0, 1024, 1024);
@@ -69,7 +70,6 @@ void APP_Shadows::Draw()
 		glBindVertexArray(glData[0]);
 		glDrawElements(GL_TRIANGLES, (unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
 	}
-
 
 	glUseProgram(m_useShadowProgram);
 	// bind the camera
@@ -124,19 +124,6 @@ void APP_Shadows::Draw()
 	glUniform1i(loc, 0);
 	glActiveTexture(GL_TEXTURE0);
 	
-//	glTexParameteri(GL_TEXTURE_2D, GL_COMPARE_REF_TO_TEXTURE, GL_NONE);
-//	glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_INTENSITY);
-	
-
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_READ_COLOR);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_READ_COLOR);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-//	glTexParameteri(GL_TEXTURE_2D, GL_MAX_DEPTH_TEXTURE_SAMPLES, BACKGROUND_INTENSITY);
-
-
 	glBindTexture(GL_TEXTURE_2D, m_fboDepth);
 	// bind our vertex array object and draw the mesh
 	for (unsigned int i = 0; i < m_fbx->getMeshCount(); ++i) {
@@ -231,8 +218,9 @@ bool APP_Shadows::Start()
 	
 	glm::mat4 lightProjection = glm::ortho<float>(-10, 10, -10, 10, -10, 10);
 	glm::mat4 lightView = glm::lookAt(m_lightDirection, glm::vec3(0), glm::vec3(0, 1, 0));
-	
-	m_lightMatrix = lightProjection * lightView;
+//	glm::mat4 depthModelMatrix = glm::mat4(1.0);
+
+	m_lightMatrix = lightProjection * lightView;// *depthModelMatrix;
 
 	createShadowGenProgram(); //requires lights to be bound first
 
@@ -277,8 +265,7 @@ void APP_Shadows::createShadowMapBuffers()
 	glBindTexture(GL_TEXTURE_2D, m_fboDepth);
 	
 	// texture uses a 16-bit depth component format
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 1024, 1024,
-		0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

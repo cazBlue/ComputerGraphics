@@ -12,26 +12,33 @@ uniform sampler2D shadowMap;
 
 void main() {
 	
-	float d = max(0, dot(normalize(vNormal.xyz), lightDir));
+	float d = max(0, dot(normalize(vNormal.xyz), lightDir)); //get the base lighting value
 
-	if (texture(shadowMap, vShadowCoord.xy).r < vShadowCoord.z - 0.01f) 
+	vec2 poissonDisk[4] = vec2[](
+	  vec2( -1.94201624, -1.39906216 ),
+	  vec2( 1.94558609, -1.76890725 ),
+	  vec2( -1.094184101, -1.92938870 ),
+	  vec2( 1.34495938, 1.29387760 )
+	);
+
+	for (int i = 0; i < 4; i++)
 	{
-		d = 0;
-	}
+		if (texture(shadowMap, vShadowCoord.xy + + poissonDisk[i]/700.0).r < vShadowCoord.z - 0.01f) 
+		{
+			d -= 0.2;
+		}		
+	}
 
-//	d = texture(shadowMap, vShadowCoord.xyz, vShadowCoord.z - 0.5f);
+	//soft shadows - Basic Algorithm for PCF using Poisson Sampling
+	//ended up using Poisson Sampling (Non Stratified)
+	////http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping
 
-	//soft shadows - Basic Algorithm for PCF
-	//http://http.developer.nvidia.com/GPUGems2/gpugems2_chapter17.html
-	//http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/#PCF
+
+	//http://http.developer.nvidia.com/GPUGems2/gpugems2_chapter17.html	
 	//shadow sampler setup http://stackoverflow.com/questions/22419682/glsl-sampler2dshadow-and-shadow2d-clarification
 	//http://stackoverflow.com/questions/20877938/glsl-sampler2dshadow-deprecated-past-version-120-what-to-use
 	//https://www.opengl.org/discussion_boards/showthread.php/166763-GLSL-Shadow-Map-code-sample/page2
 
-//	vec3 color = texture2D(Checker, TexCoord).stp;
-//	color *= shadow2DProj(ShadowMap, ProjShadow).r;
-//	color *= Diffuse;
-//    gl_FragColor = vec4(color, 1);
 
 	FragColour = vec4(d, d, d, 1);
 }
