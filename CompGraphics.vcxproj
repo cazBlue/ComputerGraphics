@@ -85,6 +85,7 @@
     <ClCompile Include="dep\tinyOBJ\tiny_obj_loader.cc" />
     <ClCompile Include="src\APP_AdvTexturing.cpp" />
     <ClCompile Include="src\APP_Animation.cpp" />
+    <ClCompile Include="src\APP_DeferredRendering.cpp" />
     <ClCompile Include="src\APP_GpuParticles.cpp" />
     <ClCompile Include="src\APP_LoadFbx.cpp" />
     <ClCompile Include="src\App_LoadingTextures.cpp" />
@@ -107,6 +108,7 @@
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\APP_AdvTexturing.h" />
     <ClInclude Include="src\APP_Animation.h" />
+    <ClInclude Include="src\APP_DeferredRendering.h" />
     <ClInclude Include="src\APP_GpuParticles.h" />
     <ClInclude Include="src\APP_LoadFbx.h" />
     <ClInclude Include="src\App_LoadingTextures.h" />
@@ -127,6 +129,12 @@
     <None Include="assets\shaders\AdvTexVertexShader.glsl" />
     <None Include="assets\shaders\AnimFragShader.glsl" />
     <None Include="assets\shaders\AnimVertexShader.glsl" />
+    <None Include="assets\shaders\deferredRendering\compositeFragShader.frag" />
+    <None Include="assets\shaders\deferredRendering\compositeVertShader.vert" />
+    <None Include="assets\shaders\deferredRendering\directionalLightFragShader.frag" />
+    <None Include="assets\shaders\deferredRendering\directionalLightVertShader.vert" />
+    <None Include="assets\shaders\deferredRendering\gBufferFragShader.frag" />
+    <None Include="assets\shaders\deferredRendering\gBufferVertShader.vert" />
     <None Include="assets\shaders\FBXFragShader.glsl" />
     <None Include="assets\shaders\FBXVertexShader.glsl" />
     <None Include="assets\shaders\FragShader.glsl" />

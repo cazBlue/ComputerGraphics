@@ -16,7 +16,7 @@ public:
 
 public:
 	void CreateFrameBuffer();
-	void CreateTriangles();
+	void CreateFullSreenQuad();
 
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;

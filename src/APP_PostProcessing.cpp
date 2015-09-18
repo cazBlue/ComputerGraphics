@@ -96,7 +96,7 @@ bool APP_postProcess::Start()
 	GameCam = new Camera();
 
 	CreateFrameBuffer();
-	CreateTriangles();
+	CreateFullSreenQuad();
 
 
 
@@ -197,7 +197,7 @@ void APP_postProcess::CreateFrameBuffer()
 	glUseProgram(0);
 }
 
-void APP_postProcess::CreateTriangles()
+void APP_postProcess::CreateFullSreenQuad()
 {
 	// fullscreen quad
 	glm::vec2 halfTexel = 1.0f / glm::vec2(1280, 720) * 0.5f; //half texel

@@ -1,0 +1,60 @@
+#ifndef APP_DEFERREDRENDERING_H
+#define APP_DEFERREDRENDERING_H
+#include <Application.h>
+
+#include <tiny_obj_loader.h>
+
+class APP_DeferredRendering : public App
+{
+public:
+	APP_DeferredRendering();
+	~APP_DeferredRendering();
+	void Update(float a_dt);
+	void Draw();
+	bool Start();
+	bool Shutdown();
+
+public:
+
+	//creaters
+	void createGpassBuffer();
+	void createLightBuffer();
+	void createCompositeBuffer();
+
+	void createScene(); //loads fbx and creates needed buffers
+	void createFullSreenQuad();
+	void createTargetBuffers(); //also loads obj
+	void createOpenGLBuffers(std::vector<tinyobj::shape_t>& shapes);
+
+	//pass vars
+	unsigned int m_gpassFBO, m_albedoTexture, m_positionTexture, 
+		m_normalTexture, m_gpassDepth;
+
+	//light buffers
+	unsigned int m_lightFBO, m_lightTexture;
+	unsigned int m_fullScreenQuad_vao, m_fullScreenQuad_vbo;
+	
+	//obj	
+	std::vector<tinyobj::shape_t> shapes;
+	std::vector<tinyobj::material_t> materials;
+	
+
+	unsigned int m_programGBuffer; //object scene
+	unsigned int m_programDirectionalLight; 
+	unsigned int m_programComposite; 
+
+	struct OpenGLInfo
+	{
+		unsigned int m_VAO;
+		unsigned int m_VBO;
+		unsigned int m_IBO;
+		unsigned int m_index_count;
+	};
+
+	std::vector<OpenGLInfo> m_gl_info;
+
+
+	std::string LoadShader(const char *a_filePath);
+};
+
+#endif APP_DEFERREDRENDERING_H

@@ -17,6 +17,18 @@
       <UniqueIdentifier>{535d2ac0-c196-485d-9514-6c80412d91c4}</UniqueIdentifier>
       <ParseFiles>true</ParseFiles>
     </Filter>
+    <Filter Include="Resource Files\shaders\deferredRendering">
+      <UniqueIdentifier>{d9f92b09-94da-4f98-a46e-7759b4bafdc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\shaders\postProcess">
+      <UniqueIdentifier>{40549c26-ac47-4820-9a7b-465201ff1c03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\shaders\gpuParticle">
+      <UniqueIdentifier>{d187ff61-3cf6-4b97-b0c5-95d0b07002e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\shaders\shadows">
+      <UniqueIdentifier>{27bee07d-b6ad-4987-b666-9f18314c304f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -74,6 +86,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\APP_Shadows.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\APP_DeferredRendering.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -135,6 +150,9 @@
     <ClInclude Include="src\APP_Shadows.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\APP_DeferredRendering.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\AdvTexVertexShader.glsl">
@@ -167,44 +185,62 @@
     <None Include="assets\shaders\particleVertexShader.glsl">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="assets\shaders\GPUParticleVertexUpdateShader.vert">
-      <Filter>Resource Files\shaders</Filter>
-    </None>
-    <None Include="assets\shaders\GPUParticleFragShader.frag">
-      <Filter>Resource Files\shaders</Filter>
-    </None>
-    <None Include="assets\shaders\GPUParticleVertexShader.vert">
-      <Filter>Resource Files\shaders</Filter>
-    </None>
-    <None Include="assets\shaders\GPUParticleGeoShader.geom">
-      <Filter>Resource Files\shaders</Filter>
-    </None>
     <None Include="assets\shaders\RotateFragShader.frag">
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="assets\shaders\RotateVertShader.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="assets\shaders\PostProcessObjVertShader.vert">
-      <Filter>Resource Files\shaders</Filter>
+    <None Include="assets\shaders\deferredRendering\gBufferVertShader.vert">
+      <Filter>Resource Files\shaders\deferredRendering</Filter>
     </None>
     <None Include="assets\shaders\PostProcessWorldVertShader.vert">
-      <Filter>Resource Files\shaders</Filter>
+      <Filter>Resource Files\shaders\postProcess</Filter>
     </None>
     <None Include="assets\shaders\PostProcessFragShader.frag">
-      <Filter>Resource Files\shaders</Filter>
+      <Filter>Resource Files\shaders\postProcess</Filter>
     </None>
-    <None Include="assets\shaders\ShadowFragShader.frag">
-      <Filter>Resource Files\shaders</Filter>
+    <None Include="assets\shaders\PostProcessObjVertShader.vert">
+      <Filter>Resource Files\shaders\postProcess</Filter>
     </None>
-    <None Include="assets\shaders\ShadowVertexShader.vert">
-      <Filter>Resource Files\shaders</Filter>
+    <None Include="assets\shaders\GPUParticleVertexUpdateShader.vert">
+      <Filter>Resource Files\shaders\gpuParticle</Filter>
     </None>
-    <None Include="assets\shaders\Shadow_shadowVertexShader.vert">
-      <Filter>Resource Files\shaders</Filter>
+    <None Include="assets\shaders\GPUParticleFragShader.frag">
+      <Filter>Resource Files\shaders\gpuParticle</Filter>
+    </None>
+    <None Include="assets\shaders\GPUParticleGeoShader.geom">
+      <Filter>Resource Files\shaders\gpuParticle</Filter>
+    </None>
+    <None Include="assets\shaders\GPUParticleVertexShader.vert">
+      <Filter>Resource Files\shaders\gpuParticle</Filter>
     </None>
     <None Include="assets\shaders\Shadow_shadowFragShader.frag">
-      <Filter>Resource Files\shaders</Filter>
+      <Filter>Resource Files\shaders\shadows</Filter>
+    </None>
+    <None Include="assets\shaders\Shadow_shadowVertexShader.vert">
+      <Filter>Resource Files\shaders\shadows</Filter>
+    </None>
+    <None Include="assets\shaders\ShadowFragShader.frag">
+      <Filter>Resource Files\shaders\shadows</Filter>
+    </None>
+    <None Include="assets\shaders\ShadowVertexShader.vert">
+      <Filter>Resource Files\shaders\shadows</Filter>
+    </None>
+    <None Include="assets\shaders\deferredRendering\compositeFragShader.frag">
+      <Filter>Resource Files\shaders\deferredRendering</Filter>
+    </None>
+    <None Include="assets\shaders\deferredRendering\compositeVertShader.vert">
+      <Filter>Resource Files\shaders\deferredRendering</Filter>
+    </None>
+    <None Include="assets\shaders\deferredRendering\gBufferFragShader.frag">
+      <Filter>Resource Files\shaders\deferredRendering</Filter>
+    </None>
+    <None Include="assets\shaders\deferredRendering\directionalLightFragShader.frag">
+      <Filter>Resource Files\shaders\deferredRendering</Filter>
+    </None>
+    <None Include="assets\shaders\deferredRendering\directionalLightVertShader.vert">
+      <Filter>Resource Files\shaders\deferredRendering</Filter>
     </None>
   </ItemGroup>
 </Project>
