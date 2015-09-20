@@ -15,5 +15,6 @@ void main()
 	// first store view-space position and normal
 	vPosition = View * Position;
 	vNormal = normalize(View * Normal);
+
 	gl_Position = ProjectionView * Position;
-}
+}

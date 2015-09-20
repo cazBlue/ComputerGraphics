@@ -13,6 +13,8 @@ void main()
 	// Note: you could use a material colour,
 	// or sample a texture for albedo
 	gpassAlbedo = vec3(1);
+//	gpassAlbedo = vNormal.xyz;
+
 	gpassPosition = vPosition.xyz;
 	gpassNormal = vNormal.xyz;
 }

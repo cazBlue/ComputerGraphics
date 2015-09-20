@@ -167,7 +167,7 @@ bool APP_AdvTex::Start()
 	const char* path = strShaderCode.c_str();
 	//fsSource = fsResult.c_str();
 
-	//issue tracked to line 184 in FBXFile.cpp
+	
 	bool didLoad = m_fbx->load(path, m_fbx->UNITS_METER, true, true, true);
 	if (didLoad)
 		printf("loaded");
