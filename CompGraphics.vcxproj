@@ -93,6 +93,7 @@
     <ClCompile Include="src\APP_Particles.cpp" />
     <ClCompile Include="src\APP_Particles_emitter.cpp" />
     <ClCompile Include="src\APP_PostProcessing.cpp" />
+    <ClCompile Include="src\APP_ProceduralGeneration.cpp" />
     <ClCompile Include="src\APP_RenderTargets.cpp" />
     <ClCompile Include="src\APP_SceneManagment.cpp" />
     <ClCompile Include="src\APP_Shadows.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="src\APP_Particles.h" />
     <ClInclude Include="src\APP_Particles_emitter.h" />
     <ClInclude Include="src\APP_PostProcessing.h" />
+    <ClInclude Include="src\APP_ProceduralGeneration.h" />
     <ClInclude Include="src\APP_RenderTargets.h" />
     <ClInclude Include="src\APP_SceneManagment.h" />
     <ClInclude Include="src\APP_Shadows.h" />

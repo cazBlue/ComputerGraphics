@@ -94,6 +94,9 @@
     <ClCompile Include="src\APP_DeferredRendering.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\APP_ProceduralGeneration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\aieutilities-master\aie\Gizmos.h">
@@ -154,6 +157,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\APP_DeferredRendering.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\APP_ProceduralGeneration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
