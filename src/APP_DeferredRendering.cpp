@@ -19,8 +19,6 @@ APP_DeferredRendering::~APP_DeferredRendering()
 void APP_DeferredRendering::Update(float a_dt)
 {
 	GameCam->Update(a_dt); //update camera
-
-
 }
 
 void APP_DeferredRendering::Draw()
@@ -83,6 +81,31 @@ void APP_DeferredRendering::Draw()
 	glBindTexture(GL_TEXTURE_2D, m_normalTexture);
 	// draw lights as fullscreen quads
 	drawDirectionalLight(glm::vec3(-1), glm::vec3(1));
+
+	//draw point lights	
+	
+	glUseProgram(m_pointLightShader);
+	loc = glGetUniformLocation(m_pointLightShader, "ProjectionView");
+	glUniformMatrix4fv(loc, 1, GL_FALSE, &(GameCam->GetProjectionView()[0][0]));
+	loc = glGetUniformLocation(m_pointLightShader, "positionTexture");
+	glUniform1i(loc, 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_positionTexture);
+	loc = glGetUniformLocation(m_pointLightShader, "normalTexture");
+	glUniform1i(loc, 1);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, m_normalTexture);
+
+	glCullFace(GL_FRONT);
+
+	float t = (float)glfwGetTime();
+	drawPointLight(glm::vec3(sinf(t) * 5, 3, cosf(t) * 5), 5, glm::vec3(1, 0, 0));
+	drawPointLight(glm::vec3(sinf(t) * -5, 3, cosf(t) * -5), 5, glm::vec3(0, 1, 0));
+
+	glCullFace(GL_BACK);
+
+	//end point lights
+
 	glDisable(GL_BLEND);
 
 	// Composite Pass: render a quad and combine albedo and light
@@ -99,6 +122,21 @@ void APP_DeferredRendering::Draw()
 	glBindTexture(GL_TEXTURE_2D, m_lightTexture);
 	glBindVertexArray(m_fullScreenQuad_vao);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+void APP_DeferredRendering::drawPointLight(const glm::vec3& position, float radius,
+											const glm::vec3& diffuse) {
+	glm::vec4 viewSpacePosition = GameCam->GetView() * glm::vec4(position, 1);
+	int loc = glGetUniformLocation(m_pointLightShader, "lightPosition"); 
+	glUniform3fv(loc, 1, &position[0]);
+	loc = glGetUniformLocation(m_pointLightShader, "lightPositionView");
+	glUniform3fv(loc, 1, &viewSpacePosition[0]);
+	loc = glGetUniformLocation(m_pointLightShader, "lightRadius");
+	glUniform1f(loc, radius);
+	loc = glGetUniformLocation(m_pointLightShader, "lightDiffuse");
+	glUniform3fv(loc, 1, &diffuse[0]);
+	glBindVertexArray(m_cubeVAO);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
 }
 
 void APP_DeferredRendering::drawDirectionalLight(const glm::vec3& direction, const glm::vec3& diffuse) {
@@ -129,8 +167,88 @@ bool APP_DeferredRendering::Start()
 
 	createScene();
 
+	createBoundingCube();
+
+	createCompositeBuffer();
+
 	return true; //not being used in this lesson
 }
+
+
+void APP_DeferredRendering::createBoundingCube()
+{
+	float cubeVertexData[] = {
+		-1, -1, 1, 1,
+		1, -1, 1, 1,
+		1, -1, -1, 1,
+		-1, -1, -1, 1,
+		-1, 1, 1, 1,
+		1, 1, 1, 1,
+		1, 1, -1, 1,
+		-1, 1, -1, 1,
+	};
+	unsigned int cubeIndexData[] = {
+		0, 5, 4,
+		0, 1, 5,
+		1, 6, 5,
+		1, 2, 6,
+		2, 7, 6,
+		2, 3, 7,
+		3, 4, 7,
+		3, 0, 4,
+		4, 6, 7,
+		4, 5, 6,
+		3, 1, 0,
+		3, 2, 1
+	};
+
+
+	//create buffers
+	glGenVertexArrays(1, &m_cubeVAO);	
+	glBindVertexArray(m_cubeVAO);
+
+	glGenBuffers(1, &m_cubeIBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_cubeIBO);
+
+	glGenBuffers(1, &m_cubeVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_cubeVBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 32, cubeVertexData, GL_STATIC_DRAW);
+	
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(unsigned int), cubeIndexData, GL_STATIC_DRAW);
+
+
+	glEnableVertexAttribArray(0); // position
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float)* 4, 0);
+	
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+	//create cube shader program
+	const char* vsSource = nullptr;
+	std::string vsResult = LoadShader("./assets/shaders/deferredRendering/pointLightVertShader.vert");
+	vsSource = vsResult.c_str();
+
+	const char* fsSource = nullptr;
+	std::string fsResult = LoadShader("./assets/shaders/deferredRendering/pointLightFragShader.frag");
+	fsSource = fsResult.c_str();
+
+	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	glShaderSource(vertexShader, 1, (const char**)&vsSource, 0);
+	glCompileShader(vertexShader);
+	glShaderSource(fragmentShader, 1, (const char**)&fsSource, 0);
+	glCompileShader(fragmentShader);
+
+	m_pointLightShader = glCreateProgram();
+	glAttachShader(m_pointLightShader, vertexShader);
+	glAttachShader(m_pointLightShader, fragmentShader);
+	glLinkProgram(m_pointLightShader);
+}
+
 
 bool APP_DeferredRendering::Shutdown()
 {
@@ -239,10 +357,10 @@ void APP_DeferredRendering::createCompositeBuffer()
 	glShaderSource(fragmentShader, 1, (const char**)&fsSource, 0);
 	glCompileShader(fragmentShader);
 
-	m_programDirectionalLight = glCreateProgram();
-	glAttachShader(m_programDirectionalLight, vertexShader);
-	glAttachShader(m_programDirectionalLight, fragmentShader);
-	glLinkProgram(m_programDirectionalLight);
+	m_programComposite = glCreateProgram();
+	glAttachShader(m_programComposite, vertexShader);
+	glAttachShader(m_programComposite, fragmentShader);
+	glLinkProgram(m_programComposite);
 }
 
 
@@ -348,12 +466,6 @@ void APP_DeferredRendering::createScene()
 		printf("no load");
 
 	createOpenGLBuffers(m_fbx);
-
-//	printf("loading object, this can take a while!");
-//	std::string err = tinyobj::LoadObj(shapes, materials, "./assets/stanford_objs/bunny.obj");
-//	printf("loading objects done");
-
-//	createOpenGLBuffers(shapes);
 }
 
 

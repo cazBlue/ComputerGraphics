@@ -29,6 +29,9 @@
     <Filter Include="Resource Files\shaders\shadows">
       <UniqueIdentifier>{27bee07d-b6ad-4987-b666-9f18314c304f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\shaders\deferredRenderingPart2">
+      <UniqueIdentifier>{5cc240cb-a7e8-4866-b902-9ccd0b91f674}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -241,6 +244,12 @@
     </None>
     <None Include="assets\shaders\deferredRendering\directionalLightVertShader.vert">
       <Filter>Resource Files\shaders\deferredRendering</Filter>
+    </None>
+    <None Include="assets\shaders\deferredRendering\pointLightFragShader.frag">
+      <Filter>Resource Files\shaders\deferredRenderingPart2</Filter>
+    </None>
+    <None Include="assets\shaders\deferredRendering\pointLightVertShader.vert">
+      <Filter>Resource Files\shaders\deferredRenderingPart2</Filter>
     </None>
   </ItemGroup>
 </Project>

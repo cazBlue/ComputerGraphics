@@ -57,6 +57,18 @@ public:
 
 	void drawDirectionalLight(const glm::vec3& direction, const glm::vec3& diffuse);
 
+
+	//bounding cube and point lights
+	void createBoundingCube();
+
+	unsigned int m_cubeVBO, m_cubeVAO, m_cubeIBO, m_pointLightShader;
+
+	void drawPointLight(const glm::vec3& position, float radius, const glm::vec3& diffuse);
+
+
+
+	
+
 //	struct OpenGLInfo
 //	{
 //		unsigned int m_VAO;

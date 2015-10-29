@@ -135,6 +135,8 @@
     <None Include="assets\shaders\deferredRendering\directionalLightVertShader.vert" />
     <None Include="assets\shaders\deferredRendering\gBufferFragShader.frag" />
     <None Include="assets\shaders\deferredRendering\gBufferVertShader.vert" />
+    <None Include="assets\shaders\deferredRendering\pointLightFragShader.frag" />
+    <None Include="assets\shaders\deferredRendering\pointLightVertShader.vert" />
     <None Include="assets\shaders\FBXFragShader.glsl" />
     <None Include="assets\shaders\FBXVertexShader.glsl" />
     <None Include="assets\shaders\FragShader.glsl" />
