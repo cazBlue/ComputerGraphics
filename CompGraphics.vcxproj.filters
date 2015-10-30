@@ -35,6 +35,9 @@
     <Filter Include="Resource Files\shaders\procedural">
       <UniqueIdentifier>{2c830a45-c68e-41d2-a29f-7585b8408717}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\shaders\brdf">
+      <UniqueIdentifier>{43252e8a-a166-4483-a92b-6eb5c19050c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -100,6 +103,9 @@
     <ClCompile Include="src\APP_ProceduralGeneration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\APP_PhysicallyBased.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\aieutilities-master\aie\Gizmos.h">
@@ -163,6 +169,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\APP_ProceduralGeneration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\APP_PhysicallyBased.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -265,6 +274,12 @@
     </None>
     <None Include="assets\shaders\procGeneration\proceduralVertShader.vert">
       <Filter>Resource Files\shaders\procedural</Filter>
+    </None>
+    <None Include="assets\shaders\physicalShaders\PhysicalFragShader.glsl">
+      <Filter>Resource Files\shaders\brdf</Filter>
+    </None>
+    <None Include="assets\shaders\physicalShaders\PhysicalVertexShader.glsl">
+      <Filter>Resource Files\shaders\brdf</Filter>
     </None>
   </ItemGroup>
 </Project>

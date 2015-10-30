@@ -22,6 +22,7 @@
 #include <APP_Shadows.h>
 #include <APP_DeferredRendering.h>
 #include <APP_ProceduralGeneration.h>
+#include <APP_PhysicallyBased.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -64,7 +65,8 @@ int main()
 	//App *appPtr = new APP_postProcess();	//#11 post processing
 	//App *appPtr = new APP_Shadows();				//#12 shadows
 	//App *appPtr = new APP_DeferredRendering();		//#13 deferred rendering pt 1 & 2
-	App *appPtr = new APP_Proc_Generation();		//#14 procedural generation
+	//App *appPtr = new APP_Proc_Generation();		//#14 procedural generation
+	App *appPtr = new APP_PhysicallyBased();		//#15 physically based rendering
 
 	appPtr->Start();
 

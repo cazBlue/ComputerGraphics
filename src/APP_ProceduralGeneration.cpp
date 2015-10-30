@@ -93,7 +93,8 @@ void APP_Proc_Generation::createPerlinNoise()
 	int dims = 64;
 	perlinData = new float[dims * dims];	
 	float scale = (1.0f / dims) * 3;
-	int octaves = 6;
+	int octaves = 6;
+
 	for (int x = 0; x < 64; ++x)
 	{
 		for (int y = 0; y < 64; ++y)

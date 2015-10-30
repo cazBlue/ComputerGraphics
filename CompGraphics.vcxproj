@@ -92,6 +92,7 @@
     <ClCompile Include="src\APP_ObjLoader.cpp" />
     <ClCompile Include="src\APP_Particles.cpp" />
     <ClCompile Include="src\APP_Particles_emitter.cpp" />
+    <ClCompile Include="src\APP_PhysicallyBased.cpp" />
     <ClCompile Include="src\APP_PostProcessing.cpp" />
     <ClCompile Include="src\APP_ProceduralGeneration.cpp" />
     <ClCompile Include="src\APP_RenderTargets.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="src\APP_ObjLoader.h" />
     <ClInclude Include="src\APP_Particles.h" />
     <ClInclude Include="src\APP_Particles_emitter.h" />
+    <ClInclude Include="src\APP_PhysicallyBased.h" />
     <ClInclude Include="src\APP_PostProcessing.h" />
     <ClInclude Include="src\APP_ProceduralGeneration.h" />
     <ClInclude Include="src\APP_RenderTargets.h" />
@@ -148,6 +150,8 @@
     <None Include="assets\shaders\GPUParticleVertexUpdateShader.vert" />
     <None Include="assets\shaders\particleFragShader.glsl" />
     <None Include="assets\shaders\particleVertexShader.glsl" />
+    <None Include="assets\shaders\physicalShaders\PhysicalFragShader.glsl" />
+    <None Include="assets\shaders\physicalShaders\PhysicalVertexShader.glsl" />
     <None Include="assets\shaders\PostProcessFragShader.frag" />
     <None Include="assets\shaders\PostProcessObjVertShader.vert" />
     <None Include="assets\shaders\PostProcessWorldVertShader.vert" />
