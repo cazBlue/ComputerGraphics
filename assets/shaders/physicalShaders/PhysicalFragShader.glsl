@@ -19,6 +19,10 @@ uniform sampler2D NormalTex;
 
 void main() 
 {
+	float NdL = max(0.0f, dot(normalize(vNormal), normalize(directionalLight)));
+	vec3 E = normalize(CameraPos - vPosition.xyz); // surface to eye vector
+	float NdE = max(0.0f, dot(normalize(vNormal), E));
+
 	//calculate normals	
 	vec3 Normal = normalize(vNormal);
     vec3 Tangent = normalize(vTangent);
@@ -33,7 +37,7 @@ void main()
 
 	float d = max( 0, dot( NewNormal, normalize( directionalLight ))); 
 
-	vec3 E = normalize( CameraPos - vPosition.xyz ); // surface to eye vector
+//	vec3 E = normalize( CameraPos - vPosition.xyz ); // surface to eye vector
 	vec3 R = reflect( -directionalLight, vNormal.xyz ); // reflected light vector
 	
 	//ambient
