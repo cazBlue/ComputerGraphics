@@ -32,6 +32,9 @@
     <Filter Include="Resource Files\shaders\deferredRenderingPart2">
       <UniqueIdentifier>{5cc240cb-a7e8-4866-b902-9ccd0b91f674}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\shaders\procedural">
+      <UniqueIdentifier>{2c830a45-c68e-41d2-a29f-7585b8408717}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -256,6 +259,12 @@
     </None>
     <None Include="assets\shaders\deferredRendering\pointLightVertShader.vert">
       <Filter>Resource Files\shaders\deferredRenderingPart2</Filter>
+    </None>
+    <None Include="assets\shaders\procGeneration\proceduralFragShader.frag">
+      <Filter>Resource Files\shaders\procedural</Filter>
+    </None>
+    <None Include="assets\shaders\procGeneration\proceduralVertShader.vert">
+      <Filter>Resource Files\shaders\procedural</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -15,17 +15,37 @@ public:
 	bool Start();
 	bool Shutdown();
 
-public:
+	std::string LoadShader(const char *a_filePath);
+
+public: //mesh data
 	
+	enum Offsets
+	{
+		PositionOffset = 0,
+		TexCoord2Offset = PositionOffset + sizeof(glm::vec4),
+	};
+
 	struct Vertex {
 		vec4 position;
 		glm::vec2 uv;
 	};	
 
-	void generateMesh(unsigned int rows, unsigned int cols);
+	void generateMesh();
 	void createMeshBuffers(unsigned int* auiIndices, Vertex* aoVertices);
 
-	unsigned int m_VAO, m_VBO, m_IBO, m_program;
+	unsigned int m_VAO, m_VBO, m_IBO, m_program, rows, cols, m_indexCount;
+
+	void createShaders();
+
+public: //noise data
+
+	void createPerlinNoise();
+	void createPerlinBuffers();
+
+	float* perlinData;
+
+	unsigned int m_perlin_texture;
+
 
 };
 

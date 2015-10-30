@@ -151,6 +151,8 @@
     <None Include="assets\shaders\PostProcessFragShader.frag" />
     <None Include="assets\shaders\PostProcessObjVertShader.vert" />
     <None Include="assets\shaders\PostProcessWorldVertShader.vert" />
+    <None Include="assets\shaders\procGeneration\proceduralFragShader.frag" />
+    <None Include="assets\shaders\procGeneration\proceduralVertShader.vert" />
     <None Include="assets\shaders\RotateFragShader.frag" />
     <None Include="assets\shaders\RotateVertShader.vert" />
     <None Include="assets\shaders\ShadowFragShader.frag" />
