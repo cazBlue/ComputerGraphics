@@ -91,6 +91,11 @@ void APP_PhysicallyBased::Draw()
 		int normalLoc = glGetUniformLocation(m_program, "NormalTex"); //get diffuse location
 		glUniform1i(normalLoc, 1); //set to the diffuse to the texture index	
 
+		//set spec texture	
+		glActiveTexture(GL_TEXTURE0 + 1); //set for initial active texture		
+		int specLoc = glGetUniformLocation(m_program, "SpecTex"); //get diffuse location
+		glUniform1i(specLoc, 1); //set to the diffuse to the texture index	
+
 		glBindVertexArray(glData[0]);
 		glDrawElements(GL_TRIANGLES,
 			(unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
@@ -214,9 +219,10 @@ void APP_PhysicallyBased::createOpenGLBuffers(FBXFile* fbx)
 
 		FBXTexture* diffuesTex = mat->textures[FBXMaterial::TextureTypes::DiffuseTexture];
 		FBXTexture* normalTex = mat->textures[FBXMaterial::TextureTypes::NormalTexture];
+		FBXTexture* specTex = mat->textures[FBXMaterial::TextureTypes::SpecularTexture];
 
 		// storage for the opengl data in 4 unsigned int (includes diffuse texID (3) and normal texID (4))
-		unsigned int* glData = new unsigned int[5];
+		unsigned int* glData = new unsigned int[6];
 
 		glGenVertexArrays(1, &glData[0]);
 		glBindVertexArray(glData[0]);
@@ -257,6 +263,13 @@ void APP_PhysicallyBased::createOpenGLBuffers(FBXFile* fbx)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, normalTex->width, normalTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, normalTex->data);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	
+
+		glActiveTexture(GL_TEXTURE0 + 1); //texture are we binding to
+		glGenTextures(1, &glData[5]);
+		glBindTexture(GL_TEXTURE_2D, glData[5]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, specTex->width, specTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, specTex->data);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 //		glActiveTexture(GL_TEXTURE0 + 1);
 //		int normalLoc = glGetUniformLocation(m_program, "Normal"); //get normal location

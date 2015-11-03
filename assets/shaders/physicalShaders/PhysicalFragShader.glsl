@@ -15,6 +15,7 @@ uniform float SpecPow;
 
 uniform sampler2D Diffuse;
 uniform sampler2D NormalTex;
+uniform sampler2D SpecTex;
 
 
 void main() 
@@ -48,18 +49,20 @@ void main()
 	//diffuse
 	vec4 diffuse = texture(Diffuse, vTexCoord) * vec4(d,d,d,1);	//light info comes from normals now
 
+	vec4 spec = texture(SpecTex, vTexCoord); //pixel colour of spec
+
 	//specular found issues with tut, ran with reference from below
 	//specular reference http://ogldev.atspace.co.uk/www/tutorial19/tutorial19.html
 
 	vec4 SpecularColor = vec4(0, 0, 0, 0);
-	float gMatSpecularIntensity = 8;
+	float gMatSpecularIntensity = 2; //add spec intensity to "pop" the spec
 
 	vec3 VertexToEye = normalize(CameraPos - vPosition.xyz);
 	vec3 LightReflect = normalize(reflect(directionalLight, NewNormal));
 	float SpecularFactor = dot(VertexToEye, LightReflect);
 	if (SpecularFactor > 0) {
 		SpecularFactor = pow(SpecularFactor, SpecPow);
-		SpecularColor = vec4(lightColour * gMatSpecularIntensity * SpecularFactor, 1.0f);		
+		SpecularColor = vec4(lightColour * gMatSpecularIntensity * SpecularFactor, 1.0f) * spec;
 	}
 
 	//point light hard coded TODO make dynamic...
@@ -82,4 +85,7 @@ void main()
 //	FragColor = ambient; //ambient onlt
 
 	FragColor = diffuse + ambient + SpecularColor; //final result
+
+//	FragColor = texture(SpecTex, vTexCoord);
+
 }
