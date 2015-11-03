@@ -143,7 +143,7 @@ std::string APP_PhysicallyBased::LoadShader(const char *a_filePath)
 bool APP_PhysicallyBased::Start()
 {
 	Gizmos::create();
-	GameCam = new Camera();
+	GameCam = new Camera();	
 
 	//FBXFile* fbxFile = new FBXFile();
 

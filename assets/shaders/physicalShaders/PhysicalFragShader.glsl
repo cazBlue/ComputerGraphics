@@ -18,6 +18,15 @@ uniform sampler2D NormalTex;
 uniform sampler2D SpecTex;
 
 
+
+//float OrenNayar(vec3 normal, )
+//{
+//
+//}
+
+
+
+
 void main() 
 {
 	//Note - no spec on point light currently!
@@ -74,7 +83,7 @@ void main()
 	float D = pow(e, exponent) / (R2 * NdH2 * NdH2);
 	
 	// Fresnel Term F
-	float FresnelScale = .5;
+	float FresnelScale = 1;
 	float HdE = dot(H, E);
 	float F = mix(pow(1 - HdE, 5), 1, FresnelScale);
 	
@@ -108,7 +117,7 @@ void main()
 	vec4 pointLight = Color / Attenuation;
 
 	//spec
-	vec4 SpecularColor = (texture(Diffuse, vTexCoord) + CookTorrance) * texture(SpecTex, vTexCoord);
+	vec4 SpecularColor = texture(SpecTex, vTexCoord) * (texture(Diffuse, vTexCoord) + CookTorrance);
 
 	FragColor = diffuse + ambient + SpecularColor + pointLight; //final result
 }
