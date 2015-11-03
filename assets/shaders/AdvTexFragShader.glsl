@@ -78,5 +78,7 @@ void main()
 //	FragColor = SpecularColor; //spec only
 //	FragColor = ambient; //ambient onlt
 
-	FragColor = diffuse + ambient + SpecularColor; //final result
+	//TODO
+	//check point light is being used
+	FragColor = diffuse + ambient + SpecularColor; //final result 
 }
