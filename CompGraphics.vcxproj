@@ -49,7 +49,7 @@
       </PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;GLM_SWIZZLE;GLM_FORCE_PURE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\aieutilities-master;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\include;$(SolutionDir)src;$(SolutionDir)dep\glm;$(SolutionDir)dep\tinyOBJ;$(SolutionDir)dep\stb-master;$(SolutionDir)dep\FBXLoader;$(SolutionDir)depdep\AntTweakBar\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\aieutilities-master;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\include;$(SolutionDir)src;$(SolutionDir)dep\glm;$(SolutionDir)dep\tinyOBJ;$(SolutionDir)dep\stb-master;$(SolutionDir)dep\FBXLoader;$(SolutionDir)dep\AntTweakBar\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -83,10 +83,12 @@
   <ItemGroup>
     <ClCompile Include="dep\aieutilities-master\aie\Gizmos.cpp" />
     <ClCompile Include="dep\tinyOBJ\tiny_obj_loader.cc" />
+    <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\APP_AdvTexturing.cpp" />
     <ClCompile Include="src\APP_Animation.cpp" />
     <ClCompile Include="src\APP_DeferredRendering.cpp" />
     <ClCompile Include="src\APP_GpuParticles.cpp" />
+    <ClCompile Include="src\APP_GUI.cpp" />
     <ClCompile Include="src\APP_ImageBased.cpp" />
     <ClCompile Include="src\APP_LoadFbx.cpp" />
     <ClCompile Include="src\App_LoadingTextures.cpp" />
@@ -101,6 +103,7 @@
     <ClCompile Include="src\APP_Shadows.cpp" />
     <ClCompile Include="src\APP_SpotRotate.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\introToOpenGl.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\RenderingGeo.cpp" />
@@ -113,6 +116,7 @@
     <ClInclude Include="src\APP_Animation.h" />
     <ClInclude Include="src\APP_DeferredRendering.h" />
     <ClInclude Include="src\APP_GpuParticles.h" />
+    <ClInclude Include="src\APP_GUI.h" />
     <ClInclude Include="src\APP_ImageBased.h" />
     <ClInclude Include="src\APP_LoadFbx.h" />
     <ClInclude Include="src\App_LoadingTextures.h" />
@@ -127,6 +131,7 @@
     <ClInclude Include="src\APP_Shadows.h" />
     <ClInclude Include="src\APP_SpotRotate.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\InputHandler.h" />
     <ClInclude Include="src\IntroToOpenGL.h" />
     <ClInclude Include="src\RenderingGeo.h" />
   </ItemGroup>

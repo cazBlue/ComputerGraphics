@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <iostream>
+#include <AntTweakBar.h>
 #include <Camera.h>
 #include <Application.h>
 #include <IntroToOpenGL.h>
@@ -24,6 +25,8 @@
 #include <APP_ProceduralGeneration.h>
 #include <APP_PhysicallyBased.h>
 #include <APP_ImageBased.h>
+#include <APP_GUI.h>
+#include <InputHandler.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -32,14 +35,23 @@ using std::cout;
 
 //updated glm/gtx/scalar_multiplication.hpp with fix from https://github.com/g-truc/glm/issues/325
 
+
 int main()
 {
 	if (glfwInit() == false)
-		return -1;
+		return -1;	
 
 	GLFWwindow* window = glfwCreateWindow(1280, 720, "Computer Graphics", nullptr, nullptr);
 
 	glfwMakeContextCurrent(window);
+
+	TwInit(TW_OPENGL_CORE, nullptr);
+	TwWindowSize(1280, 720);	TwBar *myBar;
+	myBar = TwNewBar("NameOfMyTweakBar");
+	vec4 m_clearColour = vec4(1,1,1,1);
+
+	TwAddVarRW(myBar, "clear colour",
+		TW_TYPE_COLOR4F, &m_clearColour[0], "");
 
 	if (ogl_LoadFunctions() == ogl_LOAD_FAILED) {
 		glfwDestroyWindow(window);
@@ -68,18 +80,39 @@ int main()
 	//App *appPtr = new APP_DeferredRendering();		//#14 deferred rendering pt 1 & 2
 	//App *appPtr = new APP_Proc_Generation();		//#15 procedural generation
 	//App *appPtr = new APP_PhysicallyBased();		//#16 physically based rendering
-	App *appPtr = new APP_ImageBased();		//#17 image based rendering
+	// App *appPtr = new APP_ImageBased();		//#17 image based rendering
+	App *appPtr = new APP_GUI();				//#18 GUI
 
 	appPtr->Start();
 
+
+
+//	glfwSetMouseButtonCallback(m_window, OnMouseButton);
+//	glfwSetCursorPosCallback(m_window, OnMousePosition);
+//	glfwSetScrollCallback(m_window, OnMouseScroll);
+//	glfwSetKeyCallback(m_window, OnKey);
+//	glfwSetCharCallback(m_window, OnChar);
+//	glfwSetWindowSizeCallback(m_window, OnWindowResize);
+
+
 	//enable unlimited scrolling - hides the cursor
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	//set a pointer to the game camera http://stackoverflow.com/questions/27596861/give-static-function-access-to-data-without-passing-the-data-as-a-parameter
 	//TODO move to key manager when created 
-	glfwSetWindowUserPointer(window, appPtr->GameCam); 
-	glfwSetKeyCallback(window, appPtr->GameCam->key_callback);
-	glfwSetCursorPosCallback(window, appPtr->GameCam->cursor_pos_callback);
+	glfwSetWindowUserPointer(window, appPtr->GameCam); //should be set to current app
+//	glfwSetKeyCallback(window, appPtr->GameCam->key_callback);
+//	glfwSetCursorPosCallback(window, appPtr->onMouseMove);
+
+	APP_Inputhandler* inputHandler = new APP_Inputhandler();
+
+	glfwSetMouseButtonCallback(window, inputHandler->OnMouseButton);
+	glfwSetCursorPosCallback(window, inputHandler->OnMousePosition);
+	glfwSetScrollCallback(window, inputHandler->OnMouseScroll);
+	glfwSetKeyCallback(window, inputHandler->OnKey);
+	glfwSetCharCallback(window, inputHandler->OnChar);
+	glfwSetWindowSizeCallback(window, inputHandler->OnWindowResize);
+
 	
 	float previousTime = 0.0f;
 
@@ -96,13 +129,22 @@ int main()
 		appPtr->Update(deltaTime); //main update for current app
 		appPtr->Draw();				//main draw call for current app
 
+		TwDraw();  // draw the tweak bar(s)
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
+	//shut down tweak bars
+	TwDeleteAllBars();
+	TwTerminate();
+
 	//game over, clean up and de-allocate
 	appPtr->Shutdown();
 	delete appPtr;
+	delete inputHandler;
+
+
 //	delete GameCam;
 	//Gizmos::destroy();
 	glfwDestroyWindow(window);
