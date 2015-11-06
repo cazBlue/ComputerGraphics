@@ -38,6 +38,9 @@
     <Filter Include="Resource Files\shaders\brdf">
       <UniqueIdentifier>{43252e8a-a166-4483-a92b-6eb5c19050c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\shaders\imageBased">
+      <UniqueIdentifier>{4ee04696-463a-4f30-b8d6-0a3b94797d5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -106,6 +109,9 @@
     <ClCompile Include="src\APP_PhysicallyBased.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\APP_ImageBased.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\aieutilities-master\aie\Gizmos.h">
@@ -172,6 +178,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\APP_PhysicallyBased.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\APP_ImageBased.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -280,6 +289,12 @@
     </None>
     <None Include="assets\shaders\physicalShaders\PhysicalVertexShader.glsl">
       <Filter>Resource Files\shaders\brdf</Filter>
+    </None>
+    <None Include="assets\shaders\imageBased\ImageFragShader.glsl">
+      <Filter>Resource Files\shaders\imageBased</Filter>
+    </None>
+    <None Include="assets\shaders\imageBased\ImageVertexShader.glsl">
+      <Filter>Resource Files\shaders\imageBased</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -23,6 +23,7 @@
 #include <APP_DeferredRendering.h>
 #include <APP_ProceduralGeneration.h>
 #include <APP_PhysicallyBased.h>
+#include <APP_ImageBased.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -52,21 +53,22 @@ int main()
 	
 	//App *appPtr = new IntroOpenGl();		//#1 & #2 create intro to opengl app
 	//App *appPtr = new RenderGeo();		//#2 P1 create planes!
-	//App *appPtr = new APP_OBJLoader();	//#2 P2 obj loader
-	//App *appPtr = new APP_Texturing();	//#3 texturing!
-	//App *appPtr = new APP_LoadFbx();		//#4 FBX loader and lighting!
-	//App *appPtr = new APP_AdvTex();		//#5 advanced texturing (normal maps)!
-	//App *appPtr = new APP_Animation();	//#6 animation (no lighting)
-	//App *appPtr = new APP_Particles();    //#7 CPU billboard particles
-	//App *appPtr = new APP_GPUParticles(); //#8 GPU billboard particles
+	//App *appPtr = new APP_OBJLoader();	//#3 P2 obj loader
+	//App *appPtr = new APP_Texturing();	//#4 texturing!
+	//App *appPtr = new APP_LoadFbx();		//#5 FBX loader and lighting!
+	//App *appPtr = new APP_AdvTex();		//#6 advanced texturing (normal maps)!
+	//App *appPtr = new APP_Animation();	//#7 animation (no lighting)
+	//App *appPtr = new APP_Particles();    //#8 CPU billboard particles
+	//App *appPtr = new APP_GPUParticles(); //#9 GPU billboard particles
 	//App *appPtr = new APP_SpotRotate();     //#-- side step to work out rotation for particles (proof of concept)
-	//App *appPtr = new APP_SCENEMANAGE();   //#9 scene management, could do with more work on the quad tree
-	//App *appPtr = new APP_RenderTargets();  //#10 render targets
-	//App *appPtr = new APP_postProcess();	//#11 post processing
-	//App *appPtr = new APP_Shadows();				//#12 shadows
-	//App *appPtr = new APP_DeferredRendering();		//#13 deferred rendering pt 1 & 2
-	//App *appPtr = new APP_Proc_Generation();		//#14 procedural generation
-	App *appPtr = new APP_PhysicallyBased();		//#15 physically based rendering
+	//App *appPtr = new APP_SCENEMANAGE();   //#10 scene management, could do with more work on the quad tree
+	//App *appPtr = new APP_RenderTargets();  //#11 render targets
+	//App *appPtr = new APP_postProcess();	//#12 post processing
+	//App *appPtr = new APP_Shadows();				//#13 shadows
+	//App *appPtr = new APP_DeferredRendering();		//#14 deferred rendering pt 1 & 2
+	//App *appPtr = new APP_Proc_Generation();		//#15 procedural generation
+	//App *appPtr = new APP_PhysicallyBased();		//#16 physically based rendering
+	App *appPtr = new APP_ImageBased();		//#17 image based rendering
 
 	appPtr->Start();
 

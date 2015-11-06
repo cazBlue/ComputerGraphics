@@ -49,15 +49,15 @@
       </PrecompiledHeader>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;GLM_SWIZZLE;GLM_FORCE_PURE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)dep\aieutilities-master;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\include;$(SolutionDir)src;$(SolutionDir)dep\glm;$(SolutionDir)dep\tinyOBJ;$(SolutionDir)dep\stb-master;$(SolutionDir)dep\FBXLoader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\aieutilities-master;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\include;$(SolutionDir)src;$(SolutionDir)dep\glm;$(SolutionDir)dep\tinyOBJ;$(SolutionDir)dep\stb-master;$(SolutionDir)dep\FBXLoader;$(SolutionDir)depdep\AntTweakBar\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;FBXLoader_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\FBXLoader</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;FBXLoader_d.lib;antTweakBar.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)dep\glfw-3.1.1.bin.WIN32\lib-vc2013;$(SolutionDir)dep\FBXLoader;$(SolutionDir)dep\AntTweakBar\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -87,6 +87,7 @@
     <ClCompile Include="src\APP_Animation.cpp" />
     <ClCompile Include="src\APP_DeferredRendering.cpp" />
     <ClCompile Include="src\APP_GpuParticles.cpp" />
+    <ClCompile Include="src\APP_ImageBased.cpp" />
     <ClCompile Include="src\APP_LoadFbx.cpp" />
     <ClCompile Include="src\App_LoadingTextures.cpp" />
     <ClCompile Include="src\APP_ObjLoader.cpp" />
@@ -112,6 +113,7 @@
     <ClInclude Include="src\APP_Animation.h" />
     <ClInclude Include="src\APP_DeferredRendering.h" />
     <ClInclude Include="src\APP_GpuParticles.h" />
+    <ClInclude Include="src\APP_ImageBased.h" />
     <ClInclude Include="src\APP_LoadFbx.h" />
     <ClInclude Include="src\App_LoadingTextures.h" />
     <ClInclude Include="src\APP_ObjLoader.h" />
@@ -148,6 +150,8 @@
     <None Include="assets\shaders\GPUParticleGeoShader.geom" />
     <None Include="assets\shaders\GPUParticleVertexShader.vert" />
     <None Include="assets\shaders\GPUParticleVertexUpdateShader.vert" />
+    <None Include="assets\shaders\imageBased\ImageFragShader.glsl" />
+    <None Include="assets\shaders\imageBased\ImageVertexShader.glsl" />
     <None Include="assets\shaders\particleFragShader.glsl" />
     <None Include="assets\shaders\particleVertexShader.glsl" />
     <None Include="assets\shaders\physicalShaders\PhysicalFragShader.glsl" />

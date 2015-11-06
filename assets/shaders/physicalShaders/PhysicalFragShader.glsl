@@ -57,7 +57,8 @@ void main()
 
 	// Oren-Nayar Diffuse Term
 	float A = 1.0f - 0.5f * R2 / (R2 + 0.33f);
-	float B = 0.45f * R2 / (R2 + 0.09f);
+	float B = 0.45f * R2 / (R2 + 0.09f);
+
 	// CX = Max(0, cos(l,e))
 	vec3 lightProjected = normalize(L - N * NdL);
 	vec3 viewProjected = normalize(E - N * NdE);
