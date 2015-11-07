@@ -33,10 +33,8 @@ public:
 	void UpdateProjectionViewTransform();
 
 	//glfw key and mouse callbacks
-	static void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos);
-	static void key_callback(GLFWwindow* window, int key, int scancode, 
-		int action, int mods);
-
+	void mouseUpdate();
+	void key_update();
 
 	void HandleInput(float a_dt);
 	//setters

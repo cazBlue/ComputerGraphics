@@ -46,8 +46,11 @@ int main()
 	glfwMakeContextCurrent(window);
 
 	TwInit(TW_OPENGL_CORE, nullptr);
-	TwWindowSize(1280, 720);	TwBar *myBar;
-	myBar = TwNewBar("NameOfMyTweakBar");
+	TwWindowSize(1280, 720);
+
+	TwBar *myBar;
+	myBar = TwNewBar("NameOfMyTweakBar");
+
 	vec4 m_clearColour = vec4(1,1,1,1);
 
 	TwAddVarRW(myBar, "clear colour",
@@ -92,7 +95,8 @@ int main()
 //	glfwSetScrollCallback(m_window, OnMouseScroll);
 //	glfwSetKeyCallback(m_window, OnKey);
 //	glfwSetCharCallback(m_window, OnChar);
-//	glfwSetWindowSizeCallback(m_window, OnWindowResize);
+//	glfwSetWindowSizeCallback(m_window, OnWindowResize);
+
 
 
 	//enable unlimited scrolling - hides the cursor
@@ -104,7 +108,7 @@ int main()
 //	glfwSetKeyCallback(window, appPtr->GameCam->key_callback);
 //	glfwSetCursorPosCallback(window, appPtr->onMouseMove);
 
-	APP_Inputhandler* inputHandler = new APP_Inputhandler();
+	APP_Inputhandler* inputHandler = new APP_Inputhandler();		
 
 	glfwSetMouseButtonCallback(window, inputHandler->OnMouseButton);
 	glfwSetCursorPosCallback(window, inputHandler->OnMousePosition);
@@ -129,7 +133,7 @@ int main()
 		appPtr->Update(deltaTime); //main update for current app
 		appPtr->Draw();				//main draw call for current app
 
-		TwDraw();  // draw the tweak bar(s)
+		TwDraw();  // draw the tweak bar(s)		
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

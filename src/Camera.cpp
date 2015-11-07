@@ -1,5 +1,6 @@
 #include <Camera.h>
 #include <iostream>
+#include <InputHandler.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -71,65 +72,63 @@ glm::mat4 Camera::GetProjectionView()
 	return m_projectionTransform * m_viewTransform;
 }
 
-void Camera::cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	void *data = glfwGetWindowUserPointer(window);
-	Camera *camera = static_cast<Camera *>(data);
-
+void Camera::mouseUpdate()
+{	
 	float width = 1280; //TODO pass from main game - not dynamic!
 	float height = 720; 
 
-	//create a dead zone in the centre of the screen
-	//if (xpos )
-	//cout << "xpos: " << xpos << " ypos: " << ypos << std::endl;
+	float xpos = APP_Inputhandler::lastMousePos.x;
+	float ypos = APP_Inputhandler::lastMousePos.y;
 
 	float sensativity = .05f;
 
 	//work out if the mouse moved
-	if (camera->m_lastMousePosX != xpos)
+	if (m_lastMousePosX != xpos)
 	{
-		if (xpos < camera->m_lastMousePosX)
-			camera->m_rotateLeft = true;
+		if (xpos < m_lastMousePosX)
+			m_rotateLeft = true;
 		else
-			camera->m_rotateRight = true;
+			m_rotateRight = true;
 
-		camera->m_lastMousePosX = (float)xpos; //set to last position
+		m_lastMousePosX = (float)xpos; //set to last position
 	}
 
-	if (camera->m_lastMousePosY != ypos)
+	if (m_lastMousePosY != ypos)
 	{
-		if (ypos < camera->m_lastMousePosY)
-			camera->m_rotateUp = true;
+		if (ypos < m_lastMousePosY)
+			m_rotateUp = true;
 		else
-			camera->m_rotateDown = true;
+			m_rotateDown = true;
 
-		camera->m_lastMousePosY = (float)ypos; //set to last position
+		m_lastMousePosY = (float)ypos; //set to last position
 	}
 }
 
-void Camera::key_callback(GLFWwindow* window, int key, int scancode, 
-	int action, int mods)
+void Camera::key_update()
 {
-	void *data = glfwGetWindowUserPointer(window);
-	Camera *camera = static_cast<Camera *>(data);
+	int key = APP_Inputhandler::lastKey;
+	int action = APP_Inputhandler::lastKeyAction;	
+
+//	void *data = glfwGetWindowUserPointer(window);
+//	Camera *camera = static_cast<Camera *>(data);
 
 	if (key == GLFW_KEY_D && action == GLFW_REPEAT || action == GLFW_PRESS)
-		camera->m_moveRight = true;
+		m_moveRight = true;
 
 	if (key == GLFW_KEY_A && action == GLFW_REPEAT || action == GLFW_PRESS)
-		camera->m_moveLeft = true;
+		m_moveLeft = true;
 
 	if (key == GLFW_KEY_W && action == GLFW_REPEAT || action == GLFW_PRESS)
-		camera->m_moveForward = true;
+		m_moveForward = true;
 
 	if (key == GLFW_KEY_S && action == GLFW_REPEAT || action == GLFW_PRESS)
-		camera->m_moveBackward = true;
+		m_moveBackward = true;
 
 	if (key == GLFW_KEY_Q && action == GLFW_REPEAT || action == GLFW_PRESS)
-		camera->m_tiltleft = true;
+		m_tiltleft = true;
 
 	if (key == GLFW_KEY_E && action == GLFW_REPEAT || action == GLFW_PRESS)
-		camera->m_tiltRight = true;
+		m_tiltRight = true;
 }
 
 void Camera::HandleInput(float a_dt)
@@ -197,9 +196,10 @@ void Camera::HandleInput(float a_dt)
 
 void Camera::Update(float a_dt)
 {
+	key_update();
+	mouseUpdate();
+
 	HandleInput(a_dt); //check if the camera should be moved	
-
-
 
 	//re-align the camera
 	UpdateProjectionViewTransform();
