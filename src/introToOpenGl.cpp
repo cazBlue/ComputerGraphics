@@ -2,7 +2,8 @@
 
 IntroOpenGl::IntroOpenGl()
 {
-
+	m_appName = "intro to openGL";
+	isLoaded = false;
 }
 IntroOpenGl::~IntroOpenGl()
 {
@@ -50,6 +51,8 @@ bool IntroOpenGl::Start()
 {
 	Gizmos::create();
 
+	m_appName = "intro to openGL";
+
 	GameCam = new Camera();
 	parentTrans = mat4(
 		1, 0, 0, 0,
@@ -64,6 +67,8 @@ bool IntroOpenGl::Start()
 		0, 1, 0, 0,
 		0, 0, 1, 0,
 		10, 0, 0, 1);
+
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }

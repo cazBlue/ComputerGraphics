@@ -27,6 +27,8 @@
 #include <APP_ImageBased.h>
 #include <APP_GUI.h>
 #include <InputHandler.h>
+#include <APP_Splash.h>
+#include <APP_Controller.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -59,27 +61,7 @@ int main()
 	auto minor = ogl_GetMinorVersion();
 	printf("GL: %i.%i\n", major, minor);	
 	
-	//App *appPtr = new IntroOpenGl();		//#1 & #2 create intro to opengl app
-	//App *appPtr = new RenderGeo();		//#2 P1 create planes!
-	//App *appPtr = new APP_OBJLoader();	//#3 P2 obj loader
-	//App *appPtr = new APP_Texturing();	//#4 texturing!
-	//App *appPtr = new APP_LoadFbx();		//#5 FBX loader and lighting!
-	//App *appPtr = new APP_AdvTex();		//#6 advanced texturing (normal maps)!
-	//App *appPtr = new APP_Animation();	//#7 animation (no lighting)
-	//App *appPtr = new APP_Particles();    //#8 CPU billboard particles
-	//App *appPtr = new APP_GPUParticles(); //#9 GPU billboard particles
-	//App *appPtr = new APP_SpotRotate();     //#-- side step to work out rotation for particles (proof of concept)
-	//App *appPtr = new APP_SCENEMANAGE();   //#10 scene management, could do with more work on the quad tree
-	//App *appPtr = new APP_RenderTargets();  //#11 render targets
-	//App *appPtr = new APP_postProcess();	//#12 post processing
-	//App *appPtr = new APP_Shadows();				//#13 shadows
-	//App *appPtr = new APP_DeferredRendering();		//#14 deferred rendering pt 1 & 2
-	//App *appPtr = new APP_Proc_Generation();		//#15 procedural generation
-	//App *appPtr = new APP_PhysicallyBased();		//#16 physically based rendering
-	//App *appPtr = new APP_ImageBased();		//#17 image based rendering
-	App *appPtr = new APP_GUI();				//#18 GUI
-
-	appPtr->Start();
+	
 
 
 
@@ -100,6 +82,12 @@ int main()
 	glfwSetCharCallback(window, inputHandler->OnChar);
 	glfwSetWindowSizeCallback(window, inputHandler->OnWindowResize);
 
+
+	//create app controller
+	APP_Control* appCtrl = new APP_Control();
+	appCtrl->Start();
+
+
 	
 	float previousTime = 0.0f;
 
@@ -113,8 +101,8 @@ int main()
 		float deltaTime = currentTime - previousTime; // prev of last frame
 		previousTime = currentTime;
 		
-		appPtr->Update(deltaTime); //main update for current app
-		appPtr->Draw();				//main draw call for current app
+		appCtrl->Update(deltaTime);		//main update for apps
+		appCtrl->Draw();				//main draw call for apps
 
 		TwDraw();  // draw the tweak bar(s)		
 
@@ -127,8 +115,8 @@ int main()
 	TwTerminate();
 
 	//game over, clean up and de-allocate
-	appPtr->Shutdown();
-	delete appPtr;
+	appCtrl->Shutdown();
+	delete appCtrl;
 	delete inputHandler;
 
 

@@ -24,8 +24,11 @@ using glm::mat4;
 class App
 {
 public: //variables
-	std::string m_appName;
+	std::string m_appName;	//used by app controller to identify current app
 	Camera *GameCam;	
+	bool isLoaded = false;		//used by app controller to check if app is loaded
+
+
 
 public: //functions
 	virtual bool Start() =0;
@@ -33,14 +36,7 @@ public: //functions
 	virtual void Update(float a_dt) =0;
 	virtual void Draw() =0;
 
-public: //input/callback functions
-	//virtual void OnKey(GLFWwindow* window, int key, int scancode,
-	//	int action, int mods);
-//	virtual void OnMouseButton();
-//	virtual void onMouseScroll();
-//	virtual void onMouseChar() = 0;
-//	virtual void onWindowResize();
-	//void onMouseMove(GLFWwindow* window, double xpos, double ypos);
+public: 
 };
 
 #endif APPLICATION_H

@@ -41,6 +41,9 @@
     <Filter Include="Resource Files\shaders\imageBased">
       <UniqueIdentifier>{4ee04696-463a-4f30-b8d6-0a3b94797d5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\shaders\splash">
+      <UniqueIdentifier>{8934cc35-c702-4475-bedb-e68b47a98c40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -121,6 +124,12 @@
     <ClCompile Include="src\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\APP_Controller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\APP_Splash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\aieutilities-master\aie\Gizmos.h">
@@ -196,6 +205,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\InputHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\APP_Controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\APP_Splash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -310,6 +325,12 @@
     </None>
     <None Include="assets\shaders\imageBased\ImageVertexShader.glsl">
       <Filter>Resource Files\shaders\imageBased</Filter>
+    </None>
+    <None Include="assets\shaders\splash\SplashFrag.frag">
+      <Filter>Resource Files\shaders\splash</Filter>
+    </None>
+    <None Include="assets\shaders\splash\SplashVert.vert">
+      <Filter>Resource Files\shaders\splash</Filter>
     </None>
   </ItemGroup>
 </Project>

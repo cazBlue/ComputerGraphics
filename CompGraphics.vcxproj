@@ -86,6 +86,7 @@
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\APP_AdvTexturing.cpp" />
     <ClCompile Include="src\APP_Animation.cpp" />
+    <ClCompile Include="src\APP_Controller.cpp" />
     <ClCompile Include="src\APP_DeferredRendering.cpp" />
     <ClCompile Include="src\APP_GpuParticles.cpp" />
     <ClCompile Include="src\APP_GUI.cpp" />
@@ -101,6 +102,7 @@
     <ClCompile Include="src\APP_RenderTargets.cpp" />
     <ClCompile Include="src\APP_SceneManagment.cpp" />
     <ClCompile Include="src\APP_Shadows.cpp" />
+    <ClCompile Include="src\APP_Splash.cpp" />
     <ClCompile Include="src\APP_SpotRotate.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
@@ -114,6 +116,7 @@
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\APP_AdvTexturing.h" />
     <ClInclude Include="src\APP_Animation.h" />
+    <ClInclude Include="src\APP_Controller.h" />
     <ClInclude Include="src\APP_DeferredRendering.h" />
     <ClInclude Include="src\APP_GpuParticles.h" />
     <ClInclude Include="src\APP_GUI.h" />
@@ -129,6 +132,7 @@
     <ClInclude Include="src\APP_RenderTargets.h" />
     <ClInclude Include="src\APP_SceneManagment.h" />
     <ClInclude Include="src\APP_Shadows.h" />
+    <ClInclude Include="src\APP_Splash.h" />
     <ClInclude Include="src\APP_SpotRotate.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\InputHandler.h" />
@@ -172,6 +176,8 @@
     <None Include="assets\shaders\ShadowVertexShader.vert" />
     <None Include="assets\shaders\Shadow_shadowFragShader.frag" />
     <None Include="assets\shaders\Shadow_shadowVertexShader.vert" />
+    <None Include="assets\shaders\splash\SplashFrag.frag" />
+    <None Include="assets\shaders\splash\SplashVert.vert" />
     <None Include="assets\shaders\VertexShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
