@@ -11,7 +11,7 @@ APP_GUI::~APP_GUI()
 
 void APP_GUI::Update(float a_dt)
 {
-	GameCam->Update(a_dt); //update camera
+	//GameCam->Update(a_dt); //update camera
 
 	rot += .0001f;
 
@@ -41,9 +41,9 @@ void APP_GUI::Draw()
 
 	glm::mat4 worldPos = parentTrans * sphereTrans;
 	vec4 pos = worldPos[3];
-	Gizmos::addSphere(pos.xyz(), 3.f, 12, 12, white, &worldPos);
+	Gizmos::addSphere(pos.xyz(), 3.f, 12, 12, m_sphereColour, &worldPos);
 
-	Gizmos::draw(GameCam->GetProjectionView());
+	Gizmos::draw(GameCam->GetProjectionView());	
 }
 
 bool APP_GUI::Start()
@@ -65,7 +65,20 @@ bool APP_GUI::Start()
 		0, 0, 1, 0,
 		10, 0, 0, 1);
 
+	
+	CreateGui();
+
 	return true; //not being used in this lesson
+}
+
+void APP_GUI::CreateGui()
+{
+	m_bar = TwNewBar("Gui Tut");
+
+	m_sphereColour = vec4(.5, .5, .5, 1);
+
+	TwAddVarRW(m_bar, "sphere colour",
+		TW_TYPE_COLOR4F, &m_sphereColour[0], "");
 }
 
 bool APP_GUI::Shutdown()

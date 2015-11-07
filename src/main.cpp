@@ -48,13 +48,6 @@ int main()
 	TwInit(TW_OPENGL_CORE, nullptr);
 	TwWindowSize(1280, 720);
 
-	TwBar *myBar;
-	myBar = TwNewBar("NameOfMyTweakBar");
-
-	vec4 m_clearColour = vec4(1,1,1,1);
-
-	TwAddVarRW(myBar, "clear colour",
-		TW_TYPE_COLOR4F, &m_clearColour[0], "");
 
 	if (ogl_LoadFunctions() == ogl_LOAD_FAILED) {
 		glfwDestroyWindow(window);
@@ -83,33 +76,23 @@ int main()
 	//App *appPtr = new APP_DeferredRendering();		//#14 deferred rendering pt 1 & 2
 	//App *appPtr = new APP_Proc_Generation();		//#15 procedural generation
 	//App *appPtr = new APP_PhysicallyBased();		//#16 physically based rendering
-	// App *appPtr = new APP_ImageBased();		//#17 image based rendering
+	//App *appPtr = new APP_ImageBased();		//#17 image based rendering
 	App *appPtr = new APP_GUI();				//#18 GUI
 
 	appPtr->Start();
 
 
 
-//	glfwSetMouseButtonCallback(m_window, OnMouseButton);
-//	glfwSetCursorPosCallback(m_window, OnMousePosition);
-//	glfwSetScrollCallback(m_window, OnMouseScroll);
-//	glfwSetKeyCallback(m_window, OnKey);
-//	glfwSetCharCallback(m_window, OnChar);
-//	glfwSetWindowSizeCallback(m_window, OnWindowResize);
-
-
-
 	//enable unlimited scrolling - hides the cursor
 //	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	//set a pointer to the game camera http://stackoverflow.com/questions/27596861/give-static-function-access-to-data-without-passing-the-data-as-a-parameter
-	//TODO move to key manager when created 
-	glfwSetWindowUserPointer(window, appPtr->GameCam); //should be set to current app
-//	glfwSetKeyCallback(window, appPtr->GameCam->key_callback);
-//	glfwSetCursorPosCallback(window, appPtr->onMouseMove);
+	//set a pointer to the game camera http://stackoverflow.com/questions/27596861/give-static-function-access-to-data-without-passing-the-data-as-a-parameter	
+//	glfwSetWindowUserPointer(window, appPtr->GameCam); //should be set to current app
+
 
 	APP_Inputhandler* inputHandler = new APP_Inputhandler();		
 
+	//input handler callbacks
 	glfwSetMouseButtonCallback(window, inputHandler->OnMouseButton);
 	glfwSetCursorPosCallback(window, inputHandler->OnMousePosition);
 	glfwSetScrollCallback(window, inputHandler->OnMouseScroll);

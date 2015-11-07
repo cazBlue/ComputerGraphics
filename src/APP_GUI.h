@@ -20,6 +20,9 @@ public:
 
 public:
 	TwBar* m_bar;
+	vec4 m_sphereColour;
+
+	void CreateGui();
 
 };
 
