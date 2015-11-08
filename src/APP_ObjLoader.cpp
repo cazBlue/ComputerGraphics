@@ -145,6 +145,8 @@ void APP_OBJLoader::drawObj()
 
 bool APP_OBJLoader::Start()
 {
+	m_appName = "OBJ loader";
+
 	Gizmos::create();
 	GameCam = new Camera();	
 	
@@ -155,7 +157,28 @@ bool APP_OBJLoader::Start()
 
 	createOpenGLBuffers(shapes);
 
+	isLoaded = true;
+
 	return true; //not being used in this lesson
+}
+
+void APP_OBJLoader::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_OBJLoader::CreateGui()
+{
+	m_bar = TwNewBar("ObjLoader");
+
+	TwDefine(" ObjLoader position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" ObjLoader size='430 320' "); // resize bar	
+	TwDefine(" ObjLoader color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" ObjLoader resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='loads obj and shows normals'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
 }
 
 bool APP_OBJLoader::Shutdown()

@@ -1,7 +1,6 @@
 #ifndef APP_SPLASH_H
 #define APP_SPLASH_H
 #include <Application.h>
-#include <AntTweakBar.h>
 #include <list>
 
 using std::list;
@@ -15,6 +14,8 @@ public:
 	void Draw();
 	bool Start();
 	bool Shutdown();
+	void ClearMenu();
+	void CreateGui();
 	std::string LoadShader(const char *a_filePath);
 
 public:
@@ -26,14 +27,12 @@ public:
 	unsigned int m_vao, m_vbo, m_programBackBuffer, m_splashImg;
 	
 	void createBackBufferBuffers();
-	void CreateGui(); 
-	static void TW_CALL Callback(void *clientData);
-	static std::string nextScene;
+		
 	void SetAppList(list<App*>* apps);
 
 	list<App*>* m_apps; //pointer to main list of apps
 
-	TwBar* m_bar;
+
 	
 	void SetDirtyGui();
 	bool m_guiDirty; //marks the gui for re-generating

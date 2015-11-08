@@ -52,15 +52,12 @@
 APP_Control::APP_Control()
 {
 	m_loading = true;
+	m_beginLoading = false;
 
+	m_splashApp = new APP_Splash();
+	m_splashApp->Start(); //init the splash screen app
 
-	splashApp = new APP_Splash();
-
-	splashApp->Start(); //init the splash screen app
-
-	curApp = splashApp;
-
-	apps.push_front(splashApp);
+	m_curApp = m_splashApp;	
 }
 
 APP_Control::~APP_Control()
@@ -70,54 +67,97 @@ APP_Control::~APP_Control()
 
 void APP_Control::Start()
 {
-	//begin loading all apps
-	LoadAPP(new IntroOpenGl());
+	//push all apps into memory for menu display
+
+	//m_apps.push_front(new APP_OBJLoader()); //take out while debugging
+	m_apps.push_front(new RenderGeo());
+	m_apps.push_front(new IntroOpenGl());	
 
 	//make the splash screen aware of the apps list
-	static_cast<APP_Splash*>(splashApp)->SetAppList(&apps);
+	static_cast<APP_Splash*>(m_splashApp)->SetAppList(&m_apps);
+
+	//set the loading list
+	m_appsToLoad = m_apps;
+
+	m_loadingApp = m_apps.front();
+
+	m_apps.push_front(m_splashApp); //skips adding the splash app to the loading list
 }
 
 void APP_Control::LoadAPP(App* a_app)
-{	
-	a_app->Start();
-	apps.push_front(a_app);
+{		
+	
 }
 
 void APP_Control::Update(float dt)
 {
-	if (m_loading)
+	m_curApp->Update(dt);
+
+	if (m_loading && m_beginLoading)
 		CheckLoadStatus();
 	else
-//		CheckNextScene();
+		CheckNextScene();
 
-	curApp->Update(dt);	
+	m_beginLoading = true;
+}
+
+void APP_Control::CheckNextScene()
+{
+	if (App::nextScene != "")
+	{
+		list <App *>::iterator iter;
+		for (iter = m_apps.begin(); iter != m_apps.end(); iter++)
+		{
+			if (App::nextScene == m_curApp->m_appName)
+			{								
+				m_curApp = m_splashApp;
+				m_curApp->CreateGui();
+
+				App::nextScene = ""; //reset the next scene flag
+			}
+
+			if ((*iter)->m_appName == App::nextScene)
+			{
+				//a scene button has been pressed
+
+				//clear the menu
+				m_curApp->ClearMenu();
+				m_curApp = (*iter);
+				m_curApp->CreateGui();
+
+				App::nextScene = ""; //reset the next scene flag
+			}
+		}
+	}
 }
 
 void APP_Control::CheckLoadStatus()
 {
+	//only load 1 app per update
+
 	bool stillLoading = true;
+	bool loadingApp = false;
 
-	list <App *>::iterator iter;
-	for (iter = apps.begin(); iter != apps.end(); iter++)
-	{
-		if ((*iter)->isLoaded)
+	if (m_loadingApp->isLoaded)
+	{		
+		if (m_appsToLoad.size() > 0)
 		{
-			//mark as loaded
-			std::cout << "loaded: " << (*iter)->m_appName << std::endl;
-			stillLoading = false;
-			
-			static_cast<APP_Splash*>(splashApp)->SetDirtyGui();
+			m_loadingApp = m_appsToLoad.front();
+			m_appsToLoad.pop_front();
 		}
-	}	
+		else
+			m_loading = false; //done loading apps
 
-	if (!stillLoading)
-		m_loading = false;
+		static_cast<APP_Splash*>(m_splashApp)->SetDirtyGui();
+	}
+	else
+		m_loadingApp->Start();
 }
 
 
 void APP_Control::Draw()
 {
-	curApp->Draw();
+	m_curApp->Draw();
 }
 
 void APP_Control::Shutdown()

@@ -12,6 +12,8 @@ public:
 	void Draw();
 	bool Start();
 	bool Shutdown();
+	void ClearMenu();
+	void CreateGui();
 
 public:
 	std::vector<tinyobj::shape_t> shapes;

@@ -12,7 +12,7 @@ IntroOpenGl::~IntroOpenGl()
 
 void IntroOpenGl::Update(float a_dt)
 {
-	GameCam->Update(a_dt); //update camera
+	//GameCam->Update(a_dt); //update camera
 
 	rot += .0001f;
 
@@ -45,6 +45,25 @@ void IntroOpenGl::Draw()
 	Gizmos::addSphere(pos.xyz(), 3.f, 12, 12, white, &worldPos);
 
 	Gizmos::draw(GameCam->GetProjectionView());
+}
+
+void IntroOpenGl::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void IntroOpenGl::CreateGui()
+{	
+	m_bar = TwNewBar("IntroToOpenGL");
+
+	TwDefine(" IntroToOpenGL position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" IntroToOpenGL size='430 320' "); // resize bar	
+	TwDefine(" IntroToOpenGL color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" IntroToOpenGL resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='simply opengl scene, nothing much happening'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
 }
 
 bool IntroOpenGl::Start()

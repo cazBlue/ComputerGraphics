@@ -6,10 +6,9 @@
 #include <iostream>
 #include <stdio.h>
 
-using std::string;
 
-//static variables
-string APP_Splash::nextScene = string("");
+
+
 
 APP_Splash::APP_Splash()
 {
@@ -80,24 +79,33 @@ void APP_Splash::SetAppList(list<App*>* a_apps)
 void APP_Splash::CreateGui()
 {
 	TwDeleteBar(m_bar); //reset the gui
-	m_bar = TwNewBar("Select an app");
+	m_bar = TwNewBar("SelectAnApp");
+	TwDefine(" SelectAnApp position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" SelectAnApp size='430 320' "); // resize bar	
+	TwDefine(" SelectAnApp color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" SelectAnApp resizable=false "); // mybar cannot be resized
 	
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='please wait for all apps to load'"); //show as label
+	TwAddButton(m_bar, "label_02", NULL, NULL, "label='the obj loader can take a while'"); //show as label
+
 	int counter = 0;
 	list <App *>::iterator iter;
 	for (iter = m_apps->begin(); iter != m_apps->end(); iter++)
 	{
 		if ((*iter)->m_appName != m_appName) //don't show the splash screen
 		{
-			string name = "Info." + std::to_string(counter);
+			string name = "app." + std::to_string(counter);
 			string label = " label='";
 			if ((*iter)->isLoaded)
+			{
 				label += std::to_string(counter) + ") " + (*iter)->m_appName + "'";
+				TwAddButton(m_bar, name.c_str(), Callback, (*iter), label.c_str()); //show as button
+			}
 			else
-				label += std::to_string(counter) + ") LOADING -- " + (*iter)->m_appName + "'";
-
-
-			TwAddButton(m_bar, name.c_str(), Callback, (*iter), label.c_str());
-
+			{
+				label += std::to_string(counter) + ") -- LOADING -- " + (*iter)->m_appName + "'";
+				TwAddButton(m_bar, name.c_str(), NULL, NULL, label.c_str()); //show as label
+			}
 			counter++;
 		}
 	}
@@ -105,10 +113,9 @@ void APP_Splash::CreateGui()
 	m_guiDirty = false;
 }
 
-void TW_CALL APP_Splash::Callback(void *clientData)
+void APP_Splash::ClearMenu()
 {
-	// do something
-	nextScene = static_cast<App*>(clientData)->m_appName;
+	TwDeleteBar(m_bar); //reset the gui
 }
 
 void APP_Splash::loadImg(int* a_height, int* a_width, int* a_format, const char* a_path, unsigned int* a_id)
