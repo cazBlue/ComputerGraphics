@@ -248,8 +248,29 @@ std::string APP_SpotRotate::LoadShader(const char *a_filePath)
 	return strShaderCode; //not in use
 }
 
+void APP_SpotRotate::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_SpotRotate::CreateGui()
+{
+	m_bar = TwNewBar("SpotRotate");
+
+	TwDefine(" SpotRotate position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" SpotRotate size='430 320' "); // resize bar	
+	TwDefine(" SpotRotate color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" SpotRotate resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='proof of concept for bill borded sprites with rotation'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
+
 bool APP_SpotRotate::Start()
 {
+	m_appName = "Spot rotate";
+
 	m_time = 0.0f;
 
 	Gizmos::create();
@@ -297,6 +318,8 @@ bool APP_SpotRotate::Start()
 	glGenBuffers(1, &m_VBO);
 	glGenBuffers(1, &m_IBO);
 	glGenVertexArrays(1, &m_VAO); //generate a VertexArrayObject
+
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }

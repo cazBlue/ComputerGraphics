@@ -190,16 +190,16 @@ void APP_SCENEMANAGE::Draw()
 		float d = glm::dot(vec3(planes[i]), sphere.centre) + planes[i].w;
 		if (d < -sphere.radius) 
 		{ 
-			printf("Behind, don't render it!\n"); 
+			//printf("Behind, don't render it!\n"); 
 			break; 
 		}
 		else if (d < sphere.radius) { 
-			printf("Touching, we still need to render it!\n");
+			//printf("Touching, we still need to render it!\n");
 			Gizmos::addSphere(sphere.centre, sphere.radius, 8, 8, vec4(1, 0, 1, 1));
 		}
 		else 
 		{ 
-			printf("Front, fully visible so render it!\n"); 
+			//printf("Front, fully visible so render it!\n"); 
 			Gizmos::addSphere(sphere.centre, sphere.radius, 8, 8, vec4(1, 0, 1, 1));
 		}	
 	}
@@ -207,8 +207,31 @@ void APP_SCENEMANAGE::Draw()
 	Gizmos::draw(GameCam->GetProjectionView());
 }
 
+void APP_SCENEMANAGE::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_SCENEMANAGE::CreateGui()
+{
+	m_bar = TwNewBar("SceneManagment");
+
+	TwDefine(" SceneManagment position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" SceneManagment size='430 320' "); // resize bar	
+	TwDefine(" SceneManagment color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" SceneManagment resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='Scene managment - green when in front of plane'"); //show as label		
+	TwAddButton(m_bar, "label_02", NULL, NULL, "label='yellow when intersecting and red when behind'"); //show as label		
+//	TwAddButton(m_bar, "label_03", NULL, NULL, "label='Scene managment - green when in front of plane'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
+
 bool APP_SCENEMANAGE::Start()
 {
+	m_appName = "Scene Managment";
+
 	Gizmos::create();
 
 	GameCam = new Camera();
@@ -225,6 +248,8 @@ bool APP_SCENEMANAGE::Start()
 //
 //	printf("creating buffers");
 //	createOpenGLBuffers(shapes);
+
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }

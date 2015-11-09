@@ -69,6 +69,8 @@ void APP_Control::Start()
 {
 	//push all apps into memory for menu display
 
+	m_apps.push_front(new APP_SCENEMANAGE());   //#10 scene management, could do with more work on the quad tree
+	m_apps.push_front(new APP_SpotRotate());     //#-- side step to work out rotation for particles (proof of concept)
 	m_apps.push_front(new APP_GPUParticles()); //#9 GPU billboard particles
 	m_apps.push_front(new APP_Particles());    //#8 CPU billboard particles
 	m_apps.push_front(new APP_Animation());	//#7 animation (no lighting)
