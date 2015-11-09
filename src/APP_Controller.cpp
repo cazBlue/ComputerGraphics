@@ -69,9 +69,11 @@ void APP_Control::Start()
 {
 	//push all apps into memory for menu display
 
-	//m_apps.push_front(new APP_OBJLoader()); //take out while debugging
-	m_apps.push_front(new RenderGeo());
-	m_apps.push_front(new IntroOpenGl());	
+	m_apps.push_front(new APP_LoadFbx());		//#5 FBX loader and lighting!
+	m_apps.push_front(new APP_Texturing());	//#4 texturing!
+	//m_apps.push_front(new APP_OBJLoader()); //#3 P2 obj loader //take out while debugging
+	m_apps.push_front(new RenderGeo());		//#2 P1 create planes!
+	m_apps.push_front(new IntroOpenGl());	//#1 & #2 create intro to opengl app
 
 	//make the splash screen aware of the apps list
 	static_cast<APP_Splash*>(m_splashApp)->SetAppList(&m_apps);

@@ -75,6 +75,8 @@ void APP_Texturing::loadImg(int* a_height, int* a_width, int* a_format, const ch
 
 bool APP_Texturing::Start()
 {
+	m_appName = "Loading Textures";
+
 	Gizmos::create();
 	GameCam = new Camera();
 
@@ -145,8 +147,27 @@ bool APP_Texturing::Start()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-
+	isLoaded = true;
 	return true; //not being used in this lesson
+}
+
+void APP_Texturing::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_Texturing::CreateGui()
+{
+	m_bar = TwNewBar("LoadingTextures");
+
+	TwDefine(" LoadingTextures position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" LoadingTextures size='430 320' "); // resize bar	
+	TwDefine(" LoadingTextures color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" LoadingTextures resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='loading two textures with a multiply to blend'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
 }
 
 bool APP_Texturing::Shutdown()

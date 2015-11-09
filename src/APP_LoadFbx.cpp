@@ -126,6 +126,8 @@ std::string APP_LoadFbx::LoadShader(const char *a_filePath)
 
 bool APP_LoadFbx::Start()
 {
+	m_appName = "Loading FBX";
+
 	Gizmos::create();
 	GameCam = new Camera();
 
@@ -186,6 +188,7 @@ bool APP_LoadFbx::Start()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }
@@ -255,6 +258,26 @@ void APP_LoadFbx::createOpenGLBuffers(FBXFile* fbx)
 //
 //		stbi_image_free(data); //unload the image data
 	}
+}
+
+
+void APP_LoadFbx::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_LoadFbx::CreateGui()
+{
+	m_bar = TwNewBar("LoadingFBX");
+
+	TwDefine(" LoadingFBX position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" LoadingFBX size='430 320' "); // resize bar	
+	TwDefine(" LoadingFBX color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" LoadingFBX resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='loading fbx from file'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
 }
 
 
