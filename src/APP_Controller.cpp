@@ -69,6 +69,9 @@ void APP_Control::Start()
 {
 	//push all apps into memory for menu display
 
+	m_apps.push_front(new APP_GPUParticles()); //#9 GPU billboard particles
+	m_apps.push_front(new APP_Particles());    //#8 CPU billboard particles
+	m_apps.push_front(new APP_Animation());	//#7 animation (no lighting)
 	m_apps.push_front(new APP_AdvTex());		//#6 advanced texturing (normal maps)!
 	m_apps.push_front(new APP_LoadFbx());		//#5 FBX loader and lighting!
 	m_apps.push_front(new APP_Texturing());	//#4 texturing!

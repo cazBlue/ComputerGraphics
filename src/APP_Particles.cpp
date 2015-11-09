@@ -45,8 +45,28 @@ void APP_Particles::Draw()
 	particleDraw();
 }
 
+void APP_Particles::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_Particles::CreateGui()
+{
+	m_bar = TwNewBar("CPUParticles");
+
+	TwDefine(" CPUParticles position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" CPUParticles size='430 320' "); // resize bar	
+	TwDefine(" CPUParticles color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" CPUParticles resizable=false "); // mybar cannot be resized
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='pasrticles running on the CPU'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
+
 bool APP_Particles::Start()
 {
+	m_appName = "CPU Particles";
+
 	Gizmos::create();
 	GameCam = new Camera();
 	
@@ -84,6 +104,8 @@ bool APP_Particles::Start()
 	glm::vec4 ecolour = glm::vec4(1, 1, 0, 1);
 	
 	initalise(1000, 100, .01f, 3, .01f, 10.0f, .1f, 1.0f, scolour, ecolour);
+
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }

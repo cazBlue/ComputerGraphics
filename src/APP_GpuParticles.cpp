@@ -53,8 +53,28 @@ void APP_GPUParticles::Draw()
 	draw((float)glfwGetTime(), GameCam->GetWorldTransform(), GameCam->GetProjectionView());
 }
 
+void APP_GPUParticles::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_GPUParticles::CreateGui()
+{
+	m_bar = TwNewBar("GPUParticles");
+
+	TwDefine(" GPUParticles position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" GPUParticles size='430 320' "); // resize bar	
+	TwDefine(" GPUParticles color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" GPUParticles resizable=false "); // mybar cannot be resized
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='GPU particles'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
+
 bool APP_GPUParticles::Start()
 {
+	m_appName = "GPU particles";
+
 	Gizmos::create();
 
 	GameCam = new Camera();
@@ -64,6 +84,8 @@ bool APP_GPUParticles::Start()
 		5, 20,
 		1, 0.1f,
 		glm::vec4(1, 0, 0, 1), glm::vec4(1, 1, 0, 1));
+
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }

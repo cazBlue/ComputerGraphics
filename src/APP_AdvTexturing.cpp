@@ -84,7 +84,7 @@ void APP_AdvTex::Draw()
 
 		//set diffuse texture	
 		glActiveTexture(GL_TEXTURE0); //set for initial active texture		
-		glBindTexture(GL_TEXTURE_2D, glData[3]);	//bind the crate texture
+		glBindTexture(GL_TEXTURE_2D, glData[3]);	//bind the diffuse texture
 		int difLoc = glGetUniformLocation(m_program, "Diffuse"); //get diffuse location
 		glUniform1i(difLoc, 0); //set to the diffuse to the texture index	
 
@@ -153,7 +153,7 @@ void APP_AdvTex::CreateGui()
 	TwDefine(" AdvancedTexturing resizable=false "); // mybar cannot be resized
 
 
-	TwAddButton(m_bar, "label_01", NULL, NULL, "label='advanced texturing'"); //show as label		
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='advanced texturing, diffuse normal map and directional/point light'"); //show as label		
 	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
 }
 

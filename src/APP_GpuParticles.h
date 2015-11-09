@@ -11,6 +11,8 @@ public:
 	void Draw();
 	bool Start();
 	bool Shutdown();
+	void ClearMenu();
+	void CreateGui();
 
 public:
 

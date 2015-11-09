@@ -105,6 +105,13 @@ void APP_Animation::Draw()
 		FBXMeshNode* mesh = m_fbx->getMeshByIndex(i);
 		unsigned int* glData = (unsigned int*)mesh->m_userData;
 		glBindVertexArray(glData[0]);
+
+		//set diffuse texture	
+		glActiveTexture(GL_TEXTURE0); //set for initial active texture		
+		glBindTexture(GL_TEXTURE_2D, glData[3]);	//bind the diffuse texture
+		int difLoc = glGetUniformLocation(m_program, "Diffuse"); //get diffuse location
+		glUniform1i(difLoc, 0); //set to the diffuse to the texture index	
+
 		glDrawElements(GL_TRIANGLES,
 			(unsigned int)mesh->m_indices.size(), GL_UNSIGNED_INT, 0);
 	}
@@ -145,7 +152,9 @@ std::string APP_Animation::LoadShader(const char *a_filePath)
 
 bool APP_Animation::Start()
 {
-		Gizmos::create();
+	m_appName = "animation from FBX";
+
+	Gizmos::create();
 	GameCam = new Camera();
 
 	m_timer = 0;
@@ -211,10 +220,30 @@ bool APP_Animation::Start()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }
 
+
+void APP_Animation::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_Animation::CreateGui()
+{
+	m_bar = TwNewBar("FBXAnimation");
+
+	TwDefine(" FBXAnimation position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" FBXAnimation size='430 320' "); // resize bar	
+	TwDefine(" FBXAnimation color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" FBXAnimation resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='animation from loaded FBX'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
 
 void APP_Animation::createOpenGLBuffers(FBXFile* fbx)
 {
