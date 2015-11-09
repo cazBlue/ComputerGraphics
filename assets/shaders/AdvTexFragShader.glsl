@@ -80,5 +80,7 @@ void main()
 
 	//TODO
 	//check point light is being used
-	FragColor = diffuse + ambient + SpecularColor; //final result 
+	//FragColor = diffuse + ambient + SpecularColor; //final result 
+
+	FragColor = diffuse + ambient + SpecularColor + pointLight; //final combined output
 }

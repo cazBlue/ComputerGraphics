@@ -136,8 +136,29 @@ std::string APP_AdvTex::LoadShader(const char *a_filePath)
 	return strShaderCode; //not in use
 }
 
+void APP_AdvTex::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_AdvTex::CreateGui()
+{
+	m_bar = TwNewBar("AdvancedTexturing");
+
+	TwDefine(" AdvancedTexturing position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" AdvancedTexturing size='430 320' "); // resize bar	
+	TwDefine(" AdvancedTexturing color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" AdvancedTexturing resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='advanced texturing'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
+
 bool APP_AdvTex::Start()
 {
+	m_appName = "Advanced Texturing";
+
 	Gizmos::create();
 	GameCam = new Camera();
 
@@ -197,6 +218,8 @@ bool APP_AdvTex::Start()
 	glDeleteShader(fragmentShader);
 
 	createOpenGLBuffers(m_fbx);
+
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }
