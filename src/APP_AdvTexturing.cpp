@@ -84,11 +84,13 @@ void APP_AdvTex::Draw()
 
 		//set diffuse texture	
 		glActiveTexture(GL_TEXTURE0); //set for initial active texture		
+		glBindTexture(GL_TEXTURE_2D, glData[3]);	//bind the crate texture
 		int difLoc = glGetUniformLocation(m_program, "Diffuse"); //get diffuse location
 		glUniform1i(difLoc, 0); //set to the diffuse to the texture index	
 
 		//set normal texture	
 		glActiveTexture(GL_TEXTURE0 + 1); //set for initial active texture		
+		glBindTexture(GL_TEXTURE_2D, glData[4]);	//bind the crate texture
 		int normalLoc = glGetUniformLocation(m_program, "NormalTex"); //get diffuse location
 		glUniform1i(normalLoc, 1); //set to the diffuse to the texture index	
 
