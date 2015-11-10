@@ -57,24 +57,14 @@ void APP_PhysicallyBased::Draw()
 	glUniform3fv(lightDirUniform, 1, glm::value_ptr(dirLight));	//set the lightDir uniform variabe in the vertex shader
 
 	// bind the point light position for a directional light
-	lightDirUniform = glGetUniformLocation(m_program, "pointLight");	//get the point light uniform index from the vertex shader
+	int pointLightDirUniform = glGetUniformLocation(m_program, "pointLight");	//get the point light uniform index from the vertex shader
 	glm::vec3 pointLight = glm::vec3(0, -1, -1); //controls the lights position in the world	
-	glUniform3fv(lightDirUniform, 1, glm::value_ptr(pointLight));	//set the lightDir uniform variabe in the vertex shader
-
-	// bind change the light colour
-	int lightColUniform = glGetUniformLocation(m_program, "lightColour");	//get the Time uniform index from the vertex shader
-	glm::vec3 lightColour = glm::vec3(1, 1, 1); //controls the lights colour
-	glUniform3fv(lightColUniform, 1, glm::value_ptr(lightColour));	//set the lightDir uniform variabe in the vertex shader
+	glUniform3fv(pointLightDirUniform, 1, glm::value_ptr(pointLight));	//set the lightDir uniform variabe in the vertex shader
 
 	// bind change the camera position
 	int cameraPosUniform = glGetUniformLocation(m_program, "CameraPos");	//get the Time uniform index from the vertex shader
 	glm::vec3 cameraPos = glm::vec3(GameCam->m_worldTransform[3]); //controls the lights position in the world		
 	glUniform3fv(cameraPosUniform, 1, glm::value_ptr(cameraPos));	//set the lightDir uniform variabe in the vertex shader
-
-	// bind change the spec power
-	int specPosUniform = glGetUniformLocation(m_program, "SpecPow");	//get the Time uniform index from the vertex shader
-	GLfloat specPow = 1024; //controls the lights position in the world		
-	glUniform1f(specPosUniform, specPow);	//set the lightDir uniform variabe in the vertex shader
 
 	// bind our vertex array object and draw the mesh
 	for (unsigned int i = 0; i < m_fbx->getMeshCount(); ++i) {
@@ -88,13 +78,13 @@ void APP_PhysicallyBased::Draw()
 		glUniform1i(difLoc, 0); //set to the diffuse to the texture index	
 
 		//set normal texture	
-		glActiveTexture(GL_TEXTURE0 + 1); //set for initial active texture		
+		glActiveTexture(GL_TEXTURE1); //set for initial active texture		
 		glBindTexture(GL_TEXTURE_2D, glData[4]);	//bind the normal texture
 		int normalLoc = glGetUniformLocation(m_program, "NormalTex"); //get diffuse location
 		glUniform1i(normalLoc, 1); //set to the diffuse to the texture index	
 
 		//set spec texture	
-		glActiveTexture(GL_TEXTURE0 + 2); //set for initial active texture		
+		glActiveTexture(GL_TEXTURE2); //set for initial active texture		
 		glBindTexture(GL_TEXTURE_2D, glData[5]);	//bind the diffuse texture
 		int specLoc = glGetUniformLocation(m_program, "SpecTex"); //get diffuse location
 		glUniform1i(specLoc, 1); //set to the diffuse to the texture index	
@@ -282,13 +272,13 @@ void APP_PhysicallyBased::createOpenGLBuffers(FBXFile* fbx)
 
 		//gen normal texture id and bind texture to buffer 
 //		glActiveTexture(GL_TEXTURE0 + 1);
-		glActiveTexture(GL_TEXTURE0 + 1); //texture are we binding to
+		glActiveTexture(GL_TEXTURE1); //texture are we binding to
 		glGenTextures(1, &glData[4]);
 		glBindTexture(GL_TEXTURE_2D, glData[4]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, normalTex->width, normalTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, normalTex->data);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);		
 
-		glActiveTexture(GL_TEXTURE0 + 2); //texture are we binding to
+		glActiveTexture(GL_TEXTURE1); //texture are we binding to
 		glGenTextures(1, &glData[5]);
 		glBindTexture(GL_TEXTURE_2D, glData[5]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, specTex->width, specTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, specTex->data);

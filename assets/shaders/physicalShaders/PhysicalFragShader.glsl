@@ -7,11 +7,9 @@ in vec2 vTexCoord;
 
 out vec4 FragColor;
 
-uniform vec3 lightColour;
 uniform vec3 directionalLight;
 uniform vec3 pointLight;
 uniform vec3 CameraPos;
-uniform float SpecPow;
 
 uniform sampler2D Diffuse;
 uniform sampler2D NormalTex;
@@ -23,8 +21,6 @@ uniform sampler2D SpecTex;
 //{
 //
 //}
-
-
 
 
 void main() 
@@ -121,4 +117,6 @@ void main()
 	vec4 SpecularColor = texture(SpecTex, vTexCoord) * (texture(Diffuse, vTexCoord) + CookTorrance);
 
 	FragColor = diffuse + ambient + SpecularColor + pointLight; //final result
+
+	//FragColor = texture(Diffuse, vTexCoord);
 }
