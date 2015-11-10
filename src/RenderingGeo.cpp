@@ -83,7 +83,7 @@ void RenderGeo::generateGrid(unsigned int rows, unsigned int cols)
 	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //enable wireframe render
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0); //draw all triangles to screen
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //enable wireframe render
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //enable fill render
 
 	//unbind and delte pointers
 	glBindVertexArray(0);

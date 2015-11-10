@@ -16,9 +16,27 @@ APP_Proc_Generation::~APP_Proc_Generation()
 void APP_Proc_Generation::Update(float a_dt)
 {
 	GameCam->Update(a_dt); //update camera
-
-
 }
+
+void APP_Proc_Generation::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_Proc_Generation::CreateGui()
+{
+	m_bar = TwNewBar("ProceduralGeneration");
+
+	TwDefine(" ProceduralGeneration position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" ProceduralGeneration size='430 320' "); // resize bar	
+	TwDefine(" ProceduralGeneration color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" ProceduralGeneration resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='procdural mesh, perlin noise and displacement creation'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
+
 
 void APP_Proc_Generation::Draw()
 {
@@ -44,7 +62,7 @@ void APP_Proc_Generation::Draw()
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //enable wireframe render
 	glDrawElements(GL_TRIANGLES, m_indexCount, GL_UNSIGNED_INT, 0); //draw all triangles to screen
-
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //enable fill render
 	//unbind
 	glBindVertexArray(0);
 
@@ -52,6 +70,8 @@ void APP_Proc_Generation::Draw()
 
 bool APP_Proc_Generation::Start()
 {
+	m_appName = "Procedural Generation";
+
 	Gizmos::create();
 
 	GameCam = new Camera();
@@ -72,6 +92,7 @@ bool APP_Proc_Generation::Start()
 	cols++;
 	generateMesh();
 
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }

@@ -82,17 +82,20 @@ void APP_PhysicallyBased::Draw()
 		unsigned int* glData = (unsigned int*)mesh->m_userData;
 
 		//set diffuse texture	
-		glActiveTexture(GL_TEXTURE0); //set for initial active texture		
+		glActiveTexture(GL_TEXTURE0); //set for initial active texture	
+		glBindTexture(GL_TEXTURE_2D, glData[3]);	//bind the diffuse texture
 		int difLoc = glGetUniformLocation(m_program, "Diffuse"); //get diffuse location
 		glUniform1i(difLoc, 0); //set to the diffuse to the texture index	
 
 		//set normal texture	
 		glActiveTexture(GL_TEXTURE0 + 1); //set for initial active texture		
+		glBindTexture(GL_TEXTURE_2D, glData[4]);	//bind the normal texture
 		int normalLoc = glGetUniformLocation(m_program, "NormalTex"); //get diffuse location
 		glUniform1i(normalLoc, 1); //set to the diffuse to the texture index	
 
 		//set spec texture	
-		glActiveTexture(GL_TEXTURE0 + 1); //set for initial active texture		
+		glActiveTexture(GL_TEXTURE0 + 2); //set for initial active texture		
+		glBindTexture(GL_TEXTURE_2D, glData[5]);	//bind the diffuse texture
 		int specLoc = glGetUniformLocation(m_program, "SpecTex"); //get diffuse location
 		glUniform1i(specLoc, 1); //set to the diffuse to the texture index	
 
@@ -140,8 +143,29 @@ std::string APP_PhysicallyBased::LoadShader(const char *a_filePath)
 	return strShaderCode; //not in use
 }
 
+void APP_PhysicallyBased::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_PhysicallyBased::CreateGui()
+{
+	m_bar = TwNewBar("PhysicallyBased");
+
+	TwDefine(" PhysicallyBased position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" PhysicallyBased size='430 320' "); // resize bar	
+	TwDefine(" PhysicallyBased color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" PhysicallyBased resizable=false "); // mybar cannot be resized
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='BRDF based shaders on directional light'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
+
+
 bool APP_PhysicallyBased::Start()
 {
+	m_appName = "Physically based rendering";
+
 	Gizmos::create();
 	GameCam = new Camera();	
 
@@ -201,6 +225,8 @@ bool APP_PhysicallyBased::Start()
 	glDeleteShader(fragmentShader);
 
 	createOpenGLBuffers(m_fbx);
+
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }
@@ -264,7 +290,7 @@ void APP_PhysicallyBased::createOpenGLBuffers(FBXFile* fbx)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	
 
-		glActiveTexture(GL_TEXTURE0 + 1); //texture are we binding to
+		glActiveTexture(GL_TEXTURE0 + 2); //texture are we binding to
 		glGenTextures(1, &glData[5]);
 		glBindTexture(GL_TEXTURE_2D, glData[5]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, specTex->width, specTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, specTex->data);

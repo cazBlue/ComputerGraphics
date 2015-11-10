@@ -152,8 +152,30 @@ void APP_DeferredRendering::drawDirectionalLight(const glm::vec3& direction, con
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
+void APP_DeferredRendering::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_DeferredRendering::CreateGui()
+{
+	m_bar = TwNewBar("DeferredRendering");
+
+	TwDefine(" DeferredRendering position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" DeferredRendering size='430 320' "); // resize bar	
+	TwDefine(" DeferredRendering color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" DeferredRendering resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='deferred rendering'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
+
+
 bool APP_DeferredRendering::Start()
 {
+	m_appName = "Deferred Rendering";
+
 	Gizmos::create();
 
 	GameCam = new Camera();
@@ -170,6 +192,8 @@ bool APP_DeferredRendering::Start()
 	createBoundingCube();
 
 	createCompositeBuffer();
+
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }

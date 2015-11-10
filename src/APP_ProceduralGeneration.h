@@ -14,6 +14,8 @@ public:
 	void Draw();
 	bool Start();
 	bool Shutdown();
+	void ClearMenu();
+	void CreateGui();
 
 	std::string LoadShader(const char *a_filePath);
 
