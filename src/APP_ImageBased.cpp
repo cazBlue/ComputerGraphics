@@ -63,7 +63,8 @@ void APP_ImageBased::Draw()
 		unsigned int* glData = (unsigned int*)mesh->m_userData;
 
 		//set diffuse texture	
-		glActiveTexture(GL_TEXTURE0); //set for initial active texture		
+		glActiveTexture(GL_TEXTURE0); //set for initial active texture	
+		glBindTexture(GL_TEXTURE_2D, m_textureID1);
 		int difLoc = glGetUniformLocation(m_program, "WarpTexture"); //get diffuse location
 		glUniform1i(difLoc, 0); //set to the diffuse to the texture index	
 
@@ -111,8 +112,29 @@ std::string APP_ImageBased::LoadShader(const char *a_filePath)
 	return strShaderCode; //not in use
 }
 
+void APP_ImageBased::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_ImageBased::CreateGui()
+{
+	m_bar = TwNewBar("ImageBased");
+
+	TwDefine(" ImageBased position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" ImageBased size='430 320' "); // resize bar	
+	TwDefine(" ImageBased color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" ImageBased resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='Image based lighting'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
+
 bool APP_ImageBased::Start()
 {
+	m_appName = "Image Based Lighting";
+
 	Gizmos::create();
 	GameCam = new Camera();	
 
@@ -190,6 +212,8 @@ bool APP_ImageBased::Start()
 	glDeleteShader(fragmentShader);
 
 	createOpenGLBuffers(m_fbx);
+
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }

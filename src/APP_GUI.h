@@ -12,17 +12,16 @@ public:
 	void Draw();
 	bool Start();
 	bool Shutdown();
+	void ClearMenu();
+	void CreateGui();
 
 public:
 	mat4 sphereTrans;
 	mat4 parentTrans;
 	float rot;
 
-public:
-	TwBar* m_bar;
+public:	
 	vec4 m_sphereColour;
-
-	void CreateGui();
 
 };
 

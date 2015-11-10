@@ -81,7 +81,7 @@ void APP_Splash::CreateGui()
 	TwDeleteBar(m_bar); //reset the gui
 	m_bar = TwNewBar("SelectAnApp");
 	TwDefine(" SelectAnApp position='10 10' "); // move bar to position (10, 10)
-	TwDefine(" SelectAnApp size='430 320' "); // resize bar	
+	TwDefine(" SelectAnApp size='430 420' "); // resize bar	
 	TwDefine(" SelectAnApp color='128 128 128' alpha=32 ");   // semi-transparent blue bar
 	TwDefine(" SelectAnApp resizable=false "); // mybar cannot be resized
 	

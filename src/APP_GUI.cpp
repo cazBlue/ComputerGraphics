@@ -46,8 +46,35 @@ void APP_GUI::Draw()
 	Gizmos::draw(GameCam->GetProjectionView());	
 }
 
+void APP_GUI::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui	
+}
+
+void APP_GUI::CreateGui()
+{
+	m_bar = TwNewBar("GUI");
+
+	TwDefine(" GUI position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" GUI size='250 250' "); // resize bar	
+	TwDefine(" GUI color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" GUI resizable=false "); // mybar cannot be resized
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='The original implementation of the antTweakBar for this project'"); //show as label		
+	
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+
+	m_sphereColour = vec4(.5, .5, .5, 1);
+
+	TwAddVarRW(m_bar, "sphere colour",
+		TW_TYPE_COLOR4F, &m_sphereColour[0], "");
+}
+
+
 bool APP_GUI::Start()
 {
+	m_appName = "GUI";
+
 	Gizmos::create();
 
 	GameCam = new Camera();
@@ -65,20 +92,11 @@ bool APP_GUI::Start()
 		0, 0, 1, 0,
 		10, 0, 0, 1);
 
-	
-	CreateGui();
+
+
+	isLoaded = true;
 
 	return true; //not being used in this lesson
-}
-
-void APP_GUI::CreateGui()
-{
-	m_bar = TwNewBar("Gui Tut");
-
-	m_sphereColour = vec4(.5, .5, .5, 1);
-
-	TwAddVarRW(m_bar, "sphere colour",
-		TW_TYPE_COLOR4F, &m_sphereColour[0], "");
 }
 
 bool APP_GUI::Shutdown()
