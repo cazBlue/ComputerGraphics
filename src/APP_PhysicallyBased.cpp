@@ -275,8 +275,7 @@ void APP_PhysicallyBased::createOpenGLBuffers(FBXFile* fbx)
 		glGenTextures(1, &glData[3]);
 		glBindTexture(GL_TEXTURE_2D, glData[3]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, diffuesTex->width, diffuesTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, diffuesTex->data);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);		
 
 //		int difLoc = glGetUniformLocation(m_program, "Diffuse"); //get diffuse location
 //		glUniform1i(difLoc, 0); //set to the diffuse to the texture index	
@@ -287,15 +286,13 @@ void APP_PhysicallyBased::createOpenGLBuffers(FBXFile* fbx)
 		glGenTextures(1, &glData[4]);
 		glBindTexture(GL_TEXTURE_2D, glData[4]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, normalTex->width, normalTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, normalTex->data);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);		
 
 		glActiveTexture(GL_TEXTURE0 + 2); //texture are we binding to
 		glGenTextures(1, &glData[5]);
 		glBindTexture(GL_TEXTURE_2D, glData[5]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, specTex->width, specTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, specTex->data);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);		
 
 //		glActiveTexture(GL_TEXTURE0 + 1);
 //		int normalLoc = glGetUniformLocation(m_program, "Normal"); //get normal location

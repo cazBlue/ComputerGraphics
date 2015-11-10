@@ -125,7 +125,11 @@ void APP_DeferredRendering::Draw()
 }
 
 void APP_DeferredRendering::drawPointLight(const glm::vec3& position, float radius,
-											const glm::vec3& diffuse) {
+											const glm::vec3& diffuse) 
+{
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_lightTexture); //bind light texture for adding to
+
 	glm::vec4 viewSpacePosition = GameCam->GetView() * glm::vec4(position, 1);
 	int loc = glGetUniformLocation(m_pointLightShader, "lightPosition"); 
 	glUniform3fv(loc, 1, &position[0]);
