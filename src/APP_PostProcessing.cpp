@@ -89,8 +89,30 @@ void APP_postProcess::Draw()
 //	
 }
 
+
+void APP_postProcess::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_postProcess::CreateGui()
+{
+	m_bar = TwNewBar("PostProcess");
+
+	TwDefine(" PostProcess position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" PostProcess size='430 320' "); // resize bar	
+	TwDefine(" PostProcess color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" PostProcess resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='Post processing effects, including Sobel operator'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
+
 bool APP_postProcess::Start()
 {
+	m_appName = "Post Processing";
+
 	Gizmos::create();
 
 	GameCam = new Camera();
@@ -98,11 +120,11 @@ bool APP_postProcess::Start()
 	CreateFrameBuffer();
 	CreateFullSreenQuad();
 
-
-
 	createTargetBuffers();
 	createBackBufferBuffers();
 
+	isLoaded = true;
+	
 	return true; //not being used in this lesson
 }
 

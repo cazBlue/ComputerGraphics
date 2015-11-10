@@ -11,7 +11,7 @@ APP_RenderTargets::~APP_RenderTargets()
 
 void APP_RenderTargets::Update(float a_dt)
 {
-	GameCam->Update(a_dt); //update camera
+	//GameCam->Update(a_dt); //update camera
 
 	m_time += a_dt;
 
@@ -127,8 +127,29 @@ void APP_RenderTargets::Draw()
 	Gizmos::draw(GameCam->GetProjectionView());
 }
 
+void APP_RenderTargets::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_RenderTargets::CreateGui()
+{
+	m_bar = TwNewBar("RenderTargets");
+
+	TwDefine(" RenderTargets position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" RenderTargets size='430 320' "); // resize bar	
+	TwDefine(" RenderTargets color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" RenderTargets resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='4 cameras rendering to 4 render targets'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
+
 bool APP_RenderTargets::Start()
 {
+	m_appName = "Render Targets";
+
 	Gizmos::create();
 
 	m_time = 0;
@@ -144,6 +165,8 @@ bool APP_RenderTargets::Start()
 		0, 1, 0, 0,
 		0, 0, 1, 0,
 		0, 0, 0, 1);
+
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }

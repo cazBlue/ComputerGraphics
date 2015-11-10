@@ -173,8 +173,29 @@ std::string APP_Shadows::LoadShader(const char *a_filePath)
 	return strShaderCode; //not in use
 }
 
+void APP_Shadows::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_Shadows::CreateGui()
+{
+	m_bar = TwNewBar("Shadows");
+
+	TwDefine(" Shadows position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" Shadows size='430 320' "); // resize bar	
+	TwDefine(" Shadows color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" Shadows resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='shadows'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
+
 bool APP_Shadows::Start()
 {
+	m_appName = "Shadows";
+
 	Gizmos::create();
 	GameCam = new Camera();	
 
@@ -225,6 +246,8 @@ bool APP_Shadows::Start()
 	createShadowGenProgram(); //requires lights to be bound first
 
 	generatePlane();
+
+	isLoaded = true;
 
 	return true; //not being used in this lesson
 }

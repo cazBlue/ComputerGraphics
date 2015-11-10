@@ -11,6 +11,8 @@ public:
 	void Draw();
 	bool Start();
 	bool Shutdown();
+	void ClearMenu();
+	void CreateGui();
 
 public:
 	unsigned int m_fboDepth, m_program;

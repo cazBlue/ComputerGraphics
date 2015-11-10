@@ -69,6 +69,10 @@ void APP_Control::Start()
 {
 	//push all apps into memory for menu display
 
+//	m_apps.push_front(new APP_DeferredRendering());		//#14 deferred rendering pt 1 & 2
+	m_apps.push_front(new APP_Shadows());		//#13 shadows
+	m_apps.push_front(new APP_postProcess());	//#12 post processing
+	m_apps.push_front(new APP_RenderTargets());  //#11 render targets
 	m_apps.push_front(new APP_SCENEMANAGE());   //#10 scene management, could do with more work on the quad tree
 	m_apps.push_front(new APP_SpotRotate());     //#-- side step to work out rotation for particles (proof of concept)
 	m_apps.push_front(new APP_GPUParticles()); //#9 GPU billboard particles
