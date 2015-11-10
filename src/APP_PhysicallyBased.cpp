@@ -91,13 +91,13 @@ void APP_PhysicallyBased::Draw()
 		glActiveTexture(GL_TEXTURE0 + 1); //set for initial active texture		
 		glBindTexture(GL_TEXTURE_2D, glData[4]);
 		int normalLoc = glGetUniformLocation(m_program, "NormalTex"); //get diffuse location
-		glUniform1i(normalLoc, 1); //set to the diffuse to the texture index	
+		glUniform1i(normalLoc, 1); //set to the normal to the texture index	
 
 		//set spec texture	
 		glActiveTexture(GL_TEXTURE0 + 2); //set for initial active texture		
 		glBindTexture(GL_TEXTURE_2D, glData[5]);
 		int specLoc = glGetUniformLocation(m_program, "SpecTex"); //get diffuse location
-		glUniform1i(specLoc, 1); //set to the diffuse to the texture index	
+		glUniform1i(specLoc, 2); //set to the specular to the texture index	
 
 		glBindVertexArray(glData[0]);
 		glDrawElements(GL_TRIANGLES,
@@ -271,7 +271,7 @@ void APP_PhysicallyBased::createOpenGLBuffers(FBXFile* fbx)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-		glActiveTexture(GL_TEXTURE0 + 1); //texture are we binding to
+		glActiveTexture(GL_TEXTURE0 + 2); //texture are we binding to
 		glGenTextures(1, &glData[5]);
 		glBindTexture(GL_TEXTURE_2D, glData[5]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, specTex->width, specTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, specTex->data);
@@ -285,26 +285,6 @@ void APP_PhysicallyBased::createOpenGLBuffers(FBXFile* fbx)
 		mesh->m_userData = glData;
 	}
 
-	//create GL id for textures and load then to buffer
-	for (unsigned int i = 0; i < materialCount; ++i)
-	{
-		FBXMaterial* mat = fbx->getMaterialByIndex(i);
-
-		FBXTexture* tex = mat->textures[FBXMaterial::TextureTypes::DiffuseTexture];
-
-		int temp = 0;
-		//		std::string path = mat->textures
-
-		//		unsigned char* data = stbi_load(a_path, a_width, a_height, a_format, STBI_rgb); //request no alpha
-		//
-		//		glGenTextures(1, a_id);
-		//		glBindTexture(GL_TEXTURE_2D, (*a_id));
-		//		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (*a_width), (*a_height), 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		//
-		//		stbi_image_free(data); //unload the image data
-	}
 }
 
 

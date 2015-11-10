@@ -15,6 +15,7 @@ uniform float SpecPow;
 
 uniform sampler2D Diffuse;
 uniform sampler2D NormalTex;
+//uniform sampler2D SpecTex;
 uniform sampler2D SpecTex;
 
 
@@ -51,7 +52,7 @@ void main()
 	vec3 E = normalize(CameraPos - vPosition.xyz); // surface to eye vector
 	float NdE = max(0.0f, dot(N, E));
 
-	float roughness = 0.1f;
+	float roughness = 0.2f;
 
 	float R2 = roughness * roughness;
 
@@ -84,7 +85,7 @@ void main()
 	float D = pow(e, exponent) / (R2 * NdH2 * NdH2);
 
 	// Fresnel Term F
-	float FresnelScale = 1;
+	float FresnelScale = .9;
 	float HdE = dot(H, E);
 	float F = mix(pow(1 - HdE, 5), 1, FresnelScale);
 
@@ -110,15 +111,17 @@ void main()
 	vec3 vertToPoint = vPosition.xyz - pointLight; //hard coded light position of light
 	float Distance = length(vertToPoint); //distance from light to vert	
 
-	vec4 Color = diffuse + texture(SpecTex, vTexCoord);
+	//point light fall off
 	float Attenuation = 1 + //constant factor
 		.25 * Distance + //linear factor
 		.25 * Distance * Distance; //exponitial factor
 
-	vec4 pointLight = Color / Attenuation;
+	vec4 pointLight = (texture(Diffuse, vTexCoord) * texture(SpecTex, vTexCoord)) / Attenuation;
 
 	//spec
 	vec4 SpecularColor = texture(SpecTex, vTexCoord) * (texture(Diffuse, vTexCoord) + CookTorrance);
 
 	FragColor = diffuse + ambient + SpecularColor + pointLight; //final result
+
+//	FragColor = texture(SpecTex, vTexCoord);
 }
