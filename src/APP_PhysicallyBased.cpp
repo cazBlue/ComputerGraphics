@@ -49,7 +49,7 @@ void APP_PhysicallyBased::Draw()
 	// bind the camera
 	int loc = glGetUniformLocation(m_program, "ProjectionView");
 	glUniformMatrix4fv(loc, 1, GL_FALSE, &(GameCam->GetProjectionView()[0][0]));
-	
+
 	int lightDirUniform = -1;
 	// bind the directional light position for a directional light
 	lightDirUniform = glGetUniformLocation(m_program, "directionalLight");	//get the directional light uniform index from the vertex shader
@@ -57,14 +57,24 @@ void APP_PhysicallyBased::Draw()
 	glUniform3fv(lightDirUniform, 1, glm::value_ptr(dirLight));	//set the lightDir uniform variabe in the vertex shader
 
 	// bind the point light position for a directional light
-	int pointLightDirUniform = glGetUniformLocation(m_program, "pointLight");	//get the point light uniform index from the vertex shader
+	lightDirUniform = glGetUniformLocation(m_program, "pointLight");	//get the point light uniform index from the vertex shader
 	glm::vec3 pointLight = glm::vec3(0, -1, -1); //controls the lights position in the world	
-	glUniform3fv(pointLightDirUniform, 1, glm::value_ptr(pointLight));	//set the lightDir uniform variabe in the vertex shader
+	glUniform3fv(lightDirUniform, 1, glm::value_ptr(pointLight));	//set the lightDir uniform variabe in the vertex shader
+
+	// bind change the light colour
+	int lightColUniform = glGetUniformLocation(m_program, "lightColour");	//get the Time uniform index from the vertex shader
+	glm::vec3 lightColour = glm::vec3(1, 1, 1); //controls the lights colour
+	glUniform3fv(lightColUniform, 1, glm::value_ptr(lightColour));	//set the lightDir uniform variabe in the vertex shader
 
 	// bind change the camera position
 	int cameraPosUniform = glGetUniformLocation(m_program, "CameraPos");	//get the Time uniform index from the vertex shader
 	glm::vec3 cameraPos = glm::vec3(GameCam->m_worldTransform[3]); //controls the lights position in the world		
 	glUniform3fv(cameraPosUniform, 1, glm::value_ptr(cameraPos));	//set the lightDir uniform variabe in the vertex shader
+
+	// bind change the spec power
+	int specPosUniform = glGetUniformLocation(m_program, "SpecPow");	//get the Time uniform index from the vertex shader
+	GLfloat specPow = 1024; //controls the lights position in the world		
+	glUniform1f(specPosUniform, specPow);	//set the lightDir uniform variabe in the vertex shader
 
 	// bind our vertex array object and draw the mesh
 	for (unsigned int i = 0; i < m_fbx->getMeshCount(); ++i) {
@@ -72,20 +82,20 @@ void APP_PhysicallyBased::Draw()
 		unsigned int* glData = (unsigned int*)mesh->m_userData;
 
 		//set diffuse texture	
-		glActiveTexture(GL_TEXTURE0); //set for initial active texture	
-		glBindTexture(GL_TEXTURE_2D, glData[3]);	//bind the diffuse texture
+		glActiveTexture(GL_TEXTURE0); //set for initial active texture		
+		glBindTexture(GL_TEXTURE_2D, glData[3]);
 		int difLoc = glGetUniformLocation(m_program, "Diffuse"); //get diffuse location
 		glUniform1i(difLoc, 0); //set to the diffuse to the texture index	
 
 		//set normal texture	
-		glActiveTexture(GL_TEXTURE1); //set for initial active texture		
-		glBindTexture(GL_TEXTURE_2D, glData[4]);	//bind the normal texture
+		glActiveTexture(GL_TEXTURE0 + 1); //set for initial active texture		
+		glBindTexture(GL_TEXTURE_2D, glData[4]);
 		int normalLoc = glGetUniformLocation(m_program, "NormalTex"); //get diffuse location
 		glUniform1i(normalLoc, 1); //set to the diffuse to the texture index	
 
 		//set spec texture	
-		glActiveTexture(GL_TEXTURE2); //set for initial active texture		
-		glBindTexture(GL_TEXTURE_2D, glData[5]);	//bind the diffuse texture
+		glActiveTexture(GL_TEXTURE0 + 2); //set for initial active texture		
+		glBindTexture(GL_TEXTURE_2D, glData[5]);
 		int specLoc = glGetUniformLocation(m_program, "SpecTex"); //get diffuse location
 		glUniform1i(specLoc, 1); //set to the diffuse to the texture index	
 
@@ -133,31 +143,12 @@ std::string APP_PhysicallyBased::LoadShader(const char *a_filePath)
 	return strShaderCode; //not in use
 }
 
-void APP_PhysicallyBased::ClearMenu()
-{
-	TwDeleteBar(m_bar); //reset the gui
-}
-
-void APP_PhysicallyBased::CreateGui()
-{
-	m_bar = TwNewBar("PhysicallyBased");
-
-	TwDefine(" PhysicallyBased position='10 10' "); // move bar to position (10, 10)
-	TwDefine(" PhysicallyBased size='430 320' "); // resize bar	
-	TwDefine(" PhysicallyBased color='128 128 128' alpha=32 ");   // semi-transparent blue bar
-	TwDefine(" PhysicallyBased resizable=false "); // mybar cannot be resized
-
-	TwAddButton(m_bar, "label_01", NULL, NULL, "label='BRDF based shaders on directional light'"); //show as label		
-	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
-}
-
-
 bool APP_PhysicallyBased::Start()
 {
-	m_appName = "Physically based rendering";
+	m_appName = "Physically based";
 
 	Gizmos::create();
-	GameCam = new Camera();	
+	GameCam = new Camera();
 
 	//FBXFile* fbxFile = new FBXFile();
 
@@ -185,7 +176,7 @@ bool APP_PhysicallyBased::Start()
 	const char* path = strShaderCode.c_str();
 	//fsSource = fsResult.c_str();
 
-	
+
 	bool didLoad = m_fbx->load(path, m_fbx->UNITS_METER, true, true, true);
 	if (didLoad)
 		printf("loaded");
@@ -265,28 +256,31 @@ void APP_PhysicallyBased::createOpenGLBuffers(FBXFile* fbx)
 		glGenTextures(1, &glData[3]);
 		glBindTexture(GL_TEXTURE_2D, glData[3]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, diffuesTex->width, diffuesTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, diffuesTex->data);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-//		int difLoc = glGetUniformLocation(m_program, "Diffuse"); //get diffuse location
-//		glUniform1i(difLoc, 0); //set to the diffuse to the texture index	
+		//		int difLoc = glGetUniformLocation(m_program, "Diffuse"); //get diffuse location
+		//		glUniform1i(difLoc, 0); //set to the diffuse to the texture index	
 
 		//gen normal texture id and bind texture to buffer 
-//		glActiveTexture(GL_TEXTURE0 + 1);
-		glActiveTexture(GL_TEXTURE1); //texture are we binding to
+		//		glActiveTexture(GL_TEXTURE0 + 1);
+		glActiveTexture(GL_TEXTURE0 + 1); //texture are we binding to
 		glGenTextures(1, &glData[4]);
 		glBindTexture(GL_TEXTURE_2D, glData[4]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, normalTex->width, normalTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, normalTex->data);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-		glActiveTexture(GL_TEXTURE1); //texture are we binding to
+		glActiveTexture(GL_TEXTURE0 + 1); //texture are we binding to
 		glGenTextures(1, &glData[5]);
 		glBindTexture(GL_TEXTURE_2D, glData[5]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, specTex->width, specTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, specTex->data);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-//		glActiveTexture(GL_TEXTURE0 + 1);
-//		int normalLoc = glGetUniformLocation(m_program, "Normal"); //get normal location
-//		glUniform1i(normalLoc, 1); //set to the diffuse to the texture index			
+		//		glActiveTexture(GL_TEXTURE0 + 1);
+		//		int normalLoc = glGetUniformLocation(m_program, "Normal"); //get normal location
+		//		glUniform1i(normalLoc, 1); //set to the diffuse to the texture index			
 
 		mesh->m_userData = glData;
 	}
@@ -313,6 +307,25 @@ void APP_PhysicallyBased::createOpenGLBuffers(FBXFile* fbx)
 	}
 }
 
+
+void APP_PhysicallyBased::ClearMenu()
+{
+	TwDeleteBar(m_bar); //reset the gui
+}
+
+void APP_PhysicallyBased::CreateGui()
+{
+	m_bar = TwNewBar("IntroToOpenGL");
+
+	TwDefine(" IntroToOpenGL position='10 10' "); // move bar to position (10, 10)
+	TwDefine(" IntroToOpenGL size='430 320' "); // resize bar	
+	TwDefine(" IntroToOpenGL color='128 128 128' alpha=32 ");   // semi-transparent blue bar
+	TwDefine(" IntroToOpenGL resizable=false "); // mybar cannot be resized
+
+
+	TwAddButton(m_bar, "label_01", NULL, NULL, "label='simply opengl scene, nothing much happening'"); //show as label		
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+}
 
 void APP_PhysicallyBased::cleanupOpenGLBuffers(FBXFile* fbx) {
 	// clean up the vertex data attached to each mesh

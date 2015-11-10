@@ -7,9 +7,11 @@ in vec2 vTexCoord;
 
 out vec4 FragColor;
 
+uniform vec3 lightColour;
 uniform vec3 directionalLight;
 uniform vec3 pointLight;
 uniform vec3 CameraPos;
+uniform float SpecPow;
 
 uniform sampler2D Diffuse;
 uniform sampler2D NormalTex;
@@ -23,7 +25,9 @@ uniform sampler2D SpecTex;
 //}
 
 
-void main() 
+
+
+void main()
 {
 	//Note - no spec on point light currently!
 
@@ -59,14 +63,14 @@ void main()
 	vec3 lightProjected = normalize(L - N * NdL);
 	vec3 viewProjected = normalize(E - N * NdE);
 	float CX = max(0.0f, dot(lightProjected, viewProjected));
-	
+
 	// DX = sin(alpha) * tan(beta)
 	float alpha = sin(max(acos(NdE), acos(NdL)));
 	float beta = tan(min(acos(NdE), acos(NdL)));
 	float DX = alpha * beta;
 
 	// Calculate Oren-Nayar, replaces the Phong Lambertian Term
-	float OrenNayar = NdL * (A + B * CX * DX);	
+	float OrenNayar = NdL * (A + B * CX * DX);
 
 	//Cook-Torrance Specular Reflectance
 	vec3 H = normalize(E + L);
@@ -74,34 +78,34 @@ void main()
 	float NdH2 = NdH * NdH;
 	float e = 2.71828182845904523536028747135f;
 	float pi = 3.1415926535897932384626433832f;
-	
+
 	// Beckman's Distribution Function D
 	float exponent = -(1 - NdH2) / (NdH2 * R2);
 	float D = pow(e, exponent) / (R2 * NdH2 * NdH2);
-	
+
 	// Fresnel Term F
 	float FresnelScale = 1;
 	float HdE = dot(H, E);
 	float F = mix(pow(1 - HdE, 5), 1, FresnelScale);
-	
+
 	// Geometric Attenuation Factor G
 	float X = 2.0f * NdH / dot(E, H);
 	float G = min(1, min(X * NdL, X * NdE));
-	
+
 	// Calculate Cook-Torrance
 	float CookTorrance = max((D*G*F) / (NdE * pi), 0.0f);
 
-//	vec3 E = normalize( CameraPos - vPosition.xyz ); // surface to eye vector
-	vec3 R = reflect( -directionalLight, vNormal.xyz ); // reflected light vector
-	
+	//	vec3 E = normalize( CameraPos - vPosition.xyz ); // surface to eye vector
+	vec3 R = reflect(-directionalLight, vNormal.xyz); // reflected light vector
+
 	//ambient
-	vec3 enviro =  vec3(0.25f,0.25f,0.25f); //iA - ambient intensity
-	vec3 ambientColor = vec3(1,1,1); //iD - ambient colour
-	vec4 ambient = texture(Diffuse,vTexCoord) * vec4(enviro, 1) * vec4(ambientColor, 1);
+	vec3 enviro = vec3(0.25f, 0.25f, 0.25f); //iA - ambient intensity
+	vec3 ambientColor = vec3(1, 1, 1); //iD - ambient colour
+	vec4 ambient = texture(Diffuse, vTexCoord) * vec4(enviro, 1) * vec4(ambientColor, 1);
 
 	//diffuse + light
 	vec4 diffuse = texture(Diffuse, vTexCoord) * vec4(OrenNayar, OrenNayar, OrenNayar, 1);	//light info comes	
-	
+
 	//add point light
 	vec3 vertToPoint = vPosition.xyz - pointLight; //hard coded light position of light
 	float Distance = length(vertToPoint); //distance from light to vert	
@@ -117,6 +121,4 @@ void main()
 	vec4 SpecularColor = texture(SpecTex, vTexCoord) * (texture(Diffuse, vTexCoord) + CookTorrance);
 
 	FragColor = diffuse + ambient + SpecularColor + pointLight; //final result
-
-	//FragColor = texture(Diffuse, vTexCoord);
 }
