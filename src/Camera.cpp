@@ -7,6 +7,9 @@ using glm::vec4;
 using glm::mat4;
 using std::cout;
 
+//rebuild camera using: 
+//	http://learnopengl.com/#!Getting-started/Camera
+
 Camera::~Camera()
 {
 	//destroy pointers etc
