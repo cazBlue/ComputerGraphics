@@ -30,6 +30,8 @@
 #include <APP_Splash.h>
 #include <APP_Controller.h>
 
+#include <ObjIO.h>
+
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
@@ -39,6 +41,17 @@ using std::cout;
 
 
 int main()
+{
+	OBJIO* objio = new OBJIO();
+	
+	objio->ReadObj();
+
+
+	delete objio;
+	return 0;
+}
+
+int notmain()
 {
 	if (glfwInit() == false)
 		return -1;	

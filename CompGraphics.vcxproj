@@ -108,6 +108,7 @@
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\introToOpenGl.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\ObjIO.cpp" />
     <ClCompile Include="src\RenderingGeo.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +138,7 @@
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\InputHandler.h" />
     <ClInclude Include="src\IntroToOpenGL.h" />
+    <ClInclude Include="src\ObjIO.h" />
     <ClInclude Include="src\RenderingGeo.h" />
   </ItemGroup>
   <ItemGroup>

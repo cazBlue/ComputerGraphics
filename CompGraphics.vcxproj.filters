@@ -130,6 +130,9 @@
     <ClCompile Include="src\APP_Splash.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ObjIO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\aieutilities-master\aie\Gizmos.h">
@@ -211,6 +214,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\APP_Splash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ObjIO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
