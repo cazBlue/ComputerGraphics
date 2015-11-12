@@ -196,6 +196,8 @@ bool APP_postProcess::Shutdown()
 	delete GameCam;
 	Gizmos::destroy();
 
+	delete objCtrl;
+
 	return true; //not being used in this lesson
 }
 

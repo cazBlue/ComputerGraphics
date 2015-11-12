@@ -38,7 +38,7 @@ APP_Control::APP_Control()
 
 APP_Control::~APP_Control()
 {
-	Shutdown();
+	//Shutdown();
 }
 
 void APP_Control::Start()
