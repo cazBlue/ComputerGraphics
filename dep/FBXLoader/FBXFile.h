@@ -283,7 +283,7 @@ public:
 	FBXFile() : m_root(nullptr), m_importAssistor(nullptr) {}
 	~FBXFile()
 	{
-		unload();
+		//unload(); //memory leak and corruption issues
 	}
 
 	enum UNIT_SCALE
@@ -362,7 +362,7 @@ private:
 
 	unsigned int	nodeCount(FBXNode* a_node);
 
-private:
+public:
 
 	FBXNode*								m_root;
 

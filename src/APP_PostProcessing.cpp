@@ -182,8 +182,11 @@ void APP_postProcess::createTargetBuffers()
 
 
 	printf("loading object, this can take a while!");
-	std::string err = tinyobj::LoadObj(shapes, materials, "./assets/stanford_objs/bunny.obj");
-	printf("loading objects done");
+//	std::string err = tinyobj::LoadObj(shapes, materials, "./assets/stanford_objs/bunny.obj");
+	//loads obj from file and creates a binary version, loads from that if it exists
+	objCtrl = new OBJIO();
+	objCtrl->ReadObj("./assets/stanford_objs/bunny.obj", "OBJbunny.dat", &shapes);
+	
 
 	createOpenGLBuffers(shapes);
 }

@@ -41,13 +41,17 @@ using std::cout;
 //updated glm/gtx/scalar_multiplication.hpp with fix from https://github.com/g-truc/glm/issues/325
 
 
-int notmain()
+int main()
 {
 
-	//FBXIO* fbxio = new FBXIO();
-	//fbxio->WriteObj();
-	//
-	//delete fbxio;
+	FBXIO* fbxio = new FBXIO();
+	fbxio->WriteObj();
+	//fbxio->ReadObj();
+	
+	delete fbxio;
+
+
+
 
 	//OBJIO* objio = new OBJIO();	
 	//objio->ReadObj();
@@ -55,7 +59,7 @@ int notmain()
 	return 0;
 }
 
-int main()
+int notmain()
 {
 	if (glfwInit() == false)
 		return -1;	

@@ -2,6 +2,8 @@
 #define APP_POSTPROCESS_H
 #include <Application.h>
 #include <tiny_obj_loader.h>
+#include <ObjIO.h>
+
 
 class APP_postProcess : public App
 {
@@ -42,6 +44,8 @@ public:
 	void createBackBufferBuffers();
 
 	std::vector<OpenGLInfo> m_gl_info;
+
+	OBJIO* objCtrl;
 };
 
 

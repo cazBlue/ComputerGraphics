@@ -38,32 +38,32 @@ APP_Control::APP_Control()
 
 APP_Control::~APP_Control()
 {
-	
+	Shutdown();
 }
 
 void APP_Control::Start()
 {
 	//push all apps into memory for menu display
 
-//	m_apps.push_front(new APP_GUI());				//#18 GUI
-//	m_apps.push_front(new APP_ImageBased());		//#17 image based rendering
-//	m_apps.push_front(new APP_PhysicallyBased());		//#16 physically based rendering
-//	m_apps.push_front(new APP_Proc_Generation());		//#15 procedural generation
-//	m_apps.push_front(new APP_DeferredRendering());		//#14 deferred rendering pt 1 & 2
-//	m_apps.push_front(new APP_Shadows());		//#13 shadows
-//	m_apps.push_front(new APP_postProcess());	//#12 post processing
-//	m_apps.push_front(new APP_RenderTargets());  //#11 render targets
-//	m_apps.push_front(new APP_SCENEMANAGE());   //#10 scene management, could do with more work on the quad tree
-//	m_apps.push_front(new APP_SpotRotate());     //#-- side step to work out rotation for particles (proof of concept)
-//	m_apps.push_front(new APP_GPUParticles()); //#9 GPU billboard particles
-//	m_apps.push_front(new APP_Particles());    //#8 CPU billboard particles
-//	m_apps.push_front(new APP_Animation());	//#7 animation (no lighting)
-//	m_apps.push_front(new APP_AdvTex());		//#6 advanced texturing (normal maps)!
-//	m_apps.push_front(new APP_LoadFbx());		//#5 FBX loader and lighting!
-//	m_apps.push_front(new APP_Texturing());	//#4 texturing!
+	m_apps.push_front(new APP_GUI());				//#18 GUI
+	m_apps.push_front(new APP_ImageBased());		//#17 image based rendering
+	m_apps.push_front(new APP_PhysicallyBased());		//#16 physically based rendering
+	m_apps.push_front(new APP_Proc_Generation());		//#15 procedural generation
+	m_apps.push_front(new APP_DeferredRendering());		//#14 deferred rendering pt 1 & 2
+	m_apps.push_front(new APP_Shadows());		//#13 shadows
+	m_apps.push_front(new APP_postProcess());	//#12 post processing
+	m_apps.push_front(new APP_RenderTargets());  //#11 render targets
+	m_apps.push_front(new APP_SCENEMANAGE());   //#10 scene management, could do with more work on the quad tree
+	m_apps.push_front(new APP_SpotRotate());     //#-- side step to work out rotation for particles (proof of concept)
+	m_apps.push_front(new APP_GPUParticles()); //#9 GPU billboard particles
+	m_apps.push_front(new APP_Particles());    //#8 CPU billboard particles
+	m_apps.push_front(new APP_Animation());	//#7 animation (no lighting)
+	m_apps.push_front(new APP_AdvTex());		//#6 advanced texturing (normal maps)!
+	m_apps.push_front(new APP_LoadFbx());		//#5 FBX loader and lighting!
+	m_apps.push_front(new APP_Texturing());	//#4 texturing!
 	m_apps.push_front(new APP_OBJLoader()); //#3 P2 obj loader //take out while debugging
-//	m_apps.push_front(new RenderGeo());		//#2 P1 create planes!
-//	m_apps.push_front(new IntroOpenGl());	//#1 & #2 create intro to opengl app
+	m_apps.push_front(new RenderGeo());		//#2 P1 create planes!
+	m_apps.push_front(new IntroOpenGl());	//#1 & #2 create intro to opengl app
 
 	//make the splash screen aware of the apps list
 	static_cast<APP_Splash*>(m_splashApp)->SetAppList(&m_apps);
@@ -154,5 +154,12 @@ void APP_Control::Draw()
 
 void APP_Control::Shutdown()
 {
+	for (int i = m_apps.size(); i >= 0; --i)
+	{
+		m_apps.front()->Shutdown();
 
+		m_apps.remove(m_apps.front());
+
+		i--;
+	}
 }

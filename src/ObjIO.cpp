@@ -91,7 +91,8 @@ void OBJIO::ReadObj(const char* basePath, const char* fileName,
 
 		std::ifstream fin(fileName, std::ios::in | std::ios::binary);
 
-		if (fin.good()) {
+		if (fin.good()) 
+		{
 			// read until we get to the end of file
 			//read pos size
 			if (!fin.eof() && fin.peek() != EOF)
