@@ -151,7 +151,8 @@ bool APP_OBJLoader::Start()
 	GameCam = new Camera();	
 	
 	printf("loading object, this can take a while!");
-	std::string err = tinyobj::LoadObj(shapes, materials, "./assets/stanford_objs/bunny.obj");	
+	//std::string err = tinyobj::LoadObj(shapes, materials, "./assets/stanford_objs/bunny.obj");	
+	objCtrl->ReadObj("./assets/stanford_objs/bunny.obj", "OBJbunny.dat", &shapes);
 
 	createShaders(); //created the program and loads shaders
 
@@ -184,6 +185,7 @@ void APP_OBJLoader::CreateGui()
 bool APP_OBJLoader::Shutdown()
 {
 	delete GameCam;
+	delete objCtrl;
 	Gizmos::destroy();
 
 	return true; //not being used in this lesson

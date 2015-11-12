@@ -2,6 +2,7 @@
 #define APPOBJLOADER_H
 #include <Application.h>
 #include <tiny_obj_loader.h>
+#include <ObjIO.h>
 
 class APP_OBJLoader : public App
 {
@@ -36,6 +37,8 @@ public:
 	};
 
 	std::vector<OpenGLInfo> m_gl_info;
+
+	OBJIO* objCtrl;
 };
 
 

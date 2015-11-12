@@ -31,6 +31,7 @@
 #include <APP_Controller.h>
 
 #include <ObjIO.h>
+#include <FBXIO.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -40,18 +41,21 @@ using std::cout;
 //updated glm/gtx/scalar_multiplication.hpp with fix from https://github.com/g-truc/glm/issues/325
 
 
-int main()
+int notmain()
 {
-	OBJIO* objio = new OBJIO();
-	
-	objio->ReadObj();
 
+	//FBXIO* fbxio = new FBXIO();
+	//fbxio->WriteObj();
+	//
+	//delete fbxio;
 
-	delete objio;
+	//OBJIO* objio = new OBJIO();	
+	//objio->ReadObj();
+	//delete objio;
 	return 0;
 }
 
-int notmain()
+int main()
 {
 	if (glfwInit() == false)
 		return -1;	
