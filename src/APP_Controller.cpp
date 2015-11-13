@@ -48,12 +48,12 @@ void APP_Control::Start()
 
 	//push all apps into memory for menu display
 
-//	m_apps.push_front(new APP_GUI());				//#18 GUI
-//	m_apps.push_front(new APP_ImageBased());		//#17 image based rendering
-//	m_apps.push_front(new APP_PhysicallyBased());		//#16 physically based rendering
-//	m_apps.push_front(new APP_Proc_Generation());		//#15 procedural generation
-//	m_apps.push_front(new APP_DeferredRendering());		//#14 deferred rendering pt 1 & 2
-//	m_apps.push_front(new APP_Shadows());		//#13 shadows
+	m_apps.push_front(new APP_GUI());				//#18 GUI
+	m_apps.push_front(new APP_ImageBased());		//#17 image based rendering
+	m_apps.push_front(new APP_PhysicallyBased());		//#16 physically based rendering
+	m_apps.push_front(new APP_Proc_Generation());		//#15 procedural generation
+	m_apps.push_front(new APP_DeferredRendering());		//#14 deferred rendering pt 1 & 2
+	m_apps.push_front(new APP_Shadows());		//#13 shadows
 	m_apps.push_front(new APP_postProcess());	//#12 post processing
 	m_apps.push_front(new APP_RenderTargets());  //#11 render targets
 	m_apps.push_front(new APP_SCENEMANAGE());   //#10 scene management, could do with more work on the quad tree

@@ -338,9 +338,9 @@ bool APP_Animation::Shutdown()
 	delete GameCam;
 	Gizmos::destroy();
 
-	delete m_fbx;
+//	delete m_fbx;
 
-	cleanupOpenGLBuffers(m_fbx);
+//	cleanupOpenGLBuffers(m_fbx);
 	glDeleteProgram(m_program);
 
 	return true; //not being used in this lesson

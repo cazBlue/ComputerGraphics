@@ -201,35 +201,9 @@ bool APP_Shadows::Start()
 
 	m_time = 0;
 
-	m_fbx = new FBXFile();	
+	m_fbx = importCtrl->m_FBX_bunny;
 
-	std::string strShaderCode; //file info holder --TODO create array of file names
-	//open shader file
-	std::ifstream shaderStream("./assets/ShadowFBX.txt");
-	//if that worked ok, load file line by line
-
-	if (shaderStream.is_open())
-	{
-		std::string Line = "";
-		while (std::getline(shaderStream, Line))
-		{
-			//strShaderCode += "\n" + Line;
-			strShaderCode += Line;
-		}
-		shaderStream.close();
-	}
-
-	const char* path = strShaderCode.c_str();
-	//fsSource = fsResult.c_str();
-
-	//issue tracked to line 184 in FBXFile.cpp
-	bool didLoad = m_fbx->load(path, m_fbx->UNITS_METER, true, true, true);
-	if (didLoad)
-		printf("loaded");
-	else
-		printf("no load");
-
-	createOpenGLBuffers(m_fbx);
+//	createOpenGLBuffers(m_fbx);
 
 	createLightProgram();
 
@@ -452,9 +426,9 @@ bool APP_Shadows::Shutdown()
 	delete GameCam;
 	Gizmos::destroy();
 
-	delete m_fbx;
-
-	cleanupOpenGLBuffers(m_fbx);
+//	delete m_fbx;
+//
+//	cleanupOpenGLBuffers(m_fbx);
 	glDeleteProgram(m_useShadowProgram);
 
 	return true; //not being used in this lesson

@@ -150,38 +150,8 @@ bool APP_PhysicallyBased::Start()
 	Gizmos::create();
 	GameCam = new Camera();
 
-	//FBXFile* fbxFile = new FBXFile();
+	m_fbx = importCtrl->m_FBX_soulSpear;
 
-	m_fbx = new FBXFile();
-
-	//fbxFile->unload();
-
-
-	std::string strShaderCode; //file info holder --TODO create array of file names
-	//open shader file
-	std::ifstream shaderStream("./assets/fbxToLoadAdvTex.txt");
-	//if that worked ok, load file line by line
-
-	if (shaderStream.is_open())
-	{
-		std::string Line = "";
-		while (std::getline(shaderStream, Line))
-		{
-			//strShaderCode += "\n" + Line;
-			strShaderCode += Line;
-		}
-		shaderStream.close();
-	}
-
-	const char* path = strShaderCode.c_str();
-	//fsSource = fsResult.c_str();
-
-
-	bool didLoad = m_fbx->load(path, m_fbx->UNITS_METER, true, true, true);
-	if (didLoad)
-		printf("loaded");
-	else
-		printf("no load");
 
 	//////////////create shaders and program	
 	const char* vsSource = nullptr;
@@ -205,7 +175,7 @@ bool APP_PhysicallyBased::Start()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	createOpenGLBuffers(m_fbx);
+//	createOpenGLBuffers(m_fbx);
 
 	isLoaded = true;
 
@@ -325,7 +295,7 @@ bool APP_PhysicallyBased::Shutdown()
 	delete GameCam;
 	Gizmos::destroy();
 
-	delete m_fbx;
+	//delete m_fbx;
 
 	cleanupOpenGLBuffers(m_fbx);
 	glDeleteProgram(m_program);

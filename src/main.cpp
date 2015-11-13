@@ -5,33 +5,10 @@
 #include <glm/ext.hpp>
 #include <iostream>
 #include <AntTweakBar.h>
-#include <Camera.h>
-#include <Application.h>
-#include <IntroToOpenGL.h>
-#include <RenderingGeo.h>
-#include <APP_ObjLoader.h>
-#include <App_LoadingTextures.h>
-#include <APP_LoadFbx.h>
-#include <APP_AdvTexturing.h>
-#include <APP_Animation.h>
-#include <APP_Particles.h>
-#include <APP_GpuParticles.h>
-#include <APP_SpotRotate.h>
-#include <APP_SceneManagment.h>
-#include <APP_RenderTargets.h>
-#include <APP_PostProcessing.h>
-#include <APP_Shadows.h>
-#include <APP_DeferredRendering.h>
-#include <APP_ProceduralGeneration.h>
-#include <APP_PhysicallyBased.h>
-#include <APP_ImageBased.h>
-#include <APP_GUI.h>
+
 #include <InputHandler.h>
-#include <APP_Splash.h>
 #include <APP_Controller.h>
 
-#include <ObjIO.h>
-#include <FBXIO.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -41,21 +18,18 @@ using std::cout;
 //updated glm/gtx/scalar_multiplication.hpp with fix from https://github.com/g-truc/glm/issues/325
 
 
+//temp
+#include <IntroToOpenGL.h>
+
 int notmain()
 {
+	IntroOpenGl* intro = new IntroOpenGl();
 
-	FBXIO* fbxio = new FBXIO();
-	fbxio->WriteObj();
-	//fbxio->ReadObj();
-	
-	delete fbxio;
+	intro->Start();
 
+	delete intro;
 
 
-
-	//OBJIO* objio = new OBJIO();	
-	//objio->ReadObj();
-	//delete objio;
 	return 0;
 }
 
@@ -105,8 +79,12 @@ int main()
 
 
 	//create app controller
-	APP_Control* appCtrl = new APP_Control();
-	appCtrl->Start();
+//	APP_Control* appCtrl = new APP_Control();
+//	appCtrl->Start();
+
+	//temp while building new camera
+	IntroOpenGl* intro = new IntroOpenGl();
+	intro->Start();
 
 
 	
@@ -122,8 +100,11 @@ int main()
 		float deltaTime = currentTime - previousTime; // prev of last frame
 		previousTime = currentTime;
 		
-		appCtrl->Update(deltaTime);		//main update for apps
-		appCtrl->Draw();				//main draw call for apps
+		//appCtrl->Update(deltaTime);		//main update for apps
+		//appCtrl->Draw();				//main draw call for apps
+
+		intro->Update(deltaTime);
+		intro->Draw();
 
 		TwDraw();  // draw the tweak bar(s)		
 
@@ -136,8 +117,10 @@ int main()
 	TwTerminate();
 
 	//game over, clean up and de-allocate
-	appCtrl->Shutdown();
-	delete appCtrl;
+	//appCtrl->Shutdown();
+	intro->Shutdown();
+	delete intro;
+	//delete appCtrl;
 	delete inputHandler;
 
 

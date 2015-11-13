@@ -19,7 +19,7 @@ void ImportCTRL::Start()
 	m_FBX_anim		=	new FBXFile();
 	m_FBX_bunny		=	new FBXFile();
 
-	printf("\nloading FBX files");
+	printf("\nloading FBX files\n");
 	m_FBX_soulSpear->load("./assets/soulspear/soulspear.fbx", m_FBX_soulSpear->UNITS_METER, true, true, true);
 	m_FBX_bunny->load("./assets/stanford/Bunny.fbx", m_FBX_bunny->UNITS_METER, true, true, true);
 	m_FBX_anim->load("./assets/characters/Pyro/pyro.fbx", m_FBX_anim->UNITS_METER, true, true, true);
@@ -39,6 +39,8 @@ void ImportCTRL::Start()
 
 	printf("\nloading OBJ opengl buffers");
 	createOBJOpenGLBuffers(objShapes);
+
+	printf("\nloading shaders and apps");
 
 	m_isLoaded = true;
 }

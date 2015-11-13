@@ -183,7 +183,7 @@ bool APP_DeferredRendering::Start()
 	Gizmos::create();
 
 	GameCam = new Camera();
-	m_fbx = new FBXFile();
+	m_fbx = importCtrl->m_FBX_bunny;
 
 	createGpassBuffer();
 
@@ -281,8 +281,8 @@ void APP_DeferredRendering::createBoundingCube()
 bool APP_DeferredRendering::Shutdown()
 {
 	delete GameCam;
-	cleanupOpenGLBuffers(m_fbx);
-	delete m_fbx;
+//	cleanupOpenGLBuffers(m_fbx);
+//	delete m_fbx;
 	Gizmos::destroy();
 
 	return true; //not being used in this lesson
@@ -465,35 +465,7 @@ void APP_DeferredRendering::createScene()
 
 
 
-	//load fbx asset
-	std::string strShaderCode; //file info holder --TODO create array of file names
-	//open shader file
-	std::ifstream shaderStream("./assets/deferredFBX.txt");
-	//if that worked ok, load file line by line
-
-	if (shaderStream.is_open())
-	{
-		std::string Line = "";
-		while (std::getline(shaderStream, Line))
-		{
-			//strShaderCode += "\n" + Line;
-			strShaderCode += Line;
-		}
-		shaderStream.close();
-	}
-
-
-	const char* path = strShaderCode.c_str();
-	//fsSource = fsResult.c_str();
-
-	
-	bool didLoad = m_fbx->load(path, m_fbx->UNITS_METER, true, true, true);
-	if (didLoad)
-		printf("loaded");
-	else
-		printf("no load");
-
-	createOpenGLBuffers(m_fbx);
+//	createOpenGLBuffers(m_fbx);
 }
 
 

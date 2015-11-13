@@ -57,10 +57,10 @@ void APP_postProcess::Draw()
 	glUseProgram(m_programTarget);
 	int view_proj_uniform = glGetUniformLocation(m_programTarget, "ProjectionView");
 	glUniformMatrix4fv(view_proj_uniform, 1, GL_FALSE, glm::value_ptr(GameCam->GetProjectionView()));
-	for (unsigned int i = 0; i < m_gl_info.size(); ++i)
+	for (unsigned int i = 0; i < importCtrl->m_gl_info.size(); ++i)
 	{
-		glBindVertexArray(m_gl_info[i].m_VAO);
-		glDrawElements(GL_TRIANGLES, m_gl_info[i].m_index_count, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(importCtrl->m_gl_info[i].m_VAO);
+		glDrawElements(GL_TRIANGLES, importCtrl->m_gl_info[i].m_index_count, GL_UNSIGNED_INT, 0);
 	}
 
 //	Gizmos::draw(GameCam->GetProjectionView());
@@ -181,11 +181,6 @@ void APP_postProcess::createTargetBuffers()
 	glLinkProgram(m_programTarget);
 
 
-	printf("loading object, this can take a while!");
-//	std::string err = tinyobj::LoadObj(shapes, materials, "./assets/stanford_objs/bunny.obj");
-	//loads obj from file and creates a binary version, loads from that if it exists
-	//objCtrl = new OBJIO();
-	//objCtrl->ReadObj("./assets/stanford_objs/bunny.obj", "OBJbunny.dat", &shapes);
 	
 
 
@@ -197,7 +192,7 @@ bool APP_postProcess::Shutdown()
 	delete GameCam;
 	Gizmos::destroy();
 
-	delete objCtrl;
+//	delete objCtrl;
 
 	return true; //not being used in this lesson
 }
