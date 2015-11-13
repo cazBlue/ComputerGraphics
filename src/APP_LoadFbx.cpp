@@ -158,13 +158,10 @@ bool APP_LoadFbx::Start()
 	//fsSource = fsResult.c_str();
 
 	//issue tracked to line 184 in FBXFile.cpp
-	bool didLoad = m_fbx->load(path, m_fbx->UNITS_METER, true, true, true);
-	if (didLoad)
-		printf("loaded");
-	else
-		printf("no load");
+	m_fbx = importCtrl->m_FBX_soulSpear;
 	
-	createOpenGLBuffers(m_fbx);
+	
+//	createOpenGLBuffers(m_fbx);
 
 	//////////////create shaders and program	
 	const char* vsSource = nullptr;
@@ -300,7 +297,7 @@ bool APP_LoadFbx::Shutdown()
 	delete GameCam;
 	Gizmos::destroy();
 
-	delete m_fbx;
+//	delete m_fbx;
 
 	cleanupOpenGLBuffers(m_fbx);
 	glDeleteProgram(m_program);

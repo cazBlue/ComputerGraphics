@@ -284,7 +284,6 @@ void APP_PhysicallyBased::createOpenGLBuffers(FBXFile* fbx)
 
 		mesh->m_userData = glData;
 	}
-
 }
 
 

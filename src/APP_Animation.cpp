@@ -185,11 +185,13 @@ bool APP_Animation::Start()
 	//fsSource = fsResult.c_str();
 
 	//issue tracked to line 184 in FBXFile.cpp
-	bool didLoad = m_fbx->load(path, m_fbx->UNITS_MILLIMETER, true, true, true);
-	if (didLoad)
-		printf("loaded");
-	else
-		printf("no load");
+	//bool didLoad = m_fbx->load(path, m_fbx->UNITS_MILLIMETER, true, true, true);
+	//if (didLoad)
+	//	printf("loaded");
+	//else
+	//	printf("no load");
+
+	m_fbx = importCtrl->m_FBX_anim;
 
 	createOpenGLBuffers(m_fbx);
 

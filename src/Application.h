@@ -9,6 +9,7 @@
 #include <string>
 #include <Camera.h>
 #include <AntTweakBar.h>
+#include <ImportControl.h>
 
 using glm::vec3;
 using glm::vec4;
@@ -22,14 +23,23 @@ using std::string;
 
 //more reference http://www.tutorialspoint.com/cplusplus/cpp_interfaces.htm
 
+struct OpenGLInfo
+{
+	unsigned int m_VAO;
+	unsigned int m_VBO;
+	unsigned int m_IBO;
+	unsigned int m_index_count;
+};
+
 class App
 {
 public: //variables
-	std::string m_appName;	//used by app controller to identify current app
+	std::string m_appName;			//used by app controller to identify current app
 	Camera *GameCam;	
-	bool isLoaded = false;		//used by app controller to check if app is loaded
-	TwBar* m_bar;			//gui
-	static std::string nextScene; //the next scene that should be loaded
+	bool isLoaded = false;			//used by app controller to check if app is loaded
+	TwBar* m_bar;					//gui
+	static std::string nextScene;	//the next scene that should be loaded
+	ImportCTRL* importCtrl;			//setup in the import controller
 
 public: //functions
 	virtual bool Start() =0;

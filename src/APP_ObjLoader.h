@@ -17,7 +17,7 @@ public:
 	void CreateGui();
 
 public:
-	std::vector<tinyobj::shape_t> shapes;
+//	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;
 
 	void createOpenGLBuffers(std::vector<tinyobj::shape_t>& shapes);
@@ -28,17 +28,16 @@ public:
 
 	unsigned int m_programID;
 
-	struct OpenGLInfo
-	{
-		unsigned int m_VAO;
-		unsigned int m_VBO;
-		unsigned int m_IBO;
-		unsigned int m_index_count;
-	};
+//	struct OpenGLInfo
+//	{
+//		unsigned int m_VAO;
+//		unsigned int m_VBO;
+//		unsigned int m_IBO;
+//		unsigned int m_index_count;
+//	};
 
-	std::vector<OpenGLInfo> m_gl_info;
-
-	OBJIO* objCtrl;
+//	std::vector<OpenGLInfo> m_gl_info;
+	
 };
 
 

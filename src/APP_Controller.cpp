@@ -34,6 +34,8 @@ APP_Control::APP_Control()
 	m_splashApp->Start(); //init the splash screen app
 
 	m_curApp = m_splashApp;	
+
+	m_importCtrl = new ImportCTRL();
 }
 
 APP_Control::~APP_Control()
@@ -43,14 +45,15 @@ APP_Control::~APP_Control()
 
 void APP_Control::Start()
 {
+
 	//push all apps into memory for menu display
 
-	m_apps.push_front(new APP_GUI());				//#18 GUI
-	m_apps.push_front(new APP_ImageBased());		//#17 image based rendering
-	m_apps.push_front(new APP_PhysicallyBased());		//#16 physically based rendering
-	m_apps.push_front(new APP_Proc_Generation());		//#15 procedural generation
-	m_apps.push_front(new APP_DeferredRendering());		//#14 deferred rendering pt 1 & 2
-	m_apps.push_front(new APP_Shadows());		//#13 shadows
+//	m_apps.push_front(new APP_GUI());				//#18 GUI
+//	m_apps.push_front(new APP_ImageBased());		//#17 image based rendering
+//	m_apps.push_front(new APP_PhysicallyBased());		//#16 physically based rendering
+//	m_apps.push_front(new APP_Proc_Generation());		//#15 procedural generation
+//	m_apps.push_front(new APP_DeferredRendering());		//#14 deferred rendering pt 1 & 2
+//	m_apps.push_front(new APP_Shadows());		//#13 shadows
 	m_apps.push_front(new APP_postProcess());	//#12 post processing
 	m_apps.push_front(new APP_RenderTargets());  //#11 render targets
 	m_apps.push_front(new APP_SCENEMANAGE());   //#10 scene management, could do with more work on the quad tree
@@ -61,7 +64,7 @@ void APP_Control::Start()
 	m_apps.push_front(new APP_AdvTex());		//#6 advanced texturing (normal maps)!
 	m_apps.push_front(new APP_LoadFbx());		//#5 FBX loader and lighting!
 	m_apps.push_front(new APP_Texturing());	//#4 texturing!
-	m_apps.push_front(new APP_OBJLoader()); //#3 P2 obj loader //take out while debugging
+	m_apps.push_front(new APP_OBJLoader()); //#3 P2 obj loader
 	m_apps.push_front(new RenderGeo());		//#2 P1 create planes!
 	m_apps.push_front(new IntroOpenGl());	//#1 & #2 create intro to opengl app
 
@@ -125,8 +128,10 @@ void APP_Control::CheckNextScene()
 
 void APP_Control::CheckLoadStatus()
 {
-	//only load 1 app per update
+	if (!m_importCtrl->m_isLoaded)
+		m_importCtrl->Start();
 
+	//only load 1 app per update
 	bool stillLoading = true;
 	bool loadingApp = false;
 
@@ -135,12 +140,13 @@ void APP_Control::CheckLoadStatus()
 		if (m_appsToLoad.size() > 0)
 		{
 			m_loadingApp = m_appsToLoad.front();
+			m_loadingApp->importCtrl = m_importCtrl; //link import control
 			m_appsToLoad.pop_front();
 		}
 		else
 			m_loading = false; //done loading apps
 
-		static_cast<APP_Splash*>(m_splashApp)->SetDirtyGui();
+		static_cast<APP_Splash*>(m_splashApp)->SetDirtyGui(); //tells the splash gui to rebuild
 	}
 	else
 		m_loadingApp->Start();
@@ -162,4 +168,6 @@ void APP_Control::Shutdown()
 
 		i--;
 	}
+
+	m_importCtrl->Shutdown();
 }

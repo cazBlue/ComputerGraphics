@@ -3,6 +3,7 @@
 
 #include <Application.h>
 #include <list>
+#include <ImportControl.h>
 
 using std::list;
 
@@ -26,7 +27,7 @@ public:
 	list<App*> m_apps;
 	list<App*> m_appsToLoad;
 
-
+	ImportCTRL* m_importCtrl;
 
 	App* m_curApp;
 	App* m_splashApp;

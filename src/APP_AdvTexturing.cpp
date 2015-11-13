@@ -190,12 +190,14 @@ bool APP_AdvTex::Start()
 	const char* path = strShaderCode.c_str();
 	//fsSource = fsResult.c_str();
 
+
+	m_fbx = importCtrl->m_FBX_soulSpear;
 	
-	bool didLoad = m_fbx->load(path, m_fbx->UNITS_METER, true, true, true);
-	if (didLoad)
-		printf("loaded");
-	else
-		printf("no load");
+//	bool didLoad = m_fbx->load(path, m_fbx->UNITS_METER, true, true, true);
+//	if (didLoad)
+//		printf("loaded");
+//	else
+//		printf("no load");
 
 	//////////////create shaders and program	
 	const char* vsSource = nullptr;
@@ -219,7 +221,7 @@ bool APP_AdvTex::Start()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	createOpenGLBuffers(m_fbx);
+//	createOpenGLBuffers(m_fbx);
 
 	isLoaded = true;
 
@@ -333,9 +335,8 @@ bool APP_AdvTex::Shutdown()
 	delete GameCam;
 	Gizmos::destroy();
 
-	delete m_fbx;
-
-	cleanupOpenGLBuffers(m_fbx);
+//	delete m_fbx;
+	
 	glDeleteProgram(m_program);
 
 	return true; //not being used in this lesson

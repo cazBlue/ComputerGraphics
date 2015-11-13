@@ -106,6 +106,7 @@
     <ClCompile Include="src\APP_SpotRotate.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\FBXIO.cpp" />
+    <ClCompile Include="src\ImportControl.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\introToOpenGl.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="src\APP_SpotRotate.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\FBXIO.h" />
+    <ClInclude Include="src\ImportControl.h" />
     <ClInclude Include="src\InputHandler.h" />
     <ClInclude Include="src\IntroToOpenGL.h" />
     <ClInclude Include="src\ObjIO.h" />
