@@ -8,8 +8,21 @@
 
 struct GLFWwindow;
 
+using glm::mat4;
+using glm::vec3;
+
 class Camera
 {
+public:
+	//new from the camera tutorial
+	vec3 m_pos, m_target, m_direction, m_up, m_right, m_front;
+	mat4 m_view;
+
+	void Do_movement(float a_dt);
+	void Do_Mouse(float a_dt);
+
+	float m_lastX, m_lastY, m_yaw, m_pitch;
+
 public:
 	//variables
 	glm::mat4 m_worldTransform;

@@ -11,9 +11,14 @@ class APP_Inputhandler
 public:
 	//base level for input, apps can override this as wanted	
 
+	//updated as part of the camera tutorial
+	static bool keys[];
+
 	static int lastKeyAction;
 	static int lastKey;
 	static glm::vec2 lastMousePos;
+
+	
 
 	//callbacks
 	static void OnMouseButton(GLFWwindow*, int b, int a, int m);	

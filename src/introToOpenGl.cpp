@@ -12,7 +12,7 @@ IntroOpenGl::~IntroOpenGl()
 
 void IntroOpenGl::Update(float a_dt)
 {
-	//GameCam->Update(a_dt); //update camera
+	GameCam->Update(a_dt); //update camera
 
 	rot += .0001f;
 
