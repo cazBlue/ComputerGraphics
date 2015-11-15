@@ -5,6 +5,17 @@ glm::vec2 APP_Inputhandler::lastMousePos = glm::vec2();
 int APP_Inputhandler::lastKey = 0;
 int APP_Inputhandler::lastKeyAction = 0;
 bool APP_Inputhandler::keys[1024];
+bool APP_Inputhandler::focused = false;
+
+
+void APP_Inputhandler::OnWindowFocus(GLFWwindow*, int f)
+{
+	if (f)
+		APP_Inputhandler::focused = true;
+	else
+		APP_Inputhandler::focused = false;
+}
+	
 
 void APP_Inputhandler::OnMouseButton(GLFWwindow*, int b, int a, int m)
 {

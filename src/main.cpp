@@ -60,8 +60,7 @@ int main()
 
 
 
-	//enable unlimited scrolling - hides the cursor
-//	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 
 	//set a pointer to the game camera http://stackoverflow.com/questions/27596861/give-static-function-access-to-data-without-passing-the-data-as-a-parameter	
 //	glfwSetWindowUserPointer(window, appPtr->GameCam); //should be set to current app
@@ -76,18 +75,20 @@ int main()
 	glfwSetKeyCallback(window, inputHandler->OnKey);
 	glfwSetCharCallback(window, inputHandler->OnChar);
 	glfwSetWindowSizeCallback(window, inputHandler->OnWindowResize);
+	glfwSetWindowFocusCallback(window, inputHandler->OnWindowFocus);
 
 
 	//create app controller
-//	APP_Control* appCtrl = new APP_Control();
-//	appCtrl->Start();
+	APP_Control* appCtrl = new APP_Control();
+	appCtrl->Start();
 
 	//temp while building new camera
-	IntroOpenGl* intro = new IntroOpenGl();
-	intro->Start();
+//	IntroOpenGl* intro = new IntroOpenGl();
+//	intro->Start();
 
 
-	
+	bool showMouse = true;
+	float clickTime = 0;
 	float previousTime = 0.0f;
 
 	while (glfwWindowShouldClose(window) == false &&
@@ -98,13 +99,31 @@ int main()
 
 		float currentTime = (float)glfwGetTime();
 		float deltaTime = currentTime - previousTime; // prev of last frame
-		previousTime = currentTime;
-		
-		//appCtrl->Update(deltaTime);		//main update for apps
-		//appCtrl->Draw();				//main draw call for apps
+		previousTime = currentTime;	
 
-		intro->Update(deltaTime);
-		intro->Draw();
+		appCtrl->Update(deltaTime);		//main update for apps
+		appCtrl->Draw();				//main draw call for apps
+
+		if (APP_Inputhandler::keys[GLFW_KEY_SPACE] && clickTime <= 0)
+		{
+			clickTime = 0.5f;
+			if (showMouse)
+				showMouse = false;
+			else
+				showMouse = true;
+		}
+
+		if (clickTime > 0)
+			clickTime -= deltaTime;
+
+
+		if (showMouse)	
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);		
+		else	
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //enable unlimited scrolling - hides the cursor						
+		
+		//intro->Update(deltaTime);
+		//intro->Draw();
 
 		TwDraw();  // draw the tweak bar(s)		
 
@@ -117,10 +136,10 @@ int main()
 	TwTerminate();
 
 	//game over, clean up and de-allocate
-	//appCtrl->Shutdown();
-	intro->Shutdown();
-	delete intro;
-	//delete appCtrl;
+	appCtrl->Shutdown();
+	//intro->Shutdown();
+	//delete intro;
+	delete appCtrl;
 	delete inputHandler;
 
 

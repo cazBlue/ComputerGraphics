@@ -17,7 +17,7 @@ public:
 	static int lastKeyAction;
 	static int lastKey;
 	static glm::vec2 lastMousePos;
-
+	static bool focused;
 	
 
 	//callbacks
@@ -27,6 +27,7 @@ public:
 	static void OnKey(GLFWwindow*, int k, int s, int a, int m);
 	static void OnChar(GLFWwindow*, unsigned int c);
 	static void OnWindowResize(GLFWwindow*, int w, int h);
+	static void OnWindowFocus(GLFWwindow*, int f);
 };
 
 #endif INPUTHANDLER_H

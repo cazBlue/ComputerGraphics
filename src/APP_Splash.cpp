@@ -86,7 +86,7 @@ void APP_Splash::CreateGui()
 	TwDefine(" SelectAnApp resizable=false "); // mybar cannot be resized
 	
 	TwAddButton(m_bar, "label_01", NULL, NULL, "label='please wait for all apps to load'"); //show as label
-	TwAddButton(m_bar, "label_02", NULL, NULL, "label='the obj loader can take a while'"); //show as label
+	TwAddButton(m_bar, "label_02", NULL, NULL, "label='Space to toggle cursor for easy camera control in apps'"); //show as label
 
 	int counter = 0;
 	list <App *>::iterator iter;

@@ -31,13 +31,8 @@ Camera::Camera()
 	m_projectionTransform = glm::perspective(glm::pi<float>() * 0.25f,
 		16 / 9.f, 0.1f, 1000.f);
 
-	//set initial pitch and yaw
-	m_pitch = 0;
-	m_yaw = -45;
-
 	//set initial position
-	m_pos = vec3(0, 2, 3);
-	
+	m_pos = vec3(0, 0, 2);	
 	//set the initial front vector
 	m_front = vec3(0,0,-1);
 
@@ -52,11 +47,28 @@ Camera::Camera()
 	//get the camera up
 	m_up = glm::cross(m_direction, m_right);
 
+	//actual starting place - needs to be set after axes are formed
+	m_pos = vec3(-6, 6, 10);	
+	m_front = vec3(.55, -.3, -.7);
+
+	//set initial pitch and yaw
+	m_pitch = -25;
+	m_yaw = -60;
+
+	glm::vec3 front;
+	front.x = cos(glm::radians(m_pitch)) * cos(glm::radians(m_yaw));
+	front.y = sin(glm::radians(m_pitch));
+	front.z = cos(glm::radians(m_pitch)) * sin(glm::radians(m_yaw));
+	m_front = glm::normalize(front);
+
 	m_view = glm::lookAt(m_pos, m_pos + m_front, m_up);
+	m_worldTransform = glm::inverse(m_view);
 
 	//centre the mouse
-	m_lastX = 640.0f;
-	m_lastY = 360.0f;
+	m_lastX = APP_Inputhandler::lastMousePos.x;
+	m_lastY = APP_Inputhandler::lastMousePos.y;
+
+	m_worldTransform = glm::inverse(m_viewTransform);
 }
 
 void Camera::SetPosition(glm::vec3 a_position)
@@ -97,13 +109,26 @@ void Camera::SetLookAt(glm::vec3 a_from, glm::vec3 a_to, glm::vec3 a_up)
 
 //call after updating the world transform to align the view transform
 void Camera::UpdateProjectionViewTransform()
-{
+{	
 	m_viewTransform = glm::inverse(m_worldTransform);
 }
 
 glm::mat4 Camera::GetProjectionView()
 {
-	return m_projectionTransform * m_viewTransform;
+
+	mat4 world  = mat4(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		m_pos.x + m_front.x, m_pos.y + m_front.y, m_pos.z + m_front.z, 1);
+
+	//glm::mat4 mvp = model * view * proj;
+
+
+	return m_projectionTransform * m_viewTransform;// * glm::inverse(world);
+	
+
+//	return m_projectionTransform * m_view;
 }
 
 void Camera::mouseUpdate()
@@ -241,6 +266,9 @@ void Camera::Update(float a_dt)
 
 	Do_movement(a_dt);
 	Do_Mouse(a_dt);
+
+	
+
 //	key_update();
 //	mouseUpdate();
 //
@@ -252,22 +280,38 @@ void Camera::Update(float a_dt)
 
 
 void Camera::Do_Mouse(float a_dt)
-{
+{	
+
+	if (m_firstRun)
+	{
+		m_lastX = APP_Inputhandler::lastMousePos.x;
+		m_lastY = APP_Inputhandler::lastMousePos.y;
+
+		m_firstRun = false;
+	}
+
+	if (m_firstMouse && APP_Inputhandler::focused)
+	{
+		m_lastX = APP_Inputhandler::lastMousePos.x;
+		m_lastY = APP_Inputhandler::lastMousePos.y;
+
+		m_firstMouse = false;
+	}
+
 	GLfloat xoffset = APP_Inputhandler::lastMousePos.x - m_lastX;
 	GLfloat yoffset = m_lastY - APP_Inputhandler::lastMousePos.y; // Reversed since y-coordinates range from bottom to top
-
+	
 	m_lastX = APP_Inputhandler::lastMousePos.x;
 	m_lastY = APP_Inputhandler::lastMousePos.y;
-
 	
 	GLfloat sensitivity = .05f;
 	xoffset *= sensitivity;
 	yoffset *= sensitivity;
+	
+	m_yaw		+= xoffset;
+	m_pitch		+= yoffset;
 
-	m_yaw += xoffset;
-	m_pitch += yoffset;
-
-	std::cout << "yaw: " << m_yaw << std::endl;
+	//std::cout << "offset: " << xoffset << std::endl;
 
 	if (m_pitch > 89.0f)
 		m_pitch = 89.0f;

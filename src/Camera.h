@@ -23,6 +23,9 @@ public:
 
 	float m_lastX, m_lastY, m_yaw, m_pitch;
 
+	bool m_firstMouse = true;
+	bool m_firstRun = true;
+
 public:
 	//variables
 	glm::mat4 m_worldTransform;
