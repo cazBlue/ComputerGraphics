@@ -278,6 +278,12 @@ void APP_Particles::particleUpdate(float a_deltaTime) {
 				-halfSize, 0, 1);
 			m_vertexData[quad * 4 + 3].colour = particle->colour;
 			// create billboard transform
+
+			vec3 temp = vec3(GameCam->GetWorldTransform()[1]);
+			vec3 temp2 = vec3(GameCam->GetWorldTransform()[3]);
+
+
+
 			vec3 zAxis = glm::normalize(vec3(GameCam->GetWorldTransform()[3]) - particle->position);
 			vec3 xAxis = glm::cross(vec3(GameCam->GetWorldTransform()[1]), zAxis);
 			vec3 yAxis = glm::cross(zAxis, xAxis);

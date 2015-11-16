@@ -32,7 +32,7 @@ Camera::Camera()
 		16 / 9.f, 0.1f, 1000.f);
 
 	//set initial position
-	m_pos = vec3(0, 0, 2);	
+	m_pos = vec3(0, 0, 10);	
 	//set the initial front vector
 	m_front = vec3(0,0,-1);
 
@@ -48,12 +48,15 @@ Camera::Camera()
 	m_up = glm::cross(m_direction, m_right);
 
 	//actual starting place - needs to be set after axes are formed
-	m_pos = vec3(-6, 6, 10);	
-	m_front = vec3(.55, -.3, -.7);
+//	m_pos = vec3(-6, 6, -11);
+//	m_front = vec3(.7, .2, .6);
 
 	//set initial pitch and yaw
-	m_pitch = -25;
-	m_yaw = -60;
+//	m_pitch = -15;
+//	m_yaw = 60;
+
+	m_pitch = 0;
+	m_yaw = 0;
 
 	glm::vec3 front;
 	front.x = cos(glm::radians(m_pitch)) * cos(glm::radians(m_yaw));
@@ -63,12 +66,11 @@ Camera::Camera()
 
 	m_view = glm::lookAt(m_pos, m_pos + m_front, m_up);
 	m_worldTransform = glm::inverse(m_view);
+	m_viewTransform = m_view;
 
 	//centre the mouse
 	m_lastX = APP_Inputhandler::lastMousePos.x;
-	m_lastY = APP_Inputhandler::lastMousePos.y;
-
-	m_worldTransform = glm::inverse(m_viewTransform);
+	m_lastY = APP_Inputhandler::lastMousePos.y;	
 }
 
 void Camera::SetPosition(glm::vec3 a_position)
@@ -125,7 +127,7 @@ glm::mat4 Camera::GetProjectionView()
 	//glm::mat4 mvp = model * view * proj;
 
 
-	return m_projectionTransform * m_viewTransform;// * glm::inverse(world);
+	return m_projectionTransform * m_view;// * glm::inverse(world);
 	
 
 //	return m_projectionTransform * m_view;
@@ -257,10 +259,13 @@ void Camera::Update(float a_dt)
 {
 	//from opengl camera tut
 	// http://learnopengl.com/#!Getting-started/Camera
-	
-	m_view = glm::lookAt(m_pos, m_pos + m_front, m_up);
 
-	m_viewTransform = m_view;
+
+
+
+	m_view = glm::lookAt(m_pos, m_pos + m_front, m_up);
+//
+//	m_viewTransform = m_view;
 
 //	m_worldTransform = glm::inverse(m_viewTransform);
 
@@ -275,7 +280,7 @@ void Camera::Update(float a_dt)
 //	HandleInput(a_dt); //check if the camera should be moved	
 //
 //	//re-align the camera
-//	UpdateProjectionViewTransform();
+	UpdateProjectionViewTransform();
 }
 
 
@@ -334,13 +339,25 @@ void Camera::Do_movement(float a_dt)
 	// Camera controls
 	GLfloat cameraSpeed = 5.0f * a_dt;
 	if (keys[GLFW_KEY_W])
+	{
 		m_pos += cameraSpeed * m_front;
+		//m_worldTransform *= glm::translate(cameraSpeed * m_front);
+	}
 	if (keys[GLFW_KEY_S])
+	{
 		m_pos -= cameraSpeed * m_front;
+		//m_worldTransform *= glm::translate(-(cameraSpeed * m_front));
+	}
 	if (keys[GLFW_KEY_A])
+	{
 		m_pos -= glm::normalize(glm::cross(m_front, m_up)) * cameraSpeed;
+		//m_worldTransform *= glm::translate(-(glm::normalize(glm::cross(m_front, m_up)) * cameraSpeed));
+	}
 	if (keys[GLFW_KEY_D])
+	{
 		m_pos += glm::normalize(glm::cross(m_front, m_up)) * cameraSpeed;
+		//m_worldTransform *= glm::translate((glm::normalize(glm::cross(m_front, m_up)) * cameraSpeed));
+	}
 }
 
 glm::mat4 Camera::GetWorldTransform()

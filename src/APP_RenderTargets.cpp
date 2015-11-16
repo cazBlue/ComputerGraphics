@@ -11,7 +11,7 @@ APP_RenderTargets::~APP_RenderTargets()
 
 void APP_RenderTargets::Update(float a_dt)
 {
-	//GameCam->Update(a_dt); //update camera
+	GameCam->Update(a_dt); //update camera
 
 	m_time += a_dt;
 
