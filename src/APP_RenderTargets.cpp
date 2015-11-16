@@ -72,23 +72,34 @@ void APP_RenderTargets::Draw()
 		securityCam = new Camera();
 		switch (i)
 		{
-		case 0: 
-			securityCam->SetLookAt(vec3(-10, 10, 10), vec3(0), vec3(0, 1, 0));
+		case 0:
+			//just leave at starting point
+			securityCam->SetPosition(vec3(-6, 6, 10));
+			securityCam->SetFront(vec3(.55, -.3, -.7));
+			securityCam->SetPitchYaw(-25, -60);
 			break;
 		case 1:
-			securityCam->SetLookAt(vec3(10, 10, -10), vec3(0), vec3(0, 1, 0));
+			securityCam->SetPosition(vec3(11, 6, 11));
+			securityCam->SetFront(vec3(-.6, -.3, -.7));
+			securityCam->SetPitchYaw(-18, -133);
 			break;
 		case 2:
-			securityCam->SetLookAt(vec3(10, 10, 10), vec3(0), vec3(0, 1, 0));
+			securityCam->SetPosition(vec3(11, 6, -11));
+			securityCam->SetFront(vec3(-.75, -.3, .6));
+			securityCam->SetPitchYaw(-22, -216);
 			break;
 		case 3:
-			securityCam->SetLookAt(vec3(-10, 10, -10), vec3(0), vec3(0, 1, 0));
+			securityCam->SetPosition(vec3(-11, 6, -11));
+			securityCam->SetFront(vec3(.6, -.3, .7));
+			securityCam->SetPitchYaw(-28, 42);
 			break;
 		default:
-			securityCam->SetLookAt(vec3(10, 10, 10), vec3(0), vec3(0, 1, 0));
+			securityCam->SetPosition(vec3(11, 6, 11));
+			securityCam->SetFront(vec3(-.6, -.3, -.7));
+			securityCam->SetPitchYaw(-18, -133);
 			break;
 		}
-		
+		securityCam->ManualSnap();
 		Gizmos::draw(securityCam->GetProjectionView());		
 	}
 	delete securityCam;

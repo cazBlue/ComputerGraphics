@@ -75,7 +75,7 @@ bool APP_Proc_Generation::Start()
 	Gizmos::create();
 
 	GameCam = new Camera();
-	GameCam->SetLookAt(vec3(100, 40, 50), vec3(32,0,32), vec3(0, 1, 0));
+//	GameCam->SetLookAt(vec3(100, 40, 50), vec3(32,0,32), vec3(0, 1, 0));
 	
 	//create shaders
 	createShaders();

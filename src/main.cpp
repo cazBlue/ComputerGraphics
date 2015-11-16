@@ -57,11 +57,6 @@ int main()
 	printf("GL: %i.%i\n", major, minor);	
 	
 	
-
-
-
-
-
 	//set a pointer to the game camera http://stackoverflow.com/questions/27596861/give-static-function-access-to-data-without-passing-the-data-as-a-parameter	
 //	glfwSetWindowUserPointer(window, appPtr->GameCam); //should be set to current app
 

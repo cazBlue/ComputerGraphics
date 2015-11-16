@@ -34,10 +34,13 @@ void APP_Inputhandler::OnMouseScroll(GLFWwindow*, double x, double y) {
 void APP_Inputhandler::OnKey(GLFWwindow*, int k, int s, int a, int m) {
 	TwEventKeyGLFW(k, a);
 
-	if (a == GLFW_PRESS)
-		keys[k] = true;
-	else if (a == GLFW_RELEASE)
-		keys[k] = false;
+	if (k >= 0 && k < 1024)
+	{
+		if (a == GLFW_PRESS)
+			keys[k] = true;
+		else if (a == GLFW_RELEASE)
+			keys[k] = false;
+	}
 	
 	lastKey = k;
 	lastKeyAction = a;

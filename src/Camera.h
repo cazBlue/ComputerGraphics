@@ -28,36 +28,23 @@ public:
 
 public:
 	//variables
-	glm::mat4 m_worldTransform;
-	glm::mat4 m_viewTransform;
-	glm::mat4 m_projectionTransform;
-	glm::mat4 m_projectionViewTransform;
-
-	float m_moveSpeed, m_lastMousePosX, m_lastMousePosY;
-
-	bool m_moveLeft, m_moveRight, m_moveForward, m_moveBackward; //key input
-	bool m_rotateLeft, m_rotateRight, m_rotateUp, m_rotateDown, m_tiltleft, m_tiltRight;
+	glm::mat4 m_projectionTransform;	
 
 public:
 	//functions
-	Camera(glm::vec3 a_lookAt, glm::vec3 a_centre, glm::vec3 a_up, 
-		float a_nearClip, float a_farClip, float a_FOV, float a_aspectRatio, float a_moveSpeed);
 	Camera();
 	~Camera();
 	
 	void Update(float a_dt);	
-	void UpdateProjectionViewTransform();
+
 
 	//glfw key and mouse callbacks
-	void mouseUpdate();
-	void key_update();
 
-	void HandleInput(float a_dt);
 	//setters
-	void SetPerspective(float a_FOV, float a_aspectRatio,
-		float a_near, float a_far);
-	void SetLookAt(glm::vec3 a_from, glm::vec3 a_to, glm::vec3 a_up);
+	void SetFront(glm::vec3 a_front);
 	void SetPosition(glm::vec3 a_position);
+	void SetPitchYaw(float a_pitch, float a_yaw);
+	void ManualSnap();
 	
 	//getters
 	glm::mat4 GetWorldTransform();

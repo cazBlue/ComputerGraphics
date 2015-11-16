@@ -68,7 +68,7 @@ void APP_LoadFbx::Draw()
 
 	// bind change the camera position
 	int cameraPosUniform = glGetUniformLocation(m_program, "CameraPos");	//get the Time uniform index from the vertex shader
-	glm::vec3 cameraPos = glm::vec3(GameCam->m_worldTransform[3]); //controls the lights position in the world		
+	glm::vec3 cameraPos = glm::vec3(GameCam->GetWorldTransform()[3]); //controls the lights position in the world		
 	glUniform3fv(cameraPosUniform, 1, glm::value_ptr(cameraPos));	//set the lightDir uniform variabe in the vertex shader
 
 	// bind change the spec power

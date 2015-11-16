@@ -82,7 +82,7 @@ void APP_Animation::Draw()
 
 	// bind change the camera position
 	int cameraPosUniform = glGetUniformLocation(m_program, "CameraPos");	//get the Time uniform index from the vertex shader
-	glm::vec3 cameraPos = glm::vec3(GameCam->m_worldTransform[3]); //controls the lights position in the world		
+	glm::vec3 cameraPos = glm::vec3(GameCam->GetWorldTransform()[3]); //controls the lights position in the world		
 	glUniform3fv(cameraPosUniform, 1, glm::value_ptr(cameraPos));	//set the lightDir uniform variabe in the vertex shader
 
 	// bind change the spec power
@@ -197,7 +197,7 @@ bool APP_Animation::Start()
 
 
 	//move the camera for bigger models....
-	GameCam->m_moveSpeed = 1000;
+//	GameCam->m_moveSpeed = 1000;
 	//GameCam->SetPosition(glm::vec3(-500, , -500));
 	//GameCam->SetPerspective(glm::pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);
 	//////////////create shaders and program	
