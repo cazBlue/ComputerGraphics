@@ -17,16 +17,6 @@ Camera::~Camera()
 
 Camera::Camera()
 {
-//	m_viewTransform = glm::lookAt(vec3(10, 10, 10), vec3(0), vec3(0, 1, 0));
-//	m_projectionTransform = glm::perspective(glm::pi<float>() * 0.25f,
-//		16 / 9.f, 0.1f, 1000.f);
-//
-//	m_worldTransform = glm::inverse(m_viewTransform);
-//
-//	m_moveSpeed = 100;
-//	m_lastMousePosX = 0;
-//	m_lastMousePosY = 0;
-
 	//set the projection matrix
 	m_projectionTransform = glm::perspective(glm::pi<float>() * 0.25f,
 		16 / 9.f, 0.1f, 1000.f);
@@ -73,12 +63,6 @@ Camera::Camera()
 
 void Camera::ManualSnap()
 {
-//	glm::vec3 front;
-//	front.x = cos(glm::radians(m_pitch)) * cos(glm::radians(m_yaw));
-//	front.y = sin(glm::radians(m_pitch));
-//	front.z = cos(glm::radians(m_pitch)) * sin(glm::radians(m_yaw));
-//	m_front = glm::normalize(front);
-
 	m_view = glm::lookAt(m_pos, m_pos + m_front, m_up);
 }
 
@@ -103,22 +87,36 @@ void Camera::SetPitchYaw(float a_pitch, float a_yaw)
 glm::mat4 Camera::GetProjectionView()
 {
 	return m_projectionTransform * m_view;// * glm::inverse(world);
-	
+}
 
-//	return m_projectionTransform * m_view;
+void Camera::SetToDefault()
+{
+	//actual starting place - needs to be set after axes are formed
+	m_pos = vec3(-6, 6, 10);
+	m_front = vec3(.55, -.3, -.7);
+
+	//set initial pitch and yaw
+	m_pitch = -25;
+	m_yaw = -60;
+
+	SetMouseSnapToCurrent();
+	ManualSnap();
+}
+
+void Camera::SetMouseSnapToCurrent()
+{
+	m_lastX = APP_Inputhandler::lastMousePos.x;
+	m_lastY = APP_Inputhandler::lastMousePos.y;
 }
 
 void Camera::Update(float a_dt)
 {
-	//from opengl camera tut
-	// http://learnopengl.com/#!Getting-started/Camera
-
+	//rebuilds the view matrix
 	m_view = glm::lookAt(m_pos, m_pos + m_front, m_up);
 
 	Do_movement(a_dt);
 	Do_Mouse(a_dt);
 }
-
 
 void Camera::Do_Mouse(float a_dt)
 {	

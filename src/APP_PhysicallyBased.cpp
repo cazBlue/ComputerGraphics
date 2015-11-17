@@ -273,7 +273,15 @@ void APP_PhysicallyBased::CreateGui()
 
 
 	TwAddButton(m_bar, "label_01", NULL, NULL, "label='simply opengl scene, nothing much happening'"); //show as label		
-	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button	
+
+	//resets the camera when app re-opens
+	GameCam->SetPosition(vec3(3, 2, 1.7));
+	GameCam->SetFront(vec3(-0.89, -.0357, -.455));
+	GameCam->SetPitchYaw(-2, -153);
+
+	GameCam->SetMouseSnapToCurrent();
+	GameCam->ManualSnap();
 }
 
 void APP_PhysicallyBased::cleanupOpenGLBuffers(FBXFile* fbx) {

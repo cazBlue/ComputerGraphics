@@ -106,7 +106,15 @@ void APP_postProcess::CreateGui()
 
 
 	TwAddButton(m_bar, "label_01", NULL, NULL, "label='Post processing effects, including Sobel operator'"); //show as label		
-	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button			
+
+	//resets the camera when app re-opens
+	GameCam->SetPosition(vec3(11.3, 9.4, 22));
+	GameCam->SetFront(vec3(.54, .18, -.82));
+	GameCam->SetPitchYaw(-10, -123);
+
+	GameCam->SetMouseSnapToCurrent();
+	GameCam->ManualSnap();
 }
 
 bool APP_postProcess::Start()

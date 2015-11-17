@@ -244,7 +244,15 @@ void APP_Animation::CreateGui()
 
 
 	TwAddButton(m_bar, "label_01", NULL, NULL, "label='animation from loaded FBX'"); //show as label		
-	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button	
+
+	//resets the camera when app re-opens
+	GameCam->SetPosition(vec3(11.45, 8, 12.55));
+	GameCam->SetFront(vec3(-.85, -.214, -.477));
+	GameCam->SetPitchYaw(-14, -150);
+
+	GameCam->SetMouseSnapToCurrent();
+	GameCam->ManualSnap();
 }
 
 void APP_Animation::createOpenGLBuffers(FBXFile* fbx)

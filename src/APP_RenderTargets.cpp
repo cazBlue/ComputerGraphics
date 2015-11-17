@@ -154,7 +154,15 @@ void APP_RenderTargets::CreateGui()
 
 
 	TwAddButton(m_bar, "label_01", NULL, NULL, "label='4 cameras rendering to 4 render targets'"); //show as label		
-	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button
+
+	//resets the camera when app re-opens
+	GameCam->SetPosition(vec3(-.33, 2.8, 14));
+	GameCam->SetFront(vec3(-.01, -.19, -.98));
+	GameCam->SetPitchYaw(-11, -91);
+
+	GameCam->SetMouseSnapToCurrent();
+	GameCam->ManualSnap();
 }
 
 bool APP_RenderTargets::Start()

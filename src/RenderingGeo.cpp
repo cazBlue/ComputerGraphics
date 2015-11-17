@@ -95,7 +95,7 @@ void RenderGeo::generateGrid(unsigned int rows, unsigned int cols)
 
 void RenderGeo::Update(float a_dt)
 {
-	//GameCam->Update(a_dt); //update camera
+	GameCam->Update(a_dt); //update camera
 
 	m_time += a_dt;
 }
@@ -167,7 +167,15 @@ void RenderGeo::CreateGui()
 
 
 	TwAddButton(m_bar, "label_01", NULL, NULL, "label='Rendering Geo'"); //show as label		
-	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button		
+
+	//resets the camera when app re-opens
+	GameCam->SetPosition(vec3(9.8, 4.6, 10));
+	GameCam->SetFront(vec3(-0.718, -0.47, -.51));
+	GameCam->SetPitchYaw(-28, -144);
+
+	GameCam->SetMouseSnapToCurrent();
+	GameCam->ManualSnap();
 }
 
 bool RenderGeo::Start()
@@ -179,6 +187,10 @@ bool RenderGeo::Start()
 	Gizmos::create();
 
 	GameCam = new Camera();
+
+	GameCam->SetPosition(vec3(9.8, 4.6, 10));
+	GameCam->SetFront(vec3(-0.718, -0.47, -.51));
+	GameCam->SetPitchYaw(-28, -144);
 
 	// create shaders
 	const char* vsSource = nullptr;

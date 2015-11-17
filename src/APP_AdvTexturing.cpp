@@ -154,7 +154,15 @@ void APP_AdvTex::CreateGui()
 
 
 	TwAddButton(m_bar, "label_01", NULL, NULL, "label='advanced texturing, diffuse normal map and directional/point light'"); //show as label		
-	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button		
+
+	//resets the camera when app re-opens
+	GameCam->SetPosition(vec3(1.5, .63, 5.1));
+	GameCam->SetFront(vec3(.30, .23, -.92));
+	GameCam->SetPitchYaw(13, -108);
+
+	GameCam->SetMouseSnapToCurrent();
+	GameCam->ManualSnap();
 }
 
 bool APP_AdvTex::Start()

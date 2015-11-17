@@ -173,6 +173,14 @@ void APP_DeferredRendering::CreateGui()
 
 	TwAddButton(m_bar, "label_01", NULL, NULL, "label='deferred rendering'"); //show as label		
 	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+
+	//resets the camera when app re-opens
+	GameCam->SetPosition(vec3(7.4, 8.3, 17));
+	GameCam->SetFront(vec3(-0.4268, -.241, -.87));
+	GameCam->SetPitchYaw(-14, -116);
+
+	GameCam->SetMouseSnapToCurrent();
+	GameCam->ManualSnap();
 }
 
 
@@ -183,6 +191,11 @@ bool APP_DeferredRendering::Start()
 	Gizmos::create();
 
 	GameCam = new Camera();
+
+	GameCam->SetPosition(vec3(7.4, 8.3, 17));
+	GameCam->SetFront(vec3(-0.4268, -.241, -.87));
+	GameCam->SetPitchYaw(-14, -116);
+
 	m_fbx = importCtrl->m_FBX_bunny;
 
 	createGpassBuffer();

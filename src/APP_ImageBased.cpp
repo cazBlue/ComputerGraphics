@@ -128,7 +128,15 @@ void APP_ImageBased::CreateGui()
 
 
 	TwAddButton(m_bar, "label_01", NULL, NULL, "label='Image based lighting'"); //show as label		
-	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button		
+
+	//resets the camera when app re-opens
+	GameCam->SetPosition(vec3(-9.8, 3.65, 13.46));
+	GameCam->SetFront(vec3(.483, .0558, -.87));
+	GameCam->SetPitchYaw(3.2, -61);
+
+	GameCam->SetMouseSnapToCurrent();
+	GameCam->ManualSnap();
 }
 
 bool APP_ImageBased::Start()

@@ -45,7 +45,9 @@ public:
 	void SetPosition(glm::vec3 a_position);
 	void SetPitchYaw(float a_pitch, float a_yaw);
 	void ManualSnap();
-	
+	void SetMouseSnapToCurrent();
+	void SetToDefault();
+
 	//getters
 	glm::mat4 GetWorldTransform();
 	glm::mat4 GetView();

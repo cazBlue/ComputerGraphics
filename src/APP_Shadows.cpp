@@ -189,7 +189,15 @@ void APP_Shadows::CreateGui()
 
 
 	TwAddButton(m_bar, "label_01", NULL, NULL, "label='shadows'"); //show as label		
-	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button	
+
+	//resets the camera when app re-opens
+	GameCam->SetPosition(vec3(2.77, 8.2, 17.7));
+	GameCam->SetFront(vec3(-0.28, -.25, -.92));
+	GameCam->SetPitchYaw(-14.64, -106);
+
+	GameCam->SetMouseSnapToCurrent();
+	GameCam->ManualSnap();
 }
 
 bool APP_Shadows::Start()

@@ -35,6 +35,14 @@ void APP_Proc_Generation::CreateGui()
 
 	TwAddButton(m_bar, "label_01", NULL, NULL, "label='procdural mesh, perlin noise and displacement creation'"); //show as label		
 	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+
+	//resets the camera when app re-opens
+	GameCam->SetPosition(vec3(52, 17.4, 70));
+	GameCam->SetFront(vec3(-0.718, -0.47, -.8));
+	GameCam->SetPitchYaw(-28, -114);
+
+	GameCam->SetMouseSnapToCurrent();
+	GameCam->ManualSnap();
 }
 
 
