@@ -7,7 +7,8 @@ in vec2 vTexCoord;
 
 out vec4 FragColor;
 
-uniform vec3 lightColour;
+uniform float roughness;
+uniform float FresnelScale;
 uniform vec3 directionalLight;
 uniform vec3 pointLight;
 uniform vec3 CameraPos;
@@ -15,7 +16,6 @@ uniform float SpecPow;
 
 uniform sampler2D Diffuse;
 uniform sampler2D NormalTex;
-//uniform sampler2D SpecTex;
 uniform sampler2D SpecTex;
 
 
@@ -52,7 +52,7 @@ void main()
 	vec3 E = normalize(CameraPos - vPosition.xyz); // surface to eye vector
 	float NdE = max(0.0f, dot(N, E));
 
-	float roughness = 0.2f;
+	
 
 	float R2 = roughness * roughness;
 
@@ -84,8 +84,7 @@ void main()
 	float exponent = -(1 - NdH2) / (NdH2 * R2);
 	float D = pow(e, exponent) / (R2 * NdH2 * NdH2);
 
-	// Fresnel Term F
-	float FresnelScale = .9;
+	// Fresnel Term F	
 	float HdE = dot(H, E);
 	float F = mix(pow(1 - HdE, 5), 1, FresnelScale);
 

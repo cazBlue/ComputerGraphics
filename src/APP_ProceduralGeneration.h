@@ -35,7 +35,7 @@ public: //mesh data
 	void generateMesh();
 	void createMeshBuffers(unsigned int* auiIndices, Vertex* aoVertices);
 
-	unsigned int m_VAO, m_VBO, m_IBO, m_program, rows, cols, m_indexCount;
+	unsigned int m_VAO, m_VBO, m_IBO, m_program, m_rows, m_cols, m_indexCount;
 
 	void createShaders();
 
@@ -48,6 +48,10 @@ public: //noise data
 
 	unsigned int m_perlin_texture;
 
+
+	int m_tessellation, m_lastTessellation, m_perlinRes, m_lastPerlinRes, m_octaves, m_lastOctaves;
+
+	float m_amplitude, m_lastAmplitude, m_persistence, m_lastPersistence;
 
 };
 

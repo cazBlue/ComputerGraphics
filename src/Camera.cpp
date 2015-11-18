@@ -172,26 +172,14 @@ void Camera::Do_movement(float a_dt)
 
 	// Camera controls
 	GLfloat cameraSpeed = 5.0f * a_dt;
-	if (keys[GLFW_KEY_W])
-	{
-		m_pos += cameraSpeed * m_front;
-		//m_worldTransform *= glm::translate(cameraSpeed * m_front);
-	}
-	if (keys[GLFW_KEY_S])
-	{
-		m_pos -= cameraSpeed * m_front;
-		//m_worldTransform *= glm::translate(-(cameraSpeed * m_front));
-	}
-	if (keys[GLFW_KEY_A])
-	{
-		m_pos -= glm::normalize(glm::cross(m_front, m_up)) * cameraSpeed;
-		//m_worldTransform *= glm::translate(-(glm::normalize(glm::cross(m_front, m_up)) * cameraSpeed));
-	}
-	if (keys[GLFW_KEY_D])
-	{
-		m_pos += glm::normalize(glm::cross(m_front, m_up)) * cameraSpeed;
-		//m_worldTransform *= glm::translate((glm::normalize(glm::cross(m_front, m_up)) * cameraSpeed));
-	}
+	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
+		m_pos += cameraSpeed * m_front;	
+	if (keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN])	
+		m_pos -= cameraSpeed * m_front;		
+	if (keys[GLFW_KEY_A] || keys[GLFW_KEY_LEFT])	
+		m_pos -= glm::normalize(glm::cross(m_front, m_up)) * cameraSpeed;		
+	if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT])	
+		m_pos += glm::normalize(glm::cross(m_front, m_up)) * cameraSpeed;			
 }
 
 glm::mat4 Camera::GetWorldTransform()

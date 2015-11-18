@@ -59,12 +59,15 @@ void APP_PhysicallyBased::Draw()
 	// bind the point light position for a directional light
 	lightDirUniform = glGetUniformLocation(m_program, "pointLight");	//get the point light uniform index from the vertex shader
 	glm::vec3 pointLight = glm::vec3(0, -1, -1); //controls the lights position in the world	
-	glUniform3fv(lightDirUniform, 1, glm::value_ptr(pointLight));	//set the lightDir uniform variabe in the vertex shader
+	glUniform3fv(lightDirUniform, 1, glm::value_ptr(pointLight));	//set the lightDir uniform variabe in the frag shader
 
-	// bind change the light colour
-	int lightColUniform = glGetUniformLocation(m_program, "lightColour");	//get the Time uniform index from the vertex shader
-	glm::vec3 lightColour = glm::vec3(1, 1, 1); //controls the lights colour
-	glUniform3fv(lightColUniform, 1, glm::value_ptr(lightColour));	//set the lightDir uniform variabe in the vertex shader
+	// bind roughness float
+	int roughnessUniform = glGetUniformLocation(m_program, "roughness");	//get the roughness index from the frag shader	
+	glUniform1f(roughnessUniform, m_roughness);	//set the lightDir uniform variabe in the vertex shader
+
+	// bind fresnel
+	int fresnelUniform = glGetUniformLocation(m_program, "FresnelScale");	//get the Time uniform index from the vertex shader	
+	glUniform1f(fresnelUniform, m_fresnelScale);	//set the lightDir uniform variabe in the vertex shader
 
 	// bind change the camera position
 	int cameraPosUniform = glGetUniformLocation(m_program, "CameraPos");	//get the Time uniform index from the vertex shader
@@ -152,6 +155,8 @@ bool APP_PhysicallyBased::Start()
 
 	m_fbx = importCtrl->m_FBX_soulSpear;
 
+	m_roughness = 0.5f;
+	m_fresnelScale = .9f;
 
 	//////////////create shaders and program	
 	const char* vsSource = nullptr;
@@ -274,6 +279,13 @@ void APP_PhysicallyBased::CreateGui()
 
 	TwAddButton(m_bar, "label_01", NULL, NULL, "label='simply opengl scene, nothing much happening'"); //show as label		
 	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button	
+
+	//roughness value for GUI
+	TwAddVarRW(m_bar, "roughness", TW_TYPE_FLOAT, &m_roughness, " min=0 max=1 step=0.1 ");
+
+	//roughness value for GUI
+	TwAddVarRW(m_bar, "fresnel scale",
+		TW_TYPE_FLOAT, &m_fresnelScale, " min=0 max=1 step=0.1 ");
 
 	//resets the camera when app re-opens
 	GameCam->SetPosition(vec3(3, 2, 1.7));

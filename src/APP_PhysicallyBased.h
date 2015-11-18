@@ -30,6 +30,11 @@ public:
 	void cleanupOpenGLBuffers(FBXFile* fbx);
 	FBXFile* m_fbx;
 	unsigned int m_program;
+
+public:
+	//interactive elements
+
+	float m_roughness, m_fresnelScale;
 };
 
 
