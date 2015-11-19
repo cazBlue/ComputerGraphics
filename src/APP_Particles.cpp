@@ -19,7 +19,13 @@ void APP_Particles::Update(float a_dt)
 {
 	GameCam->Update(a_dt); //update camera
 
-	particleUpdate(a_dt);
+	
+
+	
+	//if (m_windDirection.x > 0 || m_windDirection.y > 0 || m_windDirection.z > 0)
+	m_windDirection = vec3(m_windDir[0], m_windDir[1], m_windDir[2]) * m_windStrength;	//update the current wind direction and speed
+
+	particleUpdate(a_dt);	
 }
 
 void APP_Particles::Draw()
@@ -57,15 +63,26 @@ void APP_Particles::CreateGui()
 	TwDefine(" CPUParticles position='10 10' "); // move bar to position (10, 10)
 	TwDefine(" CPUParticles size='430 320' "); // resize bar	
 	TwDefine(" CPUParticles color='128 128 128' alpha=32 ");   // semi-transparent blue bar
-	TwDefine(" CPUParticles resizable=false "); // mybar cannot be resized
+	TwDefine(" CPUParticles resizable=false "); // mybar cannot be resized	
 
 	TwAddButton(m_bar, "label_01", NULL, NULL, "label='pasrticles running on the CPU'"); //show as label		
 	TwAddButton(m_bar, "mainMenu", Callback, this, "label='main menu'"); //show as button				
+
+	//interactive
+	TwAddVarRW(m_bar, "Wind Direction", TW_TYPE_DIR3D, &m_windDir, "");
+	TwAddVarRW(m_bar, "Wind Strength", TW_TYPE_FLOAT, &m_windStrength, " min=.01 max=100 step=0.1 keyIncr=z keyDecr=Z ");
 }
 
 bool APP_Particles::Start()
 {
 	m_appName = "CPU Particles";
+
+	//wind interactive init
+	m_windDir[0] = 1;
+	m_windDir[1] = 1;
+	m_windDir[2] = 1;
+	m_windDirection = vec3(0, 0, 0);
+	m_windStrength = 0.0f;	
 
 	Gizmos::create();
 	GameCam = new Camera();
@@ -254,6 +271,9 @@ void APP_Particles::particleUpdate(float a_deltaTime) {
 			particle->position += particle->velocity * a_deltaTime;
 			//apply gravity: http://gamedev.stackexchange.com/questions/32631/easy-way-to-do-gravity-in-a-simple-game
 			particle->velocity += glm::vec3(0, -.01, 0);
+
+			particle->velocity += m_windDirection;
+
 			//check that we haven't gone below 0
 //			if (particle->position.y < 0)
 //				particle->position.y = 0;

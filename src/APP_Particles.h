@@ -26,6 +26,11 @@ public:
 	void particleUpdate(float a_dt);
 	void particleDraw();
 
+	//gui interactive variables
+	vec3 m_windDirection;
+	float m_windStrength;
+	double m_windDir[3];
+		
 
 
 	struct Particle {
