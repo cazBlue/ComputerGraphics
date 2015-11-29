@@ -19,21 +19,22 @@ using std::cout;
 
 
 //temp
-#include <IntroToOpenGL.h>
+#include <FBXIO.h>
 
-int notmain()
+int main()
 {
-	IntroOpenGl* intro = new IntroOpenGl();
+	FBXIO* fbx = new FBXIO();
 
-	intro->Start();
+	fbx->WriteObj();
+	fbx->ReadObj();
 
-	delete intro;
+	delete fbx;
 
 
 	return 0;
 }
 
-int main()
+int notmain()
 {
 	if (glfwInit() == false)
 		return -1;	

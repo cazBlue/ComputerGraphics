@@ -8,6 +8,8 @@ class FBXIO
 {
 public:
 
+	//embeds images into single binary file allow fast load with no image loading needed
+
 	FBXIO();
 	~FBXIO();
 
@@ -15,6 +17,16 @@ public:
 	void ReadObj();
 	bool DoesFileExist(const char *fileName);
 	
+	struct textureLayout
+	{
+		std::string		name;
+		std::string		path;
+		unsigned int	handle;
+		unsigned char*	data;
+		int				width;
+		int				height;
+		int				format;
+	};
 
 	struct vertLayout
 	{
