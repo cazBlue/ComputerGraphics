@@ -17,6 +17,12 @@ public:
 	void ReadObj();
 	bool DoesFileExist(const char *fileName);
 	
+	void writeString(std::ofstream* a_fout, FBXTexture* a_tex);
+
+	void readString(std::ifstream* a_fin, std::string& a_string);
+
+	const char* readImgData(std::ifstream* a_fin);
+
 	struct textureLayout
 	{
 		std::string		name;

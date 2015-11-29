@@ -97,27 +97,10 @@ void FBXIO::WriteObj()
 			fout.write((char*)&mesh->m_indices[i], sizeof(unsigned int));
 		}
 
-		//diffuse data
-		FBXTexture* diffuesTex = mat->textures[FBXMaterial::TextureTypes::DiffuseTexture];
-
-		textureLayout diffuseTexLayout;
-
-		//write the image name
-		size_t nameCount = strlen(diffuesTex->name.c_str());
-		const char* name = diffuesTex->name.c_str();
-		fout.write((char*)&nameCount, sizeof(unsigned int)); //write name length
-		//http://www.cplusplus.com/forum/general/51954/
-		fout.write(name, nameCount + 1); //write path +1 for null character
-
-		//write image data
-		std::string str;
-		str.append(reinterpret_cast<const char*>(diffuesTex->data));
-		//http://stackoverflow.com/questions/658913/c-style-cast-from-unsigned-char-to-const-char
-
-		size_t dataCount = strlen(str.c_str());
-		const char* data = str.c_str();
-		fout.write((char*)&dataCount, sizeof(unsigned int)); //write path
-		fout.write(data, dataCount + 1); //write path +1 for null character
+		
+		writeString(&fout, mat->textures[FBXMaterial::TextureTypes::DiffuseTexture]);	//diffuse data		
+		writeString(&fout, mat->textures[FBXMaterial::TextureTypes::NormalTexture]);	//normal data
+		writeString(&fout, mat->textures[FBXMaterial::TextureTypes::SpecularTexture]);	//spec data
 
 //		diffuseTexLayout.name		= diffuesTex->name;
 //		diffuseTexLayout.path		= diffuesTex->path;
@@ -198,65 +181,16 @@ void FBXIO::ReadObj()
 			count++;
 		}
 
-		unsigned int nameSize = 0;
 
-		//read name size
-		if (!fin.eof() && fin.peek() != EOF)
-		{
-			fin.read((char*)ui_ptr, sizeof(unsigned int));
-			nameSize = (*ui_ptr);
-		}
-
-		//get the image name
-		char* name = new char[nameSize];
-
-		if (!fin.eof() && fin.peek() != EOF)
-		{
-			fin.read(name, nameSize + 1);			
-		}
-		//convert image name back to string
-		std::string stName = "";
-		const char* c = name;
-		stName.append(c);
-
-		//read image data size
-		unsigned int dataSize = 0;
-
-		//read data size
-		if (!fin.eof() && fin.peek() != EOF)
-		{
-			fin.read((char*)ui_ptr, sizeof(unsigned int));
-			dataSize = (*ui_ptr);
-		}
-
-		//get the image data
-		char* data = new char[dataSize];
-		if (!fin.eof() && fin.peek() != EOF)
-		{
-			fin.read(data, dataSize + 1);
-		}
-
-		const char* const_data = data;
+		std::string name = "";
+		std::string path = "";
+		unsigned int handle = 0;
+		int width, height, format;
 
 
-//		//read diffuse texture data
-//		FBXTexture diffuesTex;
-//		if (!fin.eof() && fin.peek() != EOF)
-//		{
-//			fin.read((char*)&tex_ptr, sizeof(textureLayout));
-//			
-//			diffuesTex.name		= tex_ptr.name;
-//			diffuesTex.path		= tex_ptr.path;
-//			diffuesTex.handle	= tex_ptr.handle;
-//			diffuesTex.data		= tex_ptr.data;
-//			diffuesTex.width	= tex_ptr.width;
-//			diffuesTex.height	= tex_ptr.height;
-//			diffuesTex.format	= tex_ptr.format;
-//			
-//			
-//
-//		}
-
+		readString(&fin, name);
+		readString(&fin, path);
+		const char* const_data = readImgData(&fin);
 		
 
 
@@ -269,6 +203,88 @@ void FBXIO::ReadObj()
 //	fbx.m_meshes.push_back(&mesh);
 	
 	
+}
+
+const char* FBXIO::readImgData(std::ifstream* a_fin)
+{
+	//read image data size
+	unsigned int dataSize = 0;
+	unsigned int* ui_ptr = new unsigned int;
+
+	//read data size
+	if (!a_fin->eof() && a_fin->peek() != EOF)
+	{
+		a_fin->read((char*)ui_ptr, sizeof(unsigned int));
+		dataSize = (*ui_ptr);
+	}
+
+	//get the image data
+	char* data = new char[dataSize];
+	if (!a_fin->eof() && a_fin->peek() != EOF)
+	{
+		a_fin->read(data, dataSize + 1);
+	}
+
+	delete ui_ptr;
+
+	return data;
+}
+
+void FBXIO::readString(std::ifstream* a_fin, std::string& a_string)
+{
+	unsigned int size = 0;
+	unsigned int* ui_ptr = new unsigned int;
+
+	//read name size
+	if (!a_fin->eof() && a_fin->peek() != EOF)
+	{
+		a_fin->read((char*)ui_ptr, sizeof(unsigned int));
+		size = (*ui_ptr);
+	}
+
+	//get the image name
+	char* rString = new char[size];
+
+	if (!a_fin->eof() && a_fin->peek() != EOF)
+	{
+		a_fin->read(rString, size + 1);
+	}
+	//convert image name back to string
+	std::string stName = "";
+	const char* c = rString;
+	stName.append(c);
+
+	a_string = stName;
+
+	delete ui_ptr;
+}
+
+
+void FBXIO::writeString(std::ofstream* a_fout, FBXTexture* a_tex)
+{
+	//write the image name
+	size_t count = strlen(a_tex->name.c_str());
+	const char* name = a_tex->name.c_str();
+	a_fout->write((char*)&count, sizeof(unsigned int)); //write name length
+	//http://www.cplusplus.com/forum/general/51954/
+	a_fout->write(name, count + 1); //write path +1 for null character
+
+	//write the image path
+	count = strlen(a_tex->path.c_str());
+	const char* path = a_tex->path.c_str();
+	a_fout->write((char*)&count, sizeof(unsigned int)); //write name length
+	//http://www.cplusplus.com/forum/general/51954/
+	a_fout->write(path, count + 1); //write path +1 for null character
+
+	//write image data
+	std::string str;
+	str.append(reinterpret_cast<const char*>(a_tex->data));
+	//http://stackoverflow.com/questions/658913/c-style-cast-from-unsigned-char-to-const-char
+
+	size_t dataCount = strlen(str.c_str());
+	const char* data = str.c_str();
+	a_fout->write((char*)&dataCount, sizeof(unsigned int)); //write path
+	a_fout->write(data, dataCount + 1); //write path +1 for null character
 }
 
 bool FBXIO::DoesFileExist(const char *fileName)
