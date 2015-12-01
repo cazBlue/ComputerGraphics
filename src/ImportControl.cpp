@@ -1,5 +1,6 @@
 #include <ImportControl.h>
 #include <stb_image.h>
+#include <thread>
 
 ImportCTRL::ImportCTRL()
 {
@@ -15,31 +16,61 @@ ImportCTRL::~ImportCTRL()
 
 void ImportCTRL::Start()
 {
-	m_FBX_soulSpear =	new FBXFile();
-	m_FBX_anim		=	new FBXFile();
-	m_FBX_bunny		=	new FBXFile();
+	m_FBX_soulSpear = new FBXFile();
+	m_FBX_anim = new FBXFile();
+	m_FBX_bunny = new FBXFile();
 
 	printf("\nloading FBX files\n");
 
 	FBXIO::fbxInternals soulSpear, bunny, anim;
 
 	FBXIO* fbx = new FBXIO();
-	fbx->ReadObj(soulSpear, "soulSpear.bin", "./assets/soulspear/soulspear.fbx");
-	fbx->ReadObj(bunny, "bunny.bin", "./assets/stanford/Bunny.fbx");
+	FBXIO* fbxTwo = new FBXIO();
+	m_OBJ_bunny = new OBJIO();
+	std::vector<std::thread> threads;
 
-	fbx->createFBX(soulSpear, (*m_FBX_soulSpear));
-	fbx->createFBX(bunny, (*m_FBX_bunny));
+	//multi threaded loading of obj and fbx files
+	//no dependant data to avoid race conditions
+
+	threads.push_back(std::thread(
+		// defining a lambda that can access main scope with &
+		[&](){
+			fbx->ReadObj(soulSpear, "soulSpear.bin", "./assets/soulspear/soulspear.fbx");
+			fbx->createFBX(soulSpear, (*m_FBX_soulSpear));
+		}
+	));
+
+	threads.push_back(std::thread(
+		// defining a lambda that can access main scope with &
+		[&](){		
+		fbxTwo->ReadObj(bunny, "bunny.bin", "./assets/stanford/Bunny.fbx");
+		fbxTwo->createFBX(bunny, (*m_FBX_bunny));
+	}
+	));
+
+	threads.push_back(std::thread(
+		// defining a lambda that can access main scope with &
+		[&](){
+		m_FBX_anim->load("./assets/characters/Pyro/pyro.fbx", m_FBX_anim->UNITS_METER, true, true, true); //no customising of fbx animation, no need!
+	}
+	));
+
+	threads.push_back(std::thread(
+		// defining a lambda that can access main scope with &
+		[&](){
+		printf("\nloadingOBJ");
+		m_OBJ_bunny->ReadObj("./assets/stanford_objs/bunny.obj", "OBJbunny.dat", &objShapes);
+	}
+	));
+
+	for (auto& thread : threads)
+		thread.join();
 
 //	m_FBX_soulSpear->load("./assets/soulspear/soulspear.fbx", m_FBX_soulSpear->UNITS_METER, true, true, true);
 //	m_FBX_bunny->load("./assets/stanford/Bunny.fbx", m_FBX_bunny->UNITS_METER, true, true, true);
-	m_FBX_anim->load("./assets/characters/Pyro/pyro.fbx", m_FBX_anim->UNITS_METER, true, true, true);
+	
 
 	printf("\nFBX files loaded");
-
-	printf("\nloadingOBJ");
-	m_OBJ_bunny = new OBJIO();
-	m_OBJ_bunny->ReadObj("./assets/stanford_objs/bunny.obj", "OBJbunny.dat", &objShapes);
-
 	printf("\nOBJ files loaded");
 
 	printf("\nloading FBX opengl buffers");
