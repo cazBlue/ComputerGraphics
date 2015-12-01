@@ -21,20 +21,42 @@ using std::cout;
 //temp
 #include <FBXIO.h>
 
-int main()
+int notmain()
 {
 	FBXIO* fbx = new FBXIO();
 
-	fbx->WriteObj();
-	fbx->ReadObj();
+//	fbx->WriteObj("FBXData.dat");
 
-	delete fbx;
+	FBXIO::fbxInternals soulSpear, bunny, anim;
+
+	fbx->ReadObj(soulSpear, "soulSpear.bin", "./assets/soulspear/soulspear.fbx");
+	fbx->ReadObj(bunny, "bunny.bin", "./assets/stanford/Bunny.fbx");
+	fbx->ReadObj(anim, "anim.bin", "./assets/characters/Pyro/pyro.fbx");
+
+//	FBXFile* temp = new FBXFile();
+
+//	temp->load("./assets/characters/Pyro/pyro.fbx", temp->UNITS_METER, true, true, true);
+
+	//can we shove data back into the current fbx format?
+	FBXFile* fbxSoul = new FBXFile();
+	FBXFile* fbxAnim = new FBXFile();
+	FBXFile* fbxBunny = new FBXFile();
+
+	fbx->createFBX(soulSpear, (*fbxSoul));
+	fbx->createFBX(anim, (*fbxAnim));
+	fbx->createFBX(bunny, (*fbxBunny));
+
+
+
+	delete fbxAnim;
+	delete fbxBunny;
+	delete fbxSoul;
 
 
 	return 0;
 }
 
-int notmain()
+int main()
 {
 	if (glfwInit() == false)
 		return -1;	

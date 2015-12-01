@@ -1,5 +1,5 @@
 #include <ImportControl.h>
-
+#include <stb_image.h>
 
 ImportCTRL::ImportCTRL()
 {
@@ -20,9 +20,17 @@ void ImportCTRL::Start()
 	m_FBX_bunny		=	new FBXFile();
 
 	printf("\nloading FBX files\n");
-	m_FBX_soulSpear->load("./assets/soulspear/soulspear.fbx", m_FBX_soulSpear->UNITS_METER, true, true, true);
-	m_FBX_bunny->load("./assets/stanford/Bunny.fbx", m_FBX_bunny->UNITS_METER, true, true, true);
-	m_FBX_anim->load("./assets/characters/Pyro/pyro.fbx", m_FBX_anim->UNITS_METER, true, true, true);
+
+	FBXIO::fbxInternals soulSpear, bunny, anim;
+
+	FBXIO* fbx = new FBXIO();
+	fbx->ReadObj(soulSpear, "soulSpear.bin", "./assets/soulspear/soulspear.fbx");
+
+	fbx->createFBX(soulSpear, (*m_FBX_soulSpear));
+
+//	m_FBX_soulSpear->load("./assets/soulspear/soulspear.fbx", m_FBX_soulSpear->UNITS_METER, true, true, true);
+//	m_FBX_bunny->load("./assets/stanford/Bunny.fbx", m_FBX_bunny->UNITS_METER, true, true, true);
+//	m_FBX_anim->load("./assets/characters/Pyro/pyro.fbx", m_FBX_anim->UNITS_METER, true, true, true);
 
 	printf("\nFBX files loaded");
 
@@ -33,15 +41,16 @@ void ImportCTRL::Start()
 	printf("\nOBJ files loaded");
 
 	printf("\nloading FBX opengl buffers");
-	createFBXOpenGLBuffers(m_FBX_soulSpear);
+	createFBXOpenGLBuffers(m_FBX_soulSpear, soulSpear);
 	//createFBXOpenGLBuffers(m_FBX_anim); //created in the anim app
-	createFBXOpenGLBuffers(m_FBX_bunny);
+//	createFBXOpenGLBuffers(m_FBX_bunny);
 
 	printf("\nloading OBJ opengl buffers");
 	createOBJOpenGLBuffers(objShapes);
 
 	printf("\nloading shaders and apps");
 
+	delete fbx;
 	m_isLoaded = true;
 }
 
@@ -77,7 +86,7 @@ void ImportCTRL::createOBJOpenGLBuffers(std::vector<tinyobj::shape_t>& shapes)
 	}
 }
 
-void ImportCTRL::createFBXOpenGLBuffers(FBXFile* fbx)
+void ImportCTRL::createFBXOpenGLBuffers(FBXFile* fbx, FBXIO::fbxInternals a_interal)
 {
 	unsigned int meshCount = fbx->getMeshCount();
 	unsigned int materialCount = fbx->getMaterialCount();
@@ -86,11 +95,11 @@ void ImportCTRL::createFBXOpenGLBuffers(FBXFile* fbx)
 	{
 		FBXMeshNode* mesh = fbx->getMeshByIndex(i);
 
-		FBXMaterial* mat = mesh->m_material;
+//		FBXMaterial* mat = mesh->m_material;
 
-		FBXTexture* diffuesTex = mat->textures[FBXMaterial::TextureTypes::DiffuseTexture];
-		FBXTexture* normalTex = mat->textures[FBXMaterial::TextureTypes::NormalTexture];
-		FBXTexture* specTex = mat->textures[FBXMaterial::TextureTypes::SpecularTexture];
+//		FBXTexture* diffuesTex = mat->textures[FBXMaterial::TextureTypes::DiffuseTexture];
+//		FBXTexture* normalTex = mat->textures[FBXMaterial::TextureTypes::NormalTexture];
+//		FBXTexture* specTex = mat->textures[FBXMaterial::TextureTypes::SpecularTexture];
 
 		// storage for the opengl data in 4 unsigned int (includes diffuse texID (3) and normal texID (4))
 		unsigned int* glData = new unsigned int[6];
@@ -115,34 +124,39 @@ void ImportCTRL::createFBXOpenGLBuffers(FBXFile* fbx)
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		if (diffuesTex != nullptr)
+		if (a_interal.m_dif.data != nullptr)
 		{
 			//gen diffuse texture id and bind texture to buffer 
 			glActiveTexture(GL_TEXTURE0); //texture are we binding to
 			glGenTextures(1, &glData[3]);
 			glBindTexture(GL_TEXTURE_2D, glData[3]);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, diffuesTex->width, diffuesTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, diffuesTex->data);
+//			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			
+			unsigned char* data = stbi_load(a_interal.m_dif.path.c_str(), &a_interal.m_dif.width, &a_interal.m_dif.height, &a_interal.m_dif.format, STBI_rgb); //request no alpha
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, a_interal.m_dif.res, a_interal.m_dif.res, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		}
 
 		
-		if (normalTex != nullptr)
+		if (a_interal.m_normal.data != nullptr)
 		{
 			glActiveTexture(GL_TEXTURE0 + 1); //texture are we binding to
 			glGenTextures(1, &glData[4]);
-			glBindTexture(GL_TEXTURE_2D, glData[4]);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, normalTex->width, normalTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, normalTex->data);
+			glBindTexture(GL_TEXTURE_2D, glData[4]);			
+			unsigned char* data = stbi_load(a_interal.m_normal.path.c_str(), &a_interal.m_dif.width, &a_interal.m_normal.height, &a_interal.m_normal.format, STBI_rgb); //request no alpha
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, a_interal.m_normal.res, a_interal.m_normal.res, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		}
 
-		if (specTex != nullptr)
+		if (a_interal.m_spec.data != nullptr)
 		{
 			glActiveTexture(GL_TEXTURE0 + 2); //texture are we binding to
 			glGenTextures(1, &glData[5]);
 			glBindTexture(GL_TEXTURE_2D, glData[5]);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, specTex->width, specTex->height, 0, GL_RGB, GL_UNSIGNED_BYTE, specTex->data);
+			unsigned char* data = stbi_load(a_interal.m_spec.path.c_str(), &a_interal.m_spec.width, &a_interal.m_spec.height, &a_interal.m_normal.format, STBI_rgb); //request no alpha
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, a_interal.m_spec.res, a_interal.m_spec.res, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		}

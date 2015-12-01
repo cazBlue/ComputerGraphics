@@ -135,28 +135,6 @@ bool APP_LoadFbx::Start()
 
 	m_fbx = new FBXFile();
 
-	//fbxFile->unload();
-
-
-	std::string strShaderCode; //file info holder --TODO create array of file names
-	//open shader file
-	std::ifstream shaderStream("./assets/fbxToLoad.txt");
-	//if that worked ok, load file line by line
-
-	if (shaderStream.is_open())
-	{
-		std::string Line = "";
-		while (std::getline(shaderStream, Line))
-		{
-			//strShaderCode += "\n" + Line;
-			strShaderCode += Line;
-		}
-		shaderStream.close();
-	}
-
-	const char* path = strShaderCode.c_str();
-	//fsSource = fsResult.c_str();
-
 	//issue tracked to line 184 in FBXFile.cpp
 	m_fbx = importCtrl->m_FBX_soulSpear;
 	

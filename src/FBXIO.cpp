@@ -20,40 +20,14 @@ FBXIO::~FBXIO()
 	delete m_fbx;
 }
 
-void FBXIO::WriteObj()
+void FBXIO::WriteObj(fbxInternals& a_fbxInteral, const char* fileName, const char* path)
 {	
 
 	m_fbx = new FBXFile();
 
-
-	std::string strShaderCode; //file info holder --TODO create array of file names
-	std::ifstream shaderStream("./assets/fbxToLoad.txt");
-	//if that worked ok, load file line by line
-
-	if (shaderStream.is_open())
-	{
-		std::string Line = "";
-		while (std::getline(shaderStream, Line))
-		{
-			//strShaderCode += "\n" + Line;
-			strShaderCode += Line;
-		}
-		shaderStream.close();
-	}
-
-	const char* path = strShaderCode.c_str();
-
 	m_fbx->load(path, m_fbx->UNITS_METER, true, true, true);
 
 	std::map<std::string, std::string>::iterator iter;
-
-//	for (iter = m_fbx->m_textures.begin(); iter != m_fbx->m_textures.end(); ++iter) {
-//	}
-//	
-//	for (int i = 0; i < m_fbx->m_textures.size(); ++i)
-//	{
-//		printf(m_fbx->m_textures);
-//	}
 
 	//mesh
 	//vertex info
@@ -66,7 +40,7 @@ void FBXIO::WriteObj()
 	FBXTexture* specTex = mat->textures[FBXMaterial::TextureTypes::SpecularTexture];
 
 	
-	std::ofstream fout("FBXData.dat", std::ios::out | std::ios::binary);
+	std::ofstream fout(fileName, std::ios::out | std::ios::binary);
 	if (fout.good()) 
 	{
 		//vertex data of fbxVertex
@@ -97,32 +71,40 @@ void FBXIO::WriteObj()
 			fout.write((char*)&mesh->m_indices[i], sizeof(unsigned int));
 		}
 
+		//write path, name and data for needed maps
+
+		FBXTexture* tex = mat->textures[FBXMaterial::TextureTypes::DiffuseTexture];
+		if (tex)
+			writeString(&fout, mat->textures[FBXMaterial::TextureTypes::DiffuseTexture]);	//diffuse data		
 		
-		writeString(&fout, mat->textures[FBXMaterial::TextureTypes::DiffuseTexture]);	//diffuse data		
-		writeString(&fout, mat->textures[FBXMaterial::TextureTypes::NormalTexture]);	//normal data
+		tex = mat->textures[FBXMaterial::TextureTypes::NormalTexture];
+		if (tex)
+			writeString(&fout, mat->textures[FBXMaterial::TextureTypes::NormalTexture]);	//normal data
+		
+		tex = mat->textures[FBXMaterial::TextureTypes::SpecularTexture];
+		if (tex)
 		writeString(&fout, mat->textures[FBXMaterial::TextureTypes::SpecularTexture]);	//spec data
 
-//		diffuseTexLayout.name		= diffuesTex->name;
-//		diffuseTexLayout.path		= diffuesTex->path;
-//		diffuseTexLayout.handle		= diffuesTex->handle;
-//		diffuseTexLayout.data		= diffuesTex->data;
-//		diffuseTexLayout.width		= diffuesTex->width;
-//		diffuseTexLayout.height		= diffuesTex->height;
-//		diffuseTexLayout.format		= diffuesTex->format;
-//
-//		fout.write((char*)&diffuseTexLayout, sizeof(textureLayout)); //store indice array size
+		if (HasAnimation)
+			return; //write animation data out
 
 		fout.close();
-	}		
-	
-
+	}			
 }
 
-void FBXIO::ReadObj()
+void FBXIO::ReadObj(fbxInternals& a_fbxInteral, const char* fileName, const char* path)
 {
-	std::ifstream fin("FBXData.dat", std::ios::in | std::ios::binary);
+	m_fbx = new FBXFile();
 
-	FBXMeshNode mesh;
+	//write the obj if it doesn't exist, it is then read back in.. pretty slow!
+	if (!DoesFileExist(fileName))
+	{
+		WriteObj(a_fbxInteral, fileName, path);
+	}
+
+	std::ifstream fin(fileName, std::ios::in | std::ios::binary);
+
+	fbxInternals fbxObj;
 
 	vertLayout vert_ptr;
 
@@ -152,46 +134,82 @@ void FBXIO::ReadObj()
 		unsigned int count = 0;
 
 		//read vertex data
-		while (!fin.eof() && fin.peek() != EOF && count < vertexSize) 
+		while (!fin.eof() && fin.peek() != EOF && count < vertexSize)
 		{
-			fin.read((char*)&vert_ptr, sizeof(vertLayout));			
+			fin.read((char*)&vert_ptr, sizeof(vertLayout));
 
 			FBXVertex curVert;
 
-			curVert.position =	vert_ptr.position;
-			curVert.normal =	vert_ptr.normal;
-			curVert.tangent =	vert_ptr.tangent;
-			curVert.binormal =	vert_ptr.binormal;
-			curVert.indices =	vert_ptr.indices;
-			curVert.texCoord1 =	vert_ptr.texCoord1;
+			curVert.position = vert_ptr.position;
+			curVert.normal = vert_ptr.normal;
+			curVert.tangent = vert_ptr.tangent;
+			curVert.binormal = vert_ptr.binormal;
+			curVert.indices = vert_ptr.indices;
+			curVert.texCoord1 = vert_ptr.texCoord1;
 
-			mesh.m_vertices.push_back(curVert);	
-			
+			//			mesh.m_vertices.push_back(curVert);	
+			fbxObj.verts.push_back(vert_ptr);
+
 			count++;
 		}
 
 		//read indice data
-		while (!fin.eof() && fin.peek() != EOF && count < vertexSize + indiceSize) 
+		while (!fin.eof() && fin.peek() != EOF && count < vertexSize + indiceSize)
 		{
 			unsigned int indice;
 
-			fin.read((char*)&indice, sizeof(unsigned int));	
-			mesh.m_indices.push_back(indice);
+			fin.read((char*)&indice, sizeof(unsigned int));
+			//			mesh.m_indices.push_back(indice);
+			fbxObj.m_indices.push_back(indice);
 
 			count++;
 		}
 
+		textureLayout diffuseMap;
 
-		std::string name = "";
-		std::string path = "";
-		unsigned int handle = 0;
-		int width, height, format;
+		readString(&fin, diffuseMap.name);
+		readString(&fin, diffuseMap.path);
+		//read res
+		if (!fin.eof() && fin.peek() != EOF)
+		{
+			fin.read((char*)ui_ptr, sizeof(unsigned int));
+			diffuseMap.res = (*ui_ptr);
+		}
+		//diffuseMap.data = readImgData(&fin);
+
+		textureLayout normalMap;
+
+		readString(&fin, normalMap.name);
+		readString(&fin, normalMap.path);
+		//read res
+		if (!fin.eof() && fin.peek() != EOF)
+		{
+			fin.read((char*)ui_ptr, sizeof(unsigned int));
+			normalMap.res = (*ui_ptr);
+		}
+		//normalMap.data = readImgData(&fin);
+
+		textureLayout specMap;
+
+		readString(&fin, specMap.name);
+		readString(&fin, specMap.path);
+		//read res
+		if (!fin.eof() && fin.peek() != EOF)
+		{
+			fin.read((char*)ui_ptr, sizeof(unsigned int));
+			specMap.res = (*ui_ptr);
+		}
+		//specMap.data = readImgData(&fin);
 
 
-		readString(&fin, name);
-		readString(&fin, path);
-		const char* const_data = readImgData(&fin);
-		
+		if (HasAnimation)
+		{
+			return; //read animation data in
+		}
+
+		fbxObj.m_dif = diffuseMap;
+		fbxObj.m_normal = normalMap;
+		fbxObj.m_spec = specMap;
 
 
 		delete ui_ptr;
@@ -200,9 +218,13 @@ void FBXIO::ReadObj()
 
 	FBXFile fbx;
 
-//	fbx.m_meshes.push_back(&mesh);
-	
-	
+	FBXMeshNode* mesh = new FBXMeshNode();
+
+
+
+	a_fbxInteral = fbxObj; //set 
+
+	//fbx.m_meshes.push_back();	
 }
 
 const char* FBXIO::readImgData(std::ifstream* a_fin)
@@ -276,15 +298,18 @@ void FBXIO::writeString(std::ofstream* a_fout, FBXTexture* a_tex)
 	//http://www.cplusplus.com/forum/general/51954/
 	a_fout->write(path, count + 1); //write path +1 for null character
 
-	//write image data
-	std::string str;
-	str.append(reinterpret_cast<const char*>(a_tex->data));
-	//http://stackoverflow.com/questions/658913/c-style-cast-from-unsigned-char-to-const-char
+	//write image res (only dealing with square textures)
+	a_fout->write((char*)&a_tex->width, sizeof(unsigned int)); //write res
 
-	size_t dataCount = strlen(str.c_str());
-	const char* data = str.c_str();
-	a_fout->write((char*)&dataCount, sizeof(unsigned int)); //write path
-	a_fout->write(data, dataCount + 1); //write path +1 for null character
+//	//write image data
+//	std::string str;
+//	str.append(reinterpret_cast<const char*>(a_tex->data));
+//	//http://stackoverflow.com/questions/658913/c-style-cast-from-unsigned-char-to-const-char
+
+//	size_t dataCount = strlen(str.c_str());
+//	const char* data = str.c_str();
+//	a_fout->write((char*)&dataCount, sizeof(unsigned int)); //write path
+//	a_fout->write(data, dataCount + 1); //write path +1 for null character
 }
 
 bool FBXIO::DoesFileExist(const char *fileName)
@@ -292,4 +317,61 @@ bool FBXIO::DoesFileExist(const char *fileName)
 	//http://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
 	std::ifstream infile(fileName);
 	return infile.good();	
+}
+
+void FBXIO::createFBX(fbxInternals a_fbxInternal, FBXFile& a_file)
+{
+	//FBXFile* fbxFile = new FBXFile();
+	FBXMeshNode* mesh = new FBXMeshNode;
+	FBXTexture* diffuse = new FBXTexture();
+	FBXTexture* spec = new FBXTexture();
+	FBXTexture* normal = new FBXTexture();
+
+	mesh->m_indices = a_fbxInternal.m_indices;
+
+	for (int i = 0; i < a_fbxInternal.verts.size(); ++i)
+	{
+		FBXVertex curVert;
+
+		curVert.position =	a_fbxInternal.verts[i].position;
+		curVert.normal =	a_fbxInternal.verts[i].normal;
+		curVert.tangent =	a_fbxInternal.verts[i].tangent;
+		curVert.binormal =	a_fbxInternal.verts[i].binormal;
+		curVert.indices =	a_fbxInternal.verts[i].indices;
+		curVert.texCoord1 = a_fbxInternal.verts[i].texCoord1;
+
+		mesh->m_vertices.push_back(curVert);
+	}
+
+	a_file.m_meshes.push_back(mesh);
+
+	diffuse->data = (unsigned char*)a_fbxInternal.m_dif.data;
+	diffuse->name =		a_fbxInternal.m_dif.name;
+	diffuse->height =	a_fbxInternal.m_dif.res;
+	diffuse->width = 	a_fbxInternal.m_dif.res;
+	diffuse->format =	-1;
+	diffuse->path =		a_fbxInternal.m_dif.path;
+
+	normal->data = (unsigned char*)a_fbxInternal.m_normal.data;
+	normal->name = a_fbxInternal.m_normal.name;
+	normal->height = a_fbxInternal.m_normal.res;
+	normal->width = a_fbxInternal.m_normal.res;
+	normal->format = -1;
+	normal->path = a_fbxInternal.m_normal.path;
+
+	spec->data = (unsigned char*)a_fbxInternal.m_spec.data;
+	spec->name = a_fbxInternal.m_spec.name;
+	spec->height = a_fbxInternal.m_spec.res;
+	spec->width = a_fbxInternal.m_spec.res;
+	spec->format = -1;
+	spec->path = a_fbxInternal.m_spec.path;
+
+	std::map<std::string, FBXTexture*>::iterator it = a_file.m_textures.begin();
+	a_file.m_textures.insert(it, std::pair<std::string, FBXTexture*>(a_fbxInternal.m_dif.path, diffuse));
+	a_file.m_textures.insert(it, std::pair<std::string, FBXTexture*>(a_fbxInternal.m_normal.path, normal));
+	a_file.m_textures.insert(it, std::pair<std::string, FBXTexture*>(a_fbxInternal.m_spec.path, spec));
+
+	//a_file = (*fbxFile);
+
+	
 }

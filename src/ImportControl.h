@@ -59,7 +59,7 @@ public:
 
 private:	
 	//create opengl buffers
-	void createFBXOpenGLBuffers(FBXFile* fbx);
+	void createFBXOpenGLBuffers(FBXFile* fbx, FBXIO::fbxInternals a_interal);
 	void cleanupOpenGLBuffers(FBXFile* fbx);
 	void createOBJOpenGLBuffers(std::vector<tinyobj::shape_t>& shapes);
 
