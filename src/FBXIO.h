@@ -51,13 +51,15 @@ public:
 
 	struct vertLayout
 	{
-		glm::vec4	position;		
+		glm::vec4	position;
+		glm::vec4	colour;
 		glm::vec4	normal;
 		glm::vec4	tangent;
 		glm::vec4	binormal;
 		glm::vec4	indices;
 		glm::vec4	weights;
-		glm::vec2	texCoord1;		
+		glm::vec2	texCoord1;
+		glm::vec2	texCoord2;
 	};
 
 	struct fbxInternals

@@ -33,7 +33,7 @@ APP_Control::APP_Control()
 	m_splashApp = new APP_Splash();
 	m_splashApp->Start(); //init the splash screen app
 
-	m_curApp = m_splashApp;	
+	m_curApp = m_splashApp;
 
 	m_importCtrl = new ImportCTRL();
 }
@@ -80,8 +80,8 @@ void APP_Control::Start()
 }
 
 void APP_Control::LoadAPP(App* a_app)
-{		
-	
+{
+
 }
 
 void APP_Control::Update(float dt)
@@ -104,8 +104,8 @@ void APP_Control::CheckNextScene()
 		for (iter = m_apps.begin(); iter != m_apps.end(); iter++)
 		{
 			if (App::nextScene == m_curApp->m_appName)
-			{								
-				m_curApp = m_splashApp;				
+			{
+				m_curApp = m_splashApp;
 				m_curApp->CreateGui();
 
 				App::nextScene = ""; //reset the next scene flag
@@ -136,7 +136,7 @@ void APP_Control::CheckLoadStatus()
 	bool loadingApp = false;
 
 	if (m_loadingApp->isLoaded)
-	{		
+	{
 		if (m_appsToLoad.size() > 0)
 		{
 			m_loadingApp = m_appsToLoad.front();

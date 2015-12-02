@@ -61,6 +61,10 @@ void FBXIO::WriteObj(fbxInternals& a_fbxInteral, const char* fileName, const cha
 			curVert.binormal = mesh->m_vertices[i].binormal;
 			curVert.texCoord1 = mesh->m_vertices[i].texCoord1;
 			curVert.weights = mesh->m_vertices[i].weights;
+			curVert.texCoord2 = mesh->m_vertices[i].texCoord2;
+			curVert.colour = mesh->m_vertices[i].colour;
+			curVert.tangent = mesh->m_vertices[i].tangent;
+
 
 			fout.write((char*)&curVert, sizeof(vertLayout));
 		}
@@ -141,11 +145,14 @@ void FBXIO::ReadObj(fbxInternals& a_fbxInteral, const char* fileName, const char
 			FBXVertex curVert;
 
 			curVert.position = vert_ptr.position;
+			curVert.indices = vert_ptr.indices;
 			curVert.normal = vert_ptr.normal;
 			curVert.tangent = vert_ptr.tangent;
-			curVert.binormal = vert_ptr.binormal;
-			curVert.indices = vert_ptr.indices;
+			curVert.binormal = vert_ptr.binormal;			
 			curVert.texCoord1 = vert_ptr.texCoord1;
+			curVert.texCoord2 = vert_ptr.texCoord2;
+			curVert.tangent = vert_ptr.tangent;
+			curVert.colour = vert_ptr.colour;
 
 			//			mesh.m_vertices.push_back(curVert);	
 			fbxObj.verts.push_back(vert_ptr);

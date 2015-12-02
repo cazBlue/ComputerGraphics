@@ -6,7 +6,7 @@ ImportCTRL::ImportCTRL()
 {
 
 }
-
+ 
 
 ImportCTRL::~ImportCTRL()
 {
@@ -31,6 +31,10 @@ void ImportCTRL::Start()
 
 	//multi threaded loading of obj and fbx files
 	//no dependant data to avoid race conditions
+
+	//file must exist for loading to avoid race condition
+	//fbx->ReadObj(soulSpear, "soulSpear.bin", "./assets/soulspear/soulspear.fbx");
+	//fbxTwo->ReadObj(bunny, "bunny.bin", "./assets/stanford/Bunny.fbx");
 
 	threads.push_back(std::thread(
 		// defining a lambda that can access main scope with &
@@ -67,7 +71,8 @@ void ImportCTRL::Start()
 		thread.join();
 
 //	m_FBX_soulSpear->load("./assets/soulspear/soulspear.fbx", m_FBX_soulSpear->UNITS_METER, true, true, true);
-//	m_FBX_bunny->load("./assets/stanford/Bunny.fbx", m_FBX_bunny->UNITS_METER, true, true, true);
+	FBXFile* bunTest = new FBXFile(); 
+	bunTest->load("./assets/soulspear/soulspear.fbx", m_FBX_bunny->UNITS_METER, true, true, true);
 	
 
 	printf("\nFBX files loaded");
@@ -144,6 +149,7 @@ void ImportCTRL::createFBXOpenGLBuffers(FBXFile* fbx, FBXIO::fbxInternals a_inte
 		glBindBuffer(GL_ARRAY_BUFFER, glData[1]);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glData[2]);
 		glBufferData(GL_ARRAY_BUFFER, mesh->m_vertices.size() * sizeof(FBXVertex), mesh->m_vertices.data(), GL_STATIC_DRAW);
+//		glBufferData(GL_ARRAY_BUFFER, a_interal.verts.size() * sizeof(FBXIO::vertLayout), a_interal.verts.data(), GL_STATIC_DRAW);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->m_indices.size() * sizeof(unsigned int), mesh->m_indices.data(), GL_STATIC_DRAW);
 		glEnableVertexAttribArray(0); // position
 		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(FBXVertex), 0);
@@ -201,7 +207,6 @@ void ImportCTRL::createFBXOpenGLBuffers(FBXFile* fbx, FBXIO::fbxInternals a_inte
 		mesh->m_userData = glData;
 	}
 }
-
 
 
 
